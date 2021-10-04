@@ -8,6 +8,7 @@ public class RheasSword : Weapon
     AudioSource attack;
     AudioSource whoosh;
 
+    public GameObject attackSprite;
 
 
     void Start()
@@ -27,6 +28,7 @@ public class RheasSword : Weapon
     {
         if (cooldown.Try())
         {
+            //attackSprite.GetComponent<MeshRenderer>().GetComponent<Material>().color.a.CompareTo(255);
             //$"attack_sprite/animation".play("player_attack")
             if (DamageAllInHitbox(true))
             {
@@ -37,12 +39,5 @@ public class RheasSword : Weapon
                 whoosh.Play();
             }
         }
-    }
-    
-    
-    // Update is called once per frame
-    void Update()
-    {
-        
     }
 }
