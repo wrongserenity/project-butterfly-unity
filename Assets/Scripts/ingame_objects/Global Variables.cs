@@ -50,6 +50,8 @@ public static class GlobalVariables
     public static int player_position_rewind_offset = 20;
     public static int player_tracing_step = 5;
 
+    public static float player_parry_window_duration = 0.2f;
+
     // enemies' varibles
     // TODO: write max_hp and max_energy
     public static float melee_max_speed = 6f;

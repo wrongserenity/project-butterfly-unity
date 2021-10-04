@@ -9,7 +9,7 @@ public class Weapon : MonoBehaviour
     public Collider hitBox;
 
     public int damage;
-    bool damaged = false;
+    public bool damaged = false;
     Creation owner_;
 
     public float pushForce;
@@ -47,11 +47,11 @@ public class Weapon : MonoBehaviour
     // what to do in hitting moment
     public virtual void Using() { }
 
-    public void Impulse(Creation body)
+    public void Impulse(Creation body, float multiplier)
     {
         Vector3 target_pos = body.transform.position;
         target_pos.y = owner_.transform.position.y;
-        body.GetImpulse((target_pos - owner_.transform.position).normalized, pushForce);
+        body.GetImpulse((target_pos - owner_.transform.position).normalized, pushForce * multiplier);
     }
 
     void StateProcess()
@@ -135,7 +135,7 @@ public class Weapon : MonoBehaviour
                 {
                     isHit = true;
                     enemy.ProcessHp(-damage);
-                    Impulse(enemy);
+                    Impulse(enemy, 1f);
                 }
             }
             else
@@ -143,11 +143,27 @@ public class Weapon : MonoBehaviour
                 Player player = col.GetComponent<Player>();
                 if (player != null)
                 {
-                    isHit = true;
-                    player.ProcessHp(-damage);
-                    Impulse(player);
-                    damaged = true;
-                    return true;
+                    if (player.stateMachine.IsActive("parrying"))
+                    {
+                        print("parrying!");
+                    }else if (player.stateMachine.IsActive("blocking"))
+                    {
+                        print("blocked!");
+                        isHit = true;
+                        player.ProcessHp(-Mathf.FloorToInt(damage/2));
+                        Impulse(player, 1f);
+                        damaged = true;
+                        return true;
+                    }
+                    else
+                    {
+                        isHit = true;
+                        player.ProcessHp(-damage);
+                        Impulse(player, 1f);
+                        damaged = true;
+                        return true;
+                    }
+                    
                 }
             }
 

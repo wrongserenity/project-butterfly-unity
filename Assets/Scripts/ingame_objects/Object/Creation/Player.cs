@@ -5,8 +5,11 @@ using UnityEngine.UI;
 
 public class Player : Creation
 {
-    Cooldown player_heal_cooldown;
-    Cooldown player_rewind_cooldown;
+    Cooldown heal_cooldown;
+    Cooldown rewind_cooldown;
+    Cooldown teleport_cooldown;
+
+    Cooldown parry_window_cooldown;
 
     Text hpEnergy;
 
@@ -60,8 +63,10 @@ public class Player : Creation
         cur_hp = max_hp;
         speed_vel = GlobalVariables.player_max_speed;
 
-        player_heal_cooldown = gameManager.cooldownSystem.AddCooldown(this, GlobalVariables.player_teleport_cooldown);
-        player_rewind_cooldown = gameManager.cooldownSystem.AddCooldown(this, GlobalVariables.player_position_rewind_cooldown);
+        heal_cooldown = gameManager.cooldownSystem.AddCooldown(this, GlobalVariables.player_teleport_cooldown);
+        rewind_cooldown = gameManager.cooldownSystem.AddCooldown(this, GlobalVariables.player_position_rewind_cooldown);
+        teleport_cooldown = gameManager.cooldownSystem.AddCooldown(this, GlobalVariables.player_teleport_cooldown);
+        parry_window_cooldown = gameManager.cooldownSystem.AddCooldown(this, GlobalVariables.player_parry_window_duration);
 
         GameObject go = Resources.Load("Prefabs/Weapons/RheaSword") as GameObject;
         weapon = Instantiate(go, new Vector3(0f, 0f, 0f), transform.rotation).GetComponent<Weapon>();
@@ -116,7 +121,7 @@ public class Player : Creation
         if (cur_hp < max_hp && cur_energy >= heal_cost)
         {
             stateMachine.AddState("healing");
-            if (player_heal_cooldown.Try())
+            if (heal_cooldown.Try())
             {
                 ProcessHp(1);
                 dataRec.AddTo("restored_hp", 1);
@@ -235,7 +240,7 @@ public class Player : Creation
 
     void DoRewind()
     {
-        if (player_rewind_cooldown.Try())
+        if (rewind_cooldown.Try())
         {
             int count = position_trace.Count;
             if (count > 0 && cur_energy >= rewind_cost)
@@ -346,6 +351,14 @@ public class Player : Creation
         if (!stateMachine.IsActive("rewinding") && !stateMachine.IsActive("trace_pause"))
             TraceRecording();
 
+        if (stateMachine.IsActive("parrying") && !parry_window_cooldown.in_use)
+        {
+            stateMachine.RemoveState("parrying");
+            stateMachine.AddState("blocking");
+        }
+
+
+
 
         if (telepRequest)
         {
@@ -383,9 +396,25 @@ public class Player : Creation
             Attack();
         }
 
-        if (Input.GetKeyDown(KeyCode.Space))
+        if (Input.GetKeyDown(KeyCode.Space) && teleport_cooldown.Try())
         {
             telepRequest = true;
+        }
+
+        if (Input.GetKey(KeyCode.Mouse1))
+        {
+            if (Input.GetKeyDown(KeyCode.Mouse1))
+            {
+                if (parry_window_cooldown.Try())
+                    stateMachine.AddState("parrying");
+                else
+                    stateMachine.AddState("blocking");
+            }  
+        }
+        else
+        {
+            stateMachine.RemoveState("parrying");
+            stateMachine.RemoveState("blocking");
         }
     }
 
