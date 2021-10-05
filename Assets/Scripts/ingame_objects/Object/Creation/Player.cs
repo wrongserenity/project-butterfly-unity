@@ -53,6 +53,8 @@ public class Player : Creation
     bool telepRequest = false;
     public List<Vector3> teleportTriggerRequest = new List<Vector3>() { };
 
+    GameObject blockSphere;
+
 
     // Start is called before the first frame update
     void Start()
@@ -76,6 +78,7 @@ public class Player : Creation
         cur_energy = 1000;
 
         hpEnergy = GameObject.Find("hp_nrj").GetComponent<Text>();
+        blockSphere = transform.Find("BlockSphere").gameObject;
     }
 
     //TODO: add init and ready from godot
@@ -358,6 +361,12 @@ public class Player : Creation
         }
 
 
+        if (stateMachine.IsActive("parrySoundReq"))
+        {
+            soundSystem.PlayOnce("parrySound");
+            stateMachine.RemoveState("parrySoundReq");
+        }
+
 
 
         if (telepRequest)
@@ -409,12 +418,14 @@ public class Player : Creation
                     stateMachine.AddState("parrying");
                 else
                     stateMachine.AddState("blocking");
+                blockSphere.GetComponent<MeshRenderer>().enabled = true;
             }  
         }
         else
         {
             stateMachine.RemoveState("parrying");
             stateMachine.RemoveState("blocking");
+            blockSphere.GetComponent<MeshRenderer>().enabled = false;
         }
     }
 
