@@ -133,7 +133,7 @@ public class BattleSystem : MonoBehaviour
         if (object_.tag == "Enemy")
         {
             Enemy enemy_ = (Enemy)object_;
-            if (enemy_.title == "push_machine")
+            if (enemy_.title == "pushmachine")
                 dataRec.AddTo("push_killed", 1);
             else if (enemy_.title == "robosamurai")
                 dataRec.AddTo("samu_killed", 1);
