@@ -63,3 +63,4 @@ MonoBehaviour:
   damage: 0
   damaged: 0
   pushForce: 0
+  attackSprite: {fileID: 0}
