@@ -21,16 +21,24 @@ public class Weapon : MonoBehaviour
     // 1 - attack preparing
     // 2 - realtime using
     // 3 - weapon returning
-    int state = 0;
+    public int state = 0;
     List<Cooldown> cooldown_list = new List<Cooldown>() {};
     List<float> cooldown_list_dur = new List<float>() { };
 
+    // for visual effects
+    public GameObject attackSprite;
+    public float fadeStepSec = 0.01f;
+
+
+    public Creation GetOwner()
+    {
+        return owner_;
+    }
 
     public void Start()
     {
         gameManager = GameObject.Find("GameManager").GetComponent<GameManager>();
         cooldownSystem = gameManager.cooldownSystem;
-
     }
 
     public void GiveWeaponTo(Creation creation)
@@ -46,6 +54,18 @@ public class Weapon : MonoBehaviour
 
     // what to do in hitting moment
     public virtual void Using() { }
+
+    //for animation, calls on first state's first frame
+    public virtual void StateAnimate(int state)
+    {
+        if (attackSprite != null)
+        {
+            if (state == 1)
+                StartCoroutine(FadeIn(cooldown_list_dur[1]));
+            if (state == 3)
+                StartCoroutine(FadeOut(cooldown_list_dur[3]));
+        }
+    }
 
     public void Impulse(Creation body, float multiplier)
     {
@@ -70,8 +90,17 @@ public class Weapon : MonoBehaviour
             if (!owner_.movement_lock)
                 owner_.movement_lock = true;
 
+            
+
+
             if (state == 2 && !damaged)
+            {
                 Using();
+                ;
+            }
+                
+
+
 
             
             if (cooldown_list_dur[state] > 0.001)
@@ -92,6 +121,7 @@ public class Weapon : MonoBehaviour
     {
         state = (state + 1) % 4;
         cooldown_list[state].Try();
+        StateAnimate(state);
     }
 
     public void AttackRequest()
@@ -122,9 +152,10 @@ public class Weapon : MonoBehaviour
         StateProcess();
     }
 
-    public bool DamageAllInHitbox(bool isFromPlayer)
+    // returns 0 - not hit, 1 - parry, 2 - block, 3 - open hit
+    public int DamageAllInHitbox(bool isFromPlayer)
     {
-        bool isHit = false;
+        int isHit = 0;
         Collider[] cols = Physics.OverlapBox(hitBox.bounds.center, hitBox.bounds.extents, hitBox.transform.rotation);
         foreach (Collider col in cols)
         {
@@ -133,7 +164,7 @@ public class Weapon : MonoBehaviour
                 Enemy enemy = col.GetComponent<Enemy>();
                 if (enemy != null)
                 {
-                    isHit = true;
+                    isHit = 3;
                     enemy.ProcessHp(-damage);
                     Impulse(enemy, 1f);
                 }
@@ -145,29 +176,58 @@ public class Weapon : MonoBehaviour
                 {
                     if (player.stateMachine.IsActive("parrying"))
                     {
+                        isHit = 1;
                         print("parrying!");
+
                     }else if (player.stateMachine.IsActive("blocking"))
                     {
                         print("blocked!");
-                        isHit = true;
+                        isHit = 2;
                         player.ProcessHp(-Mathf.FloorToInt(damage/2));
-                        Impulse(player, 1f);
+                        Impulse(player, 0.5f);
                         damaged = true;
-                        return true;
                     }
                     else
                     {
-                        isHit = true;
+                        isHit = 3;
                         player.ProcessHp(-damage);
                         Impulse(player, 1f);
                         damaged = true;
-                        return true;
                     }
-                    
+                    return isHit;
                 }
             }
 
         }
         return isHit;
+    }
+
+    // Fading out of transparancy of weapon - both for player and enemies
+    public IEnumerator FadeOut(float duration)
+    {
+        Color whiteColor = Color.white;
+        attackSprite.GetComponent<MeshRenderer>().material.color = new Color(whiteColor.r, whiteColor.g, whiteColor.b, 1.0f);
+        float curAlpha = 1.0f;
+        float step = 1.0f / (duration / fadeStepSec);
+        while (curAlpha > 0.0f)
+        {
+            curAlpha -= step;
+            attackSprite.GetComponent<MeshRenderer>().material.color = new Color(whiteColor.r, whiteColor.g, whiteColor.b, curAlpha);
+            yield return new WaitForSeconds(fadeStepSec);
+        }
+    }
+
+    public IEnumerator FadeIn(float duration)
+    {
+        Color redColor = Color.red;
+        attackSprite.GetComponent<MeshRenderer>().material.color = new Color(redColor.r, redColor.g, redColor.b, 0.0f);
+        float curAlpha = 0.0f;
+        float step = 1.0f / (duration / fadeStepSec);
+        while (curAlpha < 1.0f)
+        {
+            curAlpha += step;
+            attackSprite.GetComponent<MeshRenderer>().material.color = new Color(redColor.r, redColor.g, redColor.b, curAlpha);
+            yield return new WaitForSeconds(fadeStepSec);
+        }
     }
 }
