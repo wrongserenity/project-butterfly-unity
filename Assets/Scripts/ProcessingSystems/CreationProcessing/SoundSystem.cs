@@ -36,14 +36,34 @@ public class SoundSystem : MonoBehaviour
     {
         foreach(AudioSource sound in GetComponentsInChildren<AudioSource>())
         {
-            if (playlist.Contains(sound.name) && !sound.isPlaying)
+            if (sound.loop)
             {
-                sound.Play();
-            }
-            if (sound.isPlaying && !playlist.Contains(sound.name))
-            {
-                sound.Stop();
+                if (playlist.Contains(sound.name) && !sound.isPlaying)
+                {
+                    sound.Play();
+                }
+                if (sound.isPlaying && !playlist.Contains(sound.name))
+                {
+                    sound.Stop();
+                }
             }
         }
+    }
+
+    public void PlayOnce(string soundName)
+    {
+        bool isPlayed = false;
+        foreach (AudioSource sound in GetComponentsInChildren<AudioSource>())
+        {
+            if (sound.name == soundName)
+            {
+                isPlayed = true;
+                sound.Play();
+            }
+        }
+        if (!isPlayed)
+            print("not played");
+        else
+            print("played");
     }
 }
