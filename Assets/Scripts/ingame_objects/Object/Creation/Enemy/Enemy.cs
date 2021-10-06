@@ -14,6 +14,7 @@ public class Enemy : Creation
     public int power;
     public int currentLineNum = -1;   // so -1 is for non-existent line number
     Vector3 spawn_position;
+    Quaternion spawn_rotation;
     bool is_killed = false;
 
     bool moving_to_original_position = false;
@@ -22,6 +23,8 @@ public class Enemy : Creation
     public void Start()
     {
         base.Start();
+        spawn_position = transform.position;
+        spawn_rotation = transform.rotation;
     }
 
     // Update is called once per frame
@@ -107,6 +110,7 @@ public class Enemy : Creation
             ren.enabled = true;
         EnableCollision();
         transform.position = spawn_position;
+        transform.rotation = spawn_rotation;
         cur_hp = max_hp;
     }
 

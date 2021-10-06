@@ -61,15 +61,20 @@ public class BattleSystem : MonoBehaviour
         gameManager = GameObject.Find("GameManager").GetComponent<GameManager>();
         dataRec = gameManager.dataRecorder;
 
-        lines = new List<Line>(); 
+        lines = new List<Line>();
 
+        RefreshVariables();
+    }
+
+    void RefreshVariables()
+    {
         if (game_difficulty == 3)
         {
-            lines.Add(new Line(new List<char> {'e'}, 5, default_line_radius));
-            lines.Add(new Line(new List<char> {'m', 'r'}, 15, default_line_radius * 2));
-            lines.Add(new Line(new List<char> { 'm', 'r', 'e'}, 6, default_line_radius * 3));
+            lines.Add(new Line(new List<char> { 'e' }, 5, default_line_radius));
+            lines.Add(new Line(new List<char> { 'm', 'r' }, 15, default_line_radius * 2));
+            lines.Add(new Line(new List<char> { 'm', 'r', 'e' }, 6, default_line_radius * 3));
             lines.Add(new Line(new List<char> { 'r', 'e' }, 9, default_line_radius * 4));
-            lines.Add(new Line(new List<char> {'s'}, 5, default_line_radius * 5));
+            lines.Add(new Line(new List<char> { 's' }, 5, default_line_radius * 5));
             lines.Add(new Line(new List<char> { 'm', 'r', 's', 'e' }, 100, default_line_radius * 6));
         }
     }
@@ -127,7 +132,7 @@ public class BattleSystem : MonoBehaviour
     {
         if (object_.tag == "Player")
         {
-            /// Global.game.reload_current_level()
+            gameManager.ReloadCurrentLevel();
         }
 
         if (object_.tag == "Enemy")
@@ -264,5 +269,10 @@ public class BattleSystem : MonoBehaviour
             sum += line.enemies.Count;
         }
         return sum;
+    }
+
+    public void Reload()
+    {
+        RefreshVariables();
     }
 }

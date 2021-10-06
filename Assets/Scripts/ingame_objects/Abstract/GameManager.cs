@@ -11,6 +11,20 @@ public class GameManager : MonoBehaviour
     public BattleSystem battleSystem;
     public TriggerSystem triggerSystem;
     public MusicSystem musicSystem;
+    public GameObject levelContainer;
+
+    public void ReloadCurrentLevel()
+    {
+        if (levelContainer.transform.childCount != 1)
+            Debug.Log("There should be only one level");
+        else
+        {
+            levelContainer.transform.GetChild(0).GetComponent<Level>().FastReload();
+            battleSystem.Reload();
+            dataRecorder.LevelLoaded();
+        }
+
+    }
 
     public string Ping()
     {

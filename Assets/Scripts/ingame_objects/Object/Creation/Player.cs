@@ -84,11 +84,11 @@ public class Player : Creation
     //TODO: add init and ready from godot
 
     // for future ver.: game should save hp and energy on level's start
-    void PlayerReload()
+    public void PlayerReload()
     {
         cur_hp = max_hp;
         cur_energy = 0;
-        // Teleport(Global.level_start_point.translation(), true)
+        Teleport(gameManager.levelContainer.transform.GetChild(0).position, true);
     }
 
     // there should be weapon instead true in if costruction

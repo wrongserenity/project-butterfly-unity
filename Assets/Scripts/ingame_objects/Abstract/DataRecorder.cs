@@ -59,7 +59,7 @@ public class DataRecorder : MonoBehaviour
         LevelLoaded();
     }
 
-    void LevelLoaded()
+    public void LevelLoaded()
     {
         oneLifePassingTime = 0.0f;
         movementTrace.AddRange(curLifeTrace);
