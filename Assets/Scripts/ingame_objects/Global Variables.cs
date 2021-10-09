@@ -57,6 +57,7 @@ public static class GlobalVariables
     public static float melee_max_speed = 6f;
     public static float melee_enemy_push_force = 5f;
     public static float push_machine_push_force = 30f;
+    public static float deprivateble_hp_percent = 0.7f;
 
 
     // standard weapons variables
@@ -77,4 +78,9 @@ public static class GlobalVariables
 
     // sound variables
     public static int music_max_enemy_amount = 5;
+
+    // special weapons variables
+    public static float gravity_bomb_throw_distance = 5f;
+    public static float gravity_bomb_impact_radius = 4f;
+    public static float gravity_bomb_impulse_force = 30f;
 }
