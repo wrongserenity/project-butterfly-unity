@@ -47,6 +47,8 @@ public class Creation : MonoBehaviour
             cur_hp = max_hp;
         }
 
+        if (gameObject.tag == "Enemy" && cur_hp > 0)
+            gameObject.GetComponent<Enemy>().CheckDeprivationStatus();
     }
 
     void Kill()

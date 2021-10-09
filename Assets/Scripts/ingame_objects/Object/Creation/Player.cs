@@ -9,7 +9,6 @@ public class Player : Creation
     Cooldown rewind_cooldown;
     Cooldown teleport_cooldown;
 
-    Cooldown parry_window_cooldown;
 
     Text hpEnergy;
 
@@ -53,7 +52,9 @@ public class Player : Creation
     bool telepRequest = false;
     public List<Vector3> teleportTriggerRequest = new List<Vector3>() { };
 
-    GameObject blockSphere;
+
+    DeprivationSystem deprivationSystem;
+    public Weapon deprivatedWeapon;
 
 
     // Start is called before the first frame update
@@ -68,17 +69,14 @@ public class Player : Creation
         heal_cooldown = gameManager.cooldownSystem.AddCooldown(this, GlobalVariables.player_teleport_cooldown);
         rewind_cooldown = gameManager.cooldownSystem.AddCooldown(this, GlobalVariables.player_position_rewind_cooldown);
         teleport_cooldown = gameManager.cooldownSystem.AddCooldown(this, GlobalVariables.player_teleport_cooldown);
-        parry_window_cooldown = gameManager.cooldownSystem.AddCooldown(this, GlobalVariables.player_parry_window_duration);
+        
 
-        GameObject go = Resources.Load("Prefabs/Weapons/RheaSword") as GameObject;
-        weapon = Instantiate(go, new Vector3(0f, 0f, 0f), transform.rotation).GetComponent<Weapon>();
-        weapon.transform.SetParent(this.transform, false);
-        weapon.GiveWeaponTo(this);
+        Weapon.LoadWeaponFrom("Prefabs/Weapons/RheaSword", this, false);
 
         cur_energy = 1000;
 
         hpEnergy = GameObject.Find("hp_nrj").GetComponent<Text>();
-        blockSphere = transform.Find("BlockSphere").gameObject;
+        deprivationSystem = transform.Find("DeprivationSystem").GetComponent<DeprivationSystem>();
     }
 
     //TODO: add init and ready from godot
@@ -94,10 +92,13 @@ public class Player : Creation
     // there should be weapon instead true in if costruction
     void Attack()
     {
-        if (weapon != null)
+        if (deprivatedWeapon == null)
         {
-            weapon.PlayerAttack();
+            if (weapon != null)
+                weapon.Attack();
         }
+        else 
+            deprivatedWeapon.Attack();
     }
 
     // TODO:  idea: make it return boolean, with returning false if had no enoght energy
@@ -135,23 +136,22 @@ public class Player : Creation
 
     void PlayerAction()
     {
-        if (actionObj != null)
-        {
-            if (!actionObj.isIterative)
-            {
-                if (Input.GetKeyDown(KeyCode.E))
-                {
-                    actionObj.Activate();
-                }
-            }
-            else
-            {
-                actionObj.Activate();
-            }
-        }
+        if (deprivationSystem.CheckReadyEnemy())
+            deprivationSystem.DeprivateClothestWeapon();
         else
         {
-            HealSelf();
+            if (actionObj != null)
+            {
+                if (!actionObj.isIterative)
+                {
+                    if (Input.GetKeyDown(KeyCode.E))
+                        actionObj.Activate();
+                }
+                else
+                    actionObj.Activate();
+            }
+            else
+                HealSelf();
         }
     }
 
@@ -354,7 +354,7 @@ public class Player : Creation
         if (!stateMachine.IsActive("rewinding") && !stateMachine.IsActive("trace_pause"))
             TraceRecording();
 
-        if (stateMachine.IsActive("parrying") && !parry_window_cooldown.in_use)
+        if (stateMachine.IsActive("parrying") && !weapon.GetComponent<RheasSword>().parry_window_cooldown.in_use)
         {
             stateMachine.RemoveState("parrying");
             stateMachine.AddState("blocking");
@@ -414,18 +414,20 @@ public class Player : Creation
         {
             if (Input.GetKeyDown(KeyCode.Mouse1))
             {
-                if (parry_window_cooldown.Try())
-                    stateMachine.AddState("parrying");
+                if (deprivatedWeapon == null)
+                {
+                    weapon.AlternateAttack();
+                }
                 else
-                    stateMachine.AddState("blocking");
-                blockSphere.GetComponent<MeshRenderer>().enabled = true;
+                {
+                    deprivatedWeapon.AlternateAttack();
+                }
             }  
         }
         else
         {
             stateMachine.RemoveState("parrying");
             stateMachine.RemoveState("blocking");
-            blockSphere.GetComponent<MeshRenderer>().enabled = false;
         }
     }
 

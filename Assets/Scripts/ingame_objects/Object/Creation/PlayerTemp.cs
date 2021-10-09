@@ -74,7 +74,7 @@ public class PlayerTemp : Creation
     void Attack() {
         if (weapon != null)
         {
-            weapon.PlayerAttack();
+            weapon.Attack();
         }
     }
 

@@ -17,7 +17,12 @@ public class Enemy : Creation
     Quaternion spawn_rotation;
     bool is_killed = false;
 
+    public bool isReadyToDeprivate = false;
+
     bool moving_to_original_position = false;
+
+    public Vector3 playerPos = new Vector3(0f, 0f, 0f);
+    public Vector3 ownPos = new Vector3(0f, 0f, 0f);
 
     // Start is called before the first frame update
     public void Start()
@@ -48,7 +53,7 @@ public class Enemy : Creation
                 {
                     if (currentLineNum <= 1)
                     {
-                        weapon.EnemyAttack();
+                        weapon.Attack();
                     }
                 }
                 // there will be condition for 'r' - range, and 's' - support enemies
@@ -142,4 +147,32 @@ public class Enemy : Creation
         }
         return availability;
     }
+
+    public void CheckDeprivationStatus()
+    {
+        if (cur_hp <= max_hp * GlobalVariables.deprivateble_hp_percent)
+        {
+            isReadyToDeprivate = true;
+            print("ready to deprivate");
+        }
+    }
+
+    public float GetDistanceToPlayer()
+    {
+        playerPos = gameManager.player.transform.position;
+        ownPos = transform.position;
+        return (playerPos - ownPos).magnitude;
+    }
+
+    public void GiveWeaponToPlayer()
+    {
+        if (weapon.deprivationWeaponPath != null)
+        {
+            Weapon.LoadWeaponFrom(weapon.deprivationWeaponPath, gameManager.player, true);
+            print("deprivated");
+
+        }
+    }
+
+
 }
