@@ -138,7 +138,7 @@ public class MusicSystem : MonoBehaviour
             int step = (int)Mathf.Floor(mostEpicEnemyAmount / (lenList - 1));
             for (int i = 0; i < lenList - 1; i++)
             {
-                int tempNumber = step * (lenList - 1 + i);
+                int tempNumber = step * (i+1);
                 if (tempNumber != 0)
                     enoughtEnemyAmount.Add(tempNumber);
                 else
