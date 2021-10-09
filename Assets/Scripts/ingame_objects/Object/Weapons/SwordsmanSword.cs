@@ -21,9 +21,9 @@ public class SwordsmanSword : Weapon
         attackSprite = transform.Find("sprites").transform.Find("attack_sprite").gameObject;
     }
 
-    public override void EnemyAttack()
+    public override void Attack()
     {
-        base.EnemyAttack();
+        base.Attack();
         Collider[] cols = Physics.OverlapBox(hitBox.bounds.center, hitBox.bounds.extents, hitBox.transform.rotation);
         foreach (Collider col in cols)
         {

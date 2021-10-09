@@ -15,6 +15,8 @@ public class PushMachineWeapon : Weapon
         BuildCooldownList(GlobalVariables.push_machine_weapon_cooldown);
         damage = GlobalVariables.push_machine_weapon_damage;
         pushForce = GlobalVariables.push_machine_push_force;
+
+        deprivationWeaponPath = "Prefabs/Weapons/GravityBomb";
     }
 
     void SetBLocksList()
@@ -27,14 +29,14 @@ public class PushMachineWeapon : Weapon
         startColor = attackBlocks[0].GetComponent<MeshRenderer>().material.color;
     }
 
-    public override void EnemyAttack()
+    public override void Attack()
     {
         if (attackBlocks.Count == 0 && GetOwner().title == "pushmachine")
         {
             SetBLocksList();
         }
 
-        base.EnemyAttack();
+        base.Attack();
         Collider[] cols = Physics.OverlapBox(hitBox.bounds.center, hitBox.bounds.extents, hitBox.transform.rotation);
         foreach (Collider col in cols)
         {
@@ -44,6 +46,20 @@ public class PushMachineWeapon : Weapon
                 AttackRequest();
             }
         }
+    }
+
+    public void PlayerAttack()
+    {
+        Vector3 throwCenter = GetOwner().transform.position + GetOwner().GetComponent<Player>().dir_v.normalized * GlobalVariables.gravity_bomb_throw_distance;
+        foreach (Collider col in Physics.OverlapSphere(throwCenter, GlobalVariables.gravity_bomb_impact_radius))
+        {
+            if (col.gameObject.tag == "Enemy")
+            {
+                Enemy enemy = col.gameObject.GetComponent<Enemy>();
+                enemy.GetImpulse(throwCenter - enemy.transform.position, GlobalVariables.gravity_bomb_impulse_force);
+            }
+        }
+        
     }
 
     public override void Using()

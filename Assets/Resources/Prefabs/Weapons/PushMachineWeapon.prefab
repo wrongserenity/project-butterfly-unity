@@ -62,5 +62,8 @@ MonoBehaviour:
   hitBox: {fileID: 0}
   damage: 0
   damaged: 0
+  deprivationWeaponPath: 
   pushForce: 0
+  state: 0
   attackSprite: {fileID: 0}
+  fadeStepSec: 0.01

@@ -5,6 +5,11 @@ using UnityEngine;
 public class RheasSword : Weapon
 {
     Cooldown cooldown;
+    public Cooldown parry_window_cooldown;
+
+
+    GameObject blockSphere;
+
     AudioSource attack;
     AudioSource whoosh;
 
@@ -23,9 +28,12 @@ public class RheasSword : Weapon
         whoosh = gameObject.transform.Find("sounds").transform.Find("whoosh").GetComponent<AudioSource>();
 
         attackSprite = transform.Find("sprites").transform.Find("attack_sprite").gameObject;
+
+        blockSphere = transform.Find("BlockSphere").gameObject;
+        parry_window_cooldown = gameManager.cooldownSystem.AddCooldown(this, GlobalVariables.player_parry_window_duration);
     }
 
-    public override void PlayerAttack()
+    public override void Attack()
     {
         if (cooldown.Try())
         {       
@@ -47,6 +55,30 @@ public class RheasSword : Weapon
             else
             {
                 whoosh.Play();
+            }
+        }
+    }
+
+    public override void AlternateAttack()
+    {
+        if (GetOwner().tag == "Player")
+        {
+            if (parry_window_cooldown.Try())
+                GetOwner().GetComponent<Player>().stateMachine.AddState("parrying");
+            else
+                GetOwner().GetComponent<Player>().stateMachine.AddState("blocking");
+            blockSphere.GetComponent<MeshRenderer>().enabled = true;
+        }
+    }
+
+    public void FixedUpdate()
+    {
+        if (GetOwner().tag == "Player")
+        {
+            if (!GetOwner().GetComponent<Player>().stateMachine.IsActive("parrying") && !GetOwner().GetComponent<Player>().stateMachine.IsActive("blocking"))
+            {
+                blockSphere.GetComponent<MeshRenderer>().enabled = false;
+
             }
         }
     }

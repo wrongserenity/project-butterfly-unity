@@ -11,6 +11,7 @@ public class Weapon : MonoBehaviour
     public int damage;
     public bool damaged = false;
     Creation owner_;
+    public string deprivationWeaponPath;
 
     public float pushForce;
 
@@ -46,11 +47,35 @@ public class Weapon : MonoBehaviour
         owner_ = creation;
     }
 
-    // calls only by Enemies
-    public virtual void EnemyAttack() { }
+    public static void LoadWeaponFrom(string pathInResources, Creation owner, bool isDeprivative)
+    {
+        if (!isDeprivative)
+        {
+            GameObject go = Resources.Load(pathInResources) as GameObject;
+            owner.weapon = Instantiate(go, new Vector3(0f, 0f, 0f), owner.transform.Find("Model").transform.Find("weapon").transform.rotation).GetComponent<Weapon>();
+            owner.weapon.transform.SetParent(owner.transform.Find("Model").transform.Find("weapon").transform, false);
+            owner.weapon.GiveWeaponTo(owner);
+        }
+        else
+        {
+            Player player = owner.GetComponent<Player>();
+            if (player.deprivatedWeapon == null)
+            {
+                GameObject go = Resources.Load(pathInResources) as GameObject;
+                player.deprivatedWeapon = Instantiate(go, new Vector3(0f, 0f, 0f), new Quaternion(0f, 0f, 0f, 1.0f)).GetComponent<Weapon>();
+                player.deprivatedWeapon.transform.SetParent(player.transform.Find("Model").transform.Find("weapon").transform, false);
+                player.deprivatedWeapon.GiveWeaponTo(player);
+            }
+        }
 
-    // calls only by Player
-    public virtual void PlayerAttack() { }
+
+    }
+
+    // calls only by Enemies
+    public virtual void Attack() { }
+
+    // right click action processing
+    public virtual void AlternateAttack() { }
 
     // what to do in hitting moment
     public virtual void Using() { }
