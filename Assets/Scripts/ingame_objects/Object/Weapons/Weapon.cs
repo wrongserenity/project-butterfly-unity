@@ -178,7 +178,7 @@ public class Weapon : MonoBehaviour
     }
 
     // returns 0 - not hit, 1 - parry, 2 - block, 3 - open hit
-    public int DamageAllInHitbox(bool isFromPlayer)
+    public int DamageAllInHitbox(bool isFromPlayer, int damage_)
     {
         int isHit = 0;
         Collider[] cols = Physics.OverlapBox(hitBox.bounds.center, hitBox.bounds.extents, hitBox.transform.rotation);
@@ -190,7 +190,7 @@ public class Weapon : MonoBehaviour
                 if (enemy != null)
                 {
                     isHit = 3;
-                    enemy.ProcessHp(-damage);
+                    enemy.ProcessHp(-damage_);
                     Impulse(enemy, 1f);
                 }
             }
@@ -208,14 +208,14 @@ public class Weapon : MonoBehaviour
                     {
                         print("blocked!");
                         isHit = 2;
-                        player.ProcessHp(-Mathf.FloorToInt(damage/2));
+                        player.ProcessHp(-Mathf.FloorToInt(damage_/2));
                         Impulse(player, 0.5f);
                         damaged = true;
                     }
                     else
                     {
                         isHit = 3;
-                        player.ProcessHp(-damage);
+                        player.ProcessHp(-damage_);
                         Impulse(player, 1f);
                         damaged = true;
                     }

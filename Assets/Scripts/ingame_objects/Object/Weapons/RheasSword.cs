@@ -12,8 +12,10 @@ public class RheasSword : Weapon
 
     AudioSource attack;
     AudioSource whoosh;
+    AudioSource attackXiton;
 
-
+    int xitonDamageScalingCost = GlobalVariables.player_weapon_xiton_damage_scaling_cost;
+    float xitonDamageScaling = GlobalVariables.player_weapon_xiton_scaling;
 
 
     void Start()
@@ -26,6 +28,7 @@ public class RheasSword : Weapon
 
         attack = gameObject.transform.Find("sounds").transform.Find("attack").GetComponent<AudioSource>();
         whoosh = gameObject.transform.Find("sounds").transform.Find("whoosh").GetComponent<AudioSource>();
+        attackXiton = gameObject.transform.Find("sounds").transform.Find("attackXiton").GetComponent<AudioSource>();
 
         attackSprite = transform.Find("sprites").transform.Find("attack_sprite").gameObject;
 
@@ -36,12 +39,26 @@ public class RheasSword : Weapon
     public override void Attack()
     {
         if (cooldown.Try())
-        {       
+        {
+            int hit = 0;
+            bool isXitonHit = false;
             StartCoroutine(FadeOut(GlobalVariables.player_weapon_cooldown / 2));
+            if (GetOwner().tag == "Player" && GetOwner().GetComponent<Player>().curXitonCharge > xitonDamageScalingCost)
+            {
+                hit = DamageAllInHitbox(true, Mathf.FloorToInt(damage * xitonDamageScaling));
+                if (hit > 0)
+                {
+                    GetOwner().GetComponent<Player>().xitonTransfer(-xitonDamageScalingCost);
+                    isXitonHit = true;
+                }
+            }
+            else
+                hit = DamageAllInHitbox(true, damage);
 
-            int hit = DamageAllInHitbox(true);
             if (hit == 3)
             {
+                if (isXitonHit)
+                    attackXiton.Play();
                 attack.Play();
             }
             else if (hit == 2)

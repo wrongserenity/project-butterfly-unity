@@ -65,7 +65,7 @@ public class PushMachineWeapon : Weapon
     public override void Using()
     {
         base.Using();
-        int hit = DamageAllInHitbox(false);
+        int hit = DamageAllInHitbox(false, damage);
         // $attack_sprite/animation.play("enemy_attack")
         if (hit == 3)
         {

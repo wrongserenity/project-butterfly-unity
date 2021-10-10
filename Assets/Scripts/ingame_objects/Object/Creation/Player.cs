@@ -8,6 +8,7 @@ public class Player : Creation
     Cooldown heal_cooldown;
     Cooldown rewind_cooldown;
     Cooldown teleport_cooldown;
+    Cooldown xitonCharge_cooldown;
 
 
     Text hpEnergy;
@@ -44,12 +45,13 @@ public class Player : Creation
     public Vector3 prev_dir_m = new Vector3(0f, 0f, 0f);
 
     public int cur_energy = 0;
+    public int curXitonCharge = 0;
+    public int maxXitonCharge = GlobalVariables.player_max_xiton_charge;
 
     // animation variables
     // 0 - forward, 1 - backward, 2 - to the right, 3 - to the left (inversed right)
     int anim_walk_direction = 0;
 
-    bool telepRequest = false;
     public List<Vector3> teleportTriggerRequest = new List<Vector3>() { };
 
 
@@ -69,7 +71,8 @@ public class Player : Creation
         heal_cooldown = gameManager.cooldownSystem.AddCooldown(this, GlobalVariables.player_teleport_cooldown);
         rewind_cooldown = gameManager.cooldownSystem.AddCooldown(this, GlobalVariables.player_position_rewind_cooldown);
         teleport_cooldown = gameManager.cooldownSystem.AddCooldown(this, GlobalVariables.player_teleport_cooldown);
-        
+        xitonCharge_cooldown = gameManager.cooldownSystem.AddCooldown(this, GlobalVariables.player_xiton_charge_cooldown);
+
 
         Weapon.LoadWeaponFrom("Prefabs/Weapons/RheaSword", this, false);
 
@@ -86,7 +89,7 @@ public class Player : Creation
     {
         cur_hp = max_hp;
         cur_energy = 0;
-        Teleport(gameManager.levelContainer.transform.GetChild(0).position, true);
+        Teleport(gameManager.levelContainer.transform.GetChild(0).Find("SpawnPosition").position, true);
     }
 
     // there should be weapon instead true in if costruction
@@ -118,6 +121,14 @@ public class Player : Creation
         {
             cur_energy = max_energy;
         }
+    }
+
+    public void xitonTransfer(int value)
+    {
+        curXitonCharge += value;
+
+        if (curXitonCharge > maxXitonCharge)
+            curXitonCharge = maxXitonCharge;
     }
 
     void HealSelf()
@@ -367,20 +378,29 @@ public class Player : Creation
             stateMachine.RemoveState("parrySoundReq");
         }
 
+        if (stateMachine.IsActive("charging") && xitonCharge_cooldown.Try())
+            xitonTransfer(1);
 
-
-        if (telepRequest)
+        if (stateMachine.IsActive("teleportRequest"))
         {
-            ShortDistanceTeleport(pos, dir_m);
-            telepRequest = false;
+            ShortDistanceTeleport(pos, prev_dir_m);
+            soundSystem.PlayOnce("teleportSound");
+            stateMachine.RemoveState("teleportRequest");
         }
+
         if (teleportTriggerRequest.Count > 0)
         {
             Teleport(teleportTriggerRequest[teleportTriggerRequest.Count - 1], true);
             teleportTriggerRequest.Clear();
         }
 
-        hpEnergy.text = "hp: "+ cur_hp + "   energy: " + cur_energy;
+        if (stateMachine.IsActive("death"))
+        {
+            PlayerReload();
+            stateMachine.RemoveState("death");
+        }
+
+        hpEnergy.text = "hp: "+ cur_hp + "\nenergy: " + cur_energy + "\nxiton: " + curXitonCharge;
     }
 
     void Update()
@@ -407,7 +427,7 @@ public class Player : Creation
 
         if (Input.GetKeyDown(KeyCode.Space) && teleport_cooldown.Try())
         {
-            telepRequest = true;
+            stateMachine.AddState("teleportRequest");
         }
 
         if (Input.GetKey(KeyCode.Mouse1))
@@ -429,6 +449,11 @@ public class Player : Creation
             stateMachine.RemoveState("parrying");
             stateMachine.RemoveState("blocking");
         }
+
+        if (Input.GetKey(KeyCode.LeftShift))
+            stateMachine.AddState("charging");
+        else
+            stateMachine.RemoveState("charging");
     }
 
     public void Ping()

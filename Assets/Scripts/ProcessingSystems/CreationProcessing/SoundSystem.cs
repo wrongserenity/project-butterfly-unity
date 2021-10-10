@@ -11,7 +11,7 @@ public class SoundSystem : MonoBehaviour
     {
         foreach(AudioSource sound in GetComponentsInChildren<AudioSource>())
         {
-            print(sound.name);        
+            print("in sound system: " + sound.name);        
         }
     }
 
@@ -64,6 +64,6 @@ public class SoundSystem : MonoBehaviour
         if (!isPlayed)
             print("not played");
         else
-            print("played");
+            print("played " + soundName);
     }
 }

@@ -73,7 +73,7 @@ AudioSource:
   m_Enabled: 1
   serializedVersion: 4
   OutputAudioMixerGroup: {fileID: 0}
-  m_audioClip: {fileID: 8300000, guid: c5c66f9977d5ef846842a7f2222a25e5, type: 3}
+  m_audioClip: {fileID: 8300000, guid: 8ae4a88fc6960384abe5dc8de0949f57, type: 3}
   m_PlayOnAwake: 1
   m_Volume: 1
   m_Pitch: 1
@@ -223,6 +223,7 @@ MonoBehaviour:
   hitBox: {fileID: 0}
   damage: 0
   damaged: 0
+  deprivationWeaponPath: 
   pushForce: 0
   state: 0
   attackSprite: {fileID: 0}

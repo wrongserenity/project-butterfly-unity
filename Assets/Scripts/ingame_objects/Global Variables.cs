@@ -26,6 +26,7 @@ public static class GlobalVariables
     public static float player_heal_cooldown = 0.02f;
     public static float player_teleport_cooldown = 0.3f;
     public static float player_position_rewind_cooldown = 0.01f;
+    public static float player_xiton_charge_cooldown = 0.02f;
 
     public static float player_teleport_distance = 100f;
 
@@ -45,6 +46,7 @@ public static class GlobalVariables
     public static int player_max_hp = 100;
     public static int player_max_energy = 1000;
     public static float player_max_speed = 7f;
+    public static int player_max_xiton_charge = 100;
 
     public static int player_trace_max_length = 250;
     public static int player_position_rewind_offset = 20;
@@ -66,6 +68,8 @@ public static class GlobalVariables
     public static int player_weapon_damage = 35;
     public static float player_weapon_cooldown = 0.3f;
     public static float player_weapon_push_force = 5f;
+    public static int player_weapon_xiton_damage_scaling_cost = 10;
+    public static float player_weapon_xiton_scaling = 5f;
 
     public static int samurai_weapon_damage = 2;
     public static List<float> samurai_weapon_cooldown = new List<float>() { 0.0f, 0.5f, 0.0f, 0.4f };
