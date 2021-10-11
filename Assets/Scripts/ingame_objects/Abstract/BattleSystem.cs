@@ -274,5 +274,9 @@ public class BattleSystem : MonoBehaviour
     public void Reload()
     {
         RefreshVariables();
+        foreach (Line line in lines)
+        {
+            line.enemies.Clear();
+        }
     }
 }

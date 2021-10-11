@@ -5,6 +5,7 @@ using UnityEngine;
 public class Enemy : Creation
 {
     public bool is_player_noticed = false;
+    [System.NonSerialized]
     public float notice_range = GlobalVariables.default_notice_range;
 
     /// 0- forward, 1 - backward, 2 - right, 3 - left
@@ -153,7 +154,7 @@ public class Enemy : Creation
         if (cur_hp <= max_hp * GlobalVariables.deprivateble_hp_percent)
         {
             isReadyToDeprivate = true;
-            print("ready to deprivate");
+            //print("ready to deprivate");
         }
     }
 
@@ -169,8 +170,6 @@ public class Enemy : Creation
         if (weapon.deprivationWeaponPath != null)
         {
             Weapon.LoadWeaponFrom(weapon.deprivationWeaponPath, gameManager.player, true);
-            print("deprivated");
-
         }
     }
 

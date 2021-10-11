@@ -18,7 +18,7 @@ public static class GlobalVariables
     // battle system variables
     public static double line_radius = 1f;
     public static int game_difficult = 3;
-    public static float default_notice_range = 15.0f;
+    public static float default_notice_range = 7.0f;
 
     // balance variables
     public static int player_heal_cost = 10;
@@ -68,16 +68,16 @@ public static class GlobalVariables
     // standard weapons variables
     // TODO: player_weapon_cooldown should be list
     // TODO: add push forces to enemies
-    public static int player_weapon_damage = 35;
+    public static int player_weapon_damage = 25;
     public static float player_weapon_cooldown = 0.3f;
     public static float player_weapon_push_force = 5f;
     public static int player_weapon_xiton_damage_scaling_cost = 10;
     public static float player_weapon_xiton_scaling = 5f;
 
-    public static int samurai_weapon_damage = 2;
+    public static int samurai_weapon_damage = 10; // 2
     public static List<float> samurai_weapon_cooldown = new List<float>() { 0.0f, 0.5f, 0.0f, 0.4f };
 
-    public static int swordsman_weapons_damage = 4;
+    public static int swordsman_weapons_damage = 20; // 4
     public static List<float> swordman_weapon_cooldown = new List<float>() { 0.0f, 0.8f, 0.0f, 0.9f };
 
     public static int push_machine_weapon_damage = 0;
@@ -87,7 +87,7 @@ public static class GlobalVariables
     public static int music_max_enemy_amount = 5;
 
     // special weapons variables
-    public static float gravity_bomb_throw_distance = 5f;
-    public static float gravity_bomb_impact_radius = 4f;
-    public static float gravity_bomb_impulse_force = 30f;
+    public static float gravity_bomb_throw_distance = 10f;
+    public static float gravity_bomb_impact_radius = 5f;
+    public static float gravity_bomb_impulse_force = 50f;
 }

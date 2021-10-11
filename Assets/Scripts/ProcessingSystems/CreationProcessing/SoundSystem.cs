@@ -61,9 +61,9 @@ public class SoundSystem : MonoBehaviour
                 sound.Play();
             }
         }
-        if (!isPlayed)
-            print("not played");
-        else
-            print("played " + soundName);
+        //if (!isPlayed)
+        //    print("not played");
+        //else
+        //    print("played " + soundName);
     }
 }
