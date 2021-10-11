@@ -320,6 +320,11 @@ public class Player : Creation
         }
     }
 
+    public Vector3 GetVeiwPoint()
+    {
+        return dir_v;
+    }
+
     // Update is called once per frame
     void FixedUpdate()
     {

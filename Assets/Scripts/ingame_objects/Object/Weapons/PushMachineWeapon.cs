@@ -16,7 +16,7 @@ public class PushMachineWeapon : Weapon
         damage = GlobalVariables.push_machine_weapon_damage;
         pushForce = GlobalVariables.push_machine_push_force;
 
-        deprivationWeaponPath = "Prefabs/Weapons/GravityBomb";
+        deprivationWeaponPath = "Prefabs/Weapons/GravityBomb/GravityBomb";
     }
 
     void SetBLocksList()
