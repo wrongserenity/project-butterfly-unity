@@ -9,6 +9,9 @@ public static class GlobalVariables
     public static float GRAVITY = -700f;
     public static float ANGULAR_ACC = 20f;
 
+    // graphics variables
+    public static float xiton_particle_life_time = 2f;
+
     // trigger system variables
     public static float teleport_trigger_cooldown = 1f;
 
@@ -26,7 +29,7 @@ public static class GlobalVariables
     public static float player_heal_cooldown = 0.02f;
     public static float player_teleport_cooldown = 0.3f;
     public static float player_position_rewind_cooldown = 0.01f;
-    public static float player_xiton_charge_cooldown = 0.02f;
+    public static float player_xiton_charge_cooldown = 0.2f;
 
     public static float player_teleport_distance = 100f;
 
@@ -38,7 +41,7 @@ public static class GlobalVariables
     public static float camera_shaking_duration = 0.3f;
     public static float camera_shaking_amplitude = 0f;
     public static float camera_force_soft_coef = 1f;
-    public static float camera_distance_offset = 7.5f;
+    public static float camera_distance_offset = 13.5f;
     public static float camera_critical_distance = 30f;
 
 

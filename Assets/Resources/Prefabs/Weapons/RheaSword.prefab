@@ -322,6 +322,36 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
+--- !u!1 &3986596515014861904
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 7518901625338976745}
+  m_Layer: 0
+  m_Name: particlesContainer
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &7518901625338976745
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3986596515014861904}
+  m_LocalRotation: {x: 0.009866608, y: 0.6753462, z: -0.013851088, w: 0.73730487}
+  m_LocalPosition: {x: -1.47, y: 0.05, z: 0.72}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 8751620070943986892}
+  m_RootOrder: 3
+  m_LocalEulerAnglesHint: {x: 1.906, y: 84.97, z: -0.407}
 --- !u!1 &4748341687367022589
 GameObject:
   m_ObjectHideFlags: 0
@@ -639,6 +669,7 @@ Transform:
   - {fileID: 3616725188088176169}
   - {fileID: 6113731502301910614}
   - {fileID: 6621947441352134552}
+  - {fileID: 7518901625338976745}
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}

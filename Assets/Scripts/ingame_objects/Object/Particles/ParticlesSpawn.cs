@@ -13,7 +13,7 @@ public class ParticlesSpawn : MonoBehaviour
 
     GameManager gameManager;
 
-    int iterator = 10;
+    int iterator = 2;
 
     // Start is called before the first frame update
     void Start()
@@ -24,34 +24,34 @@ public class ParticlesSpawn : MonoBehaviour
     }
 
     // Update is called once per frame
-    void FixedUpdate()
+    
+
+    public void DeleteParticle(GameObject go)
+    {
+        particles.Remove(go);
+    }
+
+    public void SpawnParticlesRequest()
     {
         if (iterator == 0)
         {
             GameObject go = Resources.Load("Prefabs/Staff/XitonParticles") as GameObject;
             particles.Add(Instantiate(go, GetRandomPointInside(), new Quaternion(0f, 0f, 0f, 1.0f)).gameObject);
-            iterator = 10;
+            iterator = 2;
             particles[particles.Count - 1].transform.SetParent(particleObject.transform, false);
-            ParticleSystem.MainModule settings = particles[particles.Count - 1].GetComponent<ParticleSystem>().main;
-            settings.startColor = ownColor;
+            particles[particles.Count - 1].GetComponent<GlowParticles>().spawnerObject = this;
+            particles[particles.Count - 1].GetComponent<ParticleSystemRenderer>().material.SetColor("_EmissionColor", ownColor);
+            //ParticleSystem.MainModule settings = particles[particles.Count - 1].GetComponent<ParticleSystem>().main;
+            //settings.startColor = ownColor;
 
-            if (particles.Count > 300)
+            if (particles.Count > 30)
             {
-                for(int i = 0; i < particles.Count - 300; i++)
+                for (int i = 0; i < particles.Count - 30; i++)
                     Destroy(particles[i]);
-                particles.RemoveRange(0, particles.Count - 300);
+                particles.RemoveRange(0, particles.Count - 30);
             }
         }
-        foreach(GameObject particle in particles)
-        {
-            
-            particle.transform.position = particle.transform.position + particle.GetComponent<GlowParticles>().GetDirection(gameManager.player.transform.position) * 5f * Time.deltaTime;
-            
-            //particle.GetComponent<CharacterController>().Move(5f * direction * Time.deltaTime);
-        }
-        
         iterator--;
-
     }
 
     Vector3 GetRandomPointInside()

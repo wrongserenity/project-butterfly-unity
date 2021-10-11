@@ -14,8 +14,17 @@ public class RheasSword : Weapon
     AudioSource whoosh;
     AudioSource attackXiton;
 
+    List<Color> particlesColors = new List<Color>() { };
+
     int xitonDamageScalingCost = GlobalVariables.player_weapon_xiton_damage_scaling_cost;
     float xitonDamageScaling = GlobalVariables.player_weapon_xiton_scaling;
+
+    GameObject particleObject;
+
+    Gradient gradient;
+    GradientColorKey[] colorKey;
+    GradientAlphaKey[] alphaKey;
+        
 
 
     void Start()
@@ -34,6 +43,16 @@ public class RheasSword : Weapon
 
         blockSphere = transform.Find("BlockSphere").gameObject;
         parry_window_cooldown = gameManager.cooldownSystem.AddCooldown(this, GlobalVariables.player_parry_window_duration);
+
+
+        particleObject = transform.Find("particlesContainer").gameObject;
+        particlesColors.Add(Color.yellow);
+
+
+
+
+
+
     }
 
     public override void Attack()
@@ -48,7 +67,7 @@ public class RheasSword : Weapon
                 hit = DamageAllInHitbox(true, Mathf.FloorToInt(damage * xitonDamageScaling));
                 if (hit > 0)
                 {
-                    GetOwner().GetComponent<Player>().xitonTransfer(-xitonDamageScalingCost);
+                    GetOwner().GetComponent<Player>().XitonTransfer(-xitonDamageScalingCost);
                     isXitonHit = true;
                 }
             }
@@ -58,7 +77,10 @@ public class RheasSword : Weapon
             if (hit == 3)
             {
                 if (isXitonHit)
+                {
+                    ParticlesSpawn();
                     attackXiton.Play();
+                }
                 attack.Play();
             }
             else if (hit == 2)
@@ -97,6 +119,16 @@ public class RheasSword : Weapon
                 blockSphere.GetComponent<MeshRenderer>().enabled = false;
 
             }
+        }
+    }
+
+    public void ParticlesSpawn()
+    {
+        for (int i = 0; i < 20; i++)
+        {
+            GameObject go = Resources.Load("Prefabs/Staff/XitonParticleLine") as GameObject;
+            GameObject particle = Instantiate(go, particleObject.transform.position, particleObject.transform.rotation).gameObject;
+            particle.GetComponent<ParticleSystemRenderer>().material.SetColor("_EmissionColor", particlesColors[Random.Range(0, particlesColors.Count)]);
         }
     }
 }

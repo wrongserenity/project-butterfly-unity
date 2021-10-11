@@ -58,6 +58,8 @@ public class Player : Creation
     DeprivationSystem deprivationSystem;
     public Weapon deprivatedWeapon;
 
+    SphereCollider xitonChargeCollider;
+
 
     // Start is called before the first frame update
     void Start()
@@ -80,6 +82,7 @@ public class Player : Creation
 
         hpEnergy = GameObject.Find("hp_nrj").GetComponent<Text>();
         deprivationSystem = transform.Find("DeprivationSystem").GetComponent<DeprivationSystem>();
+        xitonChargeCollider = transform.Find("XitonChargeSphere").GetComponent<SphereCollider>();
     }
 
     //TODO: add init and ready from godot
@@ -123,7 +126,7 @@ public class Player : Creation
         }
     }
 
-    public void xitonTransfer(int value)
+    public void XitonTransfer(int value)
     {
         curXitonCharge += value;
 
@@ -141,6 +144,17 @@ public class Player : Creation
                 ProcessHp(1);
                 dataRec.AddTo("restored_hp", 1);
                 EnergyTransfer(-heal_cost);
+            }
+        }
+    }
+
+    void XitonChargeAnimation()
+    {
+        foreach (Collider col in Physics.OverlapSphere(xitonChargeCollider.bounds.center, xitonChargeCollider.radius))
+        { 
+            if (col.tag == "GlowingObject")
+            {
+                col.GetComponent<ParticlesSpawn>().SpawnParticlesRequest();
             }
         }
     }
@@ -378,8 +392,14 @@ public class Player : Creation
             stateMachine.RemoveState("parrySoundReq");
         }
 
-        if (stateMachine.IsActive("charging") && xitonCharge_cooldown.Try())
-            xitonTransfer(1);
+        if (stateMachine.IsActive("charging"))
+        {
+            XitonChargeAnimation();
+            if (xitonCharge_cooldown.Try())
+            {
+                XitonTransfer(1);
+            }
+        }
 
         if (stateMachine.IsActive("teleportRequest"))
         {
