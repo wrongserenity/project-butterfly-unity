@@ -89,5 +89,7 @@ public static class GlobalVariables
     // special weapons variables
     public static float gravity_bomb_throw_distance = 10f;
     public static float gravity_bomb_impact_radius = 5f;
-    public static float gravity_bomb_impulse_force = 50f;
+    public static float gravity_bomb_impulse_force = 5f;
+    public static float gravity_bomb_impact_time_step = 0.05f;
+    public static float gravity_bomb_impact_duration = 4f;
 }
