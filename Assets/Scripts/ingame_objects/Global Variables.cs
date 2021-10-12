@@ -11,6 +11,10 @@ public static class GlobalVariables
 
     // graphics variables
     public static float xiton_particle_life_time = 2f;
+    public static int short_distance_teleport_circle_count = 5;
+    public static float short_distance_teleport_circle_lifetime = 0.5f;
+    public static float short_distance_teleport_circle_timestep = 0.05f;
+    public static float enemies_deprivation_ready_ripple_tick_time = 0.5f;
 
     // trigger system variables
     public static float teleport_trigger_cooldown = 1f;
@@ -30,8 +34,9 @@ public static class GlobalVariables
     public static float player_teleport_cooldown = 0.3f;
     public static float player_position_rewind_cooldown = 0.01f;
     public static float player_xiton_charge_cooldown = 0.2f;
+    public static float player_deprivation_cooldown = 0.5f;
 
-    public static float player_teleport_distance = 100f;
+    public static float player_teleport_distance = 5f;
 
     // DataRecorder variables
     public static bool is_writing = true;
@@ -62,6 +67,7 @@ public static class GlobalVariables
     public static float melee_max_speed = 6f;
     public static float melee_enemy_push_force = 5f;
     public static float push_machine_push_force = 30f;
+
     public static float deprivateble_hp_percent = 0.7f;
 
 

@@ -161,7 +161,7 @@ public class Player : Creation
 
     void PlayerAction()
     {
-        if (deprivationSystem.CheckReadyEnemy())
+        if (deprivationSystem.CheckReadyEnemy() && deprivatedWeapon == null)
             deprivationSystem.DeprivateClothestWeapon();
         else
         {
@@ -293,6 +293,8 @@ public class Player : Creation
     {
         if (cur_energy >= teleport_cost)
         {
+            StartCoroutine(AnimateShortDistanceTeleport(pos, dir_m_));
+
             telep = pos + dir_m_.normalized * teleport_distance;
             // disables enemy collision for passing through them
             // immediately enables after
@@ -305,7 +307,7 @@ public class Player : Creation
                         enemy.DisableCollision();
                     }
                 }
-                controller.Move((telep - pos) * Time.deltaTime);
+                controller.Move((telep - pos));
                 telep *= 0;
                 foreach (Line line in gameManager.battleSystem.lines)
                 {
@@ -318,6 +320,29 @@ public class Player : Creation
                 dataRec.AddTo("shifted", 1);
             }
         }
+    }
+
+    public IEnumerator AnimateShortDistanceTeleport(Vector3 pos, Vector3 dir_m_)
+    {
+        List<GameObject> circles = new List<GameObject>() { };
+        float step = teleport_distance / (GlobalVariables.short_distance_teleport_circle_count);
+        GameObject go = Resources.Load("Prefabs/Player/TeleportCircle") as GameObject;
+        for (int i = 0; i < GlobalVariables.short_distance_teleport_circle_count; i++)
+        {
+            circles.Add(Instantiate(go, new Vector3(0f, 0f, 0f), new Quaternion(0f, 0f, 0f, 1.0f)));
+            circles[circles.Count - 1].transform.position = pos + (i + 1) * step * dir_m_.normalized;
+            circles[circles.Count - 1].transform.rotation = Quaternion.LookRotation(dir_m_.normalized);
+            yield return new WaitForSeconds(GlobalVariables.short_distance_teleport_circle_timestep);
+
+        }
+        yield return new WaitForSeconds(GlobalVariables.short_distance_teleport_circle_lifetime);
+        foreach(GameObject circle in circles)
+        {
+            Destroy(circle);
+            yield return new WaitForSeconds(GlobalVariables.short_distance_teleport_circle_timestep);
+        }
+        circles.Clear();
+
     }
 
     public Vector3 GetVeiwPoint()
