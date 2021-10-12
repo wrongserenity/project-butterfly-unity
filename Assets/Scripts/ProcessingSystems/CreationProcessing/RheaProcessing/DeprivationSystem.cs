@@ -5,6 +5,8 @@ using UnityEngine;
 public class DeprivationSystem : MonoBehaviour
 {
     SphereCollider sphereCollider;
+    Cooldown cooldown;
+    GameManager gameManager;
 
     public bool CheckReadyEnemy()
     {
@@ -18,34 +20,40 @@ public class DeprivationSystem : MonoBehaviour
 
     public void DeprivateClothestWeapon()
     {
-        print("deprivating...");
-        List<Enemy> readyEnemies = new List<Enemy>() { };
-        foreach (Collider col in Physics.OverlapSphere(sphereCollider.bounds.center, sphereCollider.radius))
+        if (!cooldown.in_use)
         {
-            if (col.gameObject.tag == "Enemy" && col.gameObject.GetComponent<Enemy>().isReadyToDeprivate)
-                readyEnemies.Add(col.gameObject.GetComponent<Enemy>());
-        }
-        print("ready enemy count: " + readyEnemies.Count);
-        
-        float distance = 0f;
-        int clothestEnemyIndex = -1;
-        if (readyEnemies.Count > 0)
-        {
-            distance = readyEnemies[0].GetDistanceToPlayer();
-            clothestEnemyIndex = 0;
-        }
-        for (int i = 1; i < readyEnemies.Count; i++)
-        {
-            float tempDist = readyEnemies[i].GetDistanceToPlayer();
-            if (distance > tempDist)
+            print("deprivating...");
+            List<Enemy> readyEnemies = new List<Enemy>() { };
+            foreach (Collider col in Physics.OverlapSphere(sphereCollider.bounds.center, sphereCollider.radius))
             {
-                distance = tempDist;
-                clothestEnemyIndex = i;
+                if (col.gameObject.tag == "Enemy" && col.gameObject.GetComponent<Enemy>().isReadyToDeprivate)
+                    readyEnemies.Add(col.gameObject.GetComponent<Enemy>());
+            }
+            print("ready enemy count: " + readyEnemies.Count);
+
+            float distance = 0f;
+            int clothestEnemyIndex = -1;
+            if (readyEnemies.Count > 0)
+            {
+                distance = readyEnemies[0].GetDistanceToPlayer();
+                clothestEnemyIndex = 0;
+            }
+            for (int i = 1; i < readyEnemies.Count; i++)
+            {
+                float tempDist = readyEnemies[i].GetDistanceToPlayer();
+                if (distance > tempDist)
+                {
+                    distance = tempDist;
+                    clothestEnemyIndex = i;
+                }
+            }
+            print("clothest index " + clothestEnemyIndex);
+            if (clothestEnemyIndex >= 0)
+            {
+                readyEnemies[clothestEnemyIndex].GiveWeaponToPlayer();
+                cooldown.Try();
             }
         }
-        print("clothest index " + clothestEnemyIndex);
-        if (clothestEnemyIndex >= 0) 
-            readyEnemies[clothestEnemyIndex].GiveWeaponToPlayer();
     }
 
 
@@ -54,5 +62,7 @@ public class DeprivationSystem : MonoBehaviour
     void Start()
     {
         sphereCollider = GetComponent<SphereCollider>();
+        gameManager = GameObject.Find("GameManager").GetComponent<GameManager>();
+        cooldown = gameManager.cooldownSystem.AddCooldown(this, GlobalVariables.player_deprivation_cooldown);
     }
 }

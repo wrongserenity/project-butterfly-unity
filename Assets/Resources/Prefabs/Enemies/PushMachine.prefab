@@ -605,7 +605,6 @@ MonoBehaviour:
   speed_vel: 0
   controller: {fileID: 5527621215508098686}
   is_player_noticed: 0
-  notice_range: 1.9
   movementHitbox:
   - {fileID: 5527621214805283699}
   - {fileID: 5527621214437903225}
@@ -614,6 +613,10 @@ MonoBehaviour:
   type: 0
   power: 0
   currentLineNum: -1
+  isReadyToDeprivate: 0
+  body: {fileID: 0}
+  playerPos: {x: 0, y: 0, z: 0}
+  ownPos: {x: 0, y: 0, z: 0}
 --- !u!1 &8354829388179079270
 GameObject:
   m_ObjectHideFlags: 0

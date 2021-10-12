@@ -11,7 +11,7 @@ public class Weapon : MonoBehaviour
     public int damage;
     public bool damaged = false;
     Creation owner_;
-    public string deprivationWeaponPath;
+    public string deprivationWeaponPath = "";
 
     public float pushForce;
 

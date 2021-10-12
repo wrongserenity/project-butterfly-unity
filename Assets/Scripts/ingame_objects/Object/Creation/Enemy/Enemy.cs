@@ -19,6 +19,8 @@ public class Enemy : Creation
     bool is_killed = false;
 
     public bool isReadyToDeprivate = false;
+    List<Material> deprivateMaterials = new List<Material>() { null, null };
+    public GameObject body;
 
     bool moving_to_original_position = false;
 
@@ -31,6 +33,7 @@ public class Enemy : Creation
         base.Start();
         spawn_position = transform.position;
         spawn_rotation = transform.rotation;
+        body = transform.Find("Model").Find("Capsule").gameObject;
     }
 
     // Update is called once per frame
@@ -103,9 +106,19 @@ public class Enemy : Creation
     public void EnemyTurnOff()
     {
         is_killed = true;
+        GameObject go = Resources.Load("Prefabs/Staff/EnemyKillParticles") as GameObject;
+        GameObject killingParticles = Instantiate(go, new Vector3(0f, 0f, 0f), new Quaternion(0f, 0f, 0f, 1.0f));
+        killingParticles.transform.position = transform.position;
+        StartCoroutine(DeleteDeathParticles(killingParticles));
         foreach (Renderer ren in GetComponentsInChildren<Renderer>())
             ren.enabled = false;
         DisableCollision();
+    }
+
+    public IEnumerator DeleteDeathParticles(GameObject part)
+    {
+        yield return new WaitForSeconds(part.GetComponent<ParticleSystem>().main.startLifetime.constantMax);
+        Destroy(part);
     }
 
     public void EnemyReload()
@@ -154,6 +167,7 @@ public class Enemy : Creation
         if (cur_hp <= max_hp * GlobalVariables.deprivateble_hp_percent)
         {
             isReadyToDeprivate = true;
+            StartCoroutine(DeprivationReadyAnimation());
             //print("ready to deprivate");
         }
     }
@@ -167,9 +181,25 @@ public class Enemy : Creation
 
     public void GiveWeaponToPlayer()
     {
-        if (weapon.deprivationWeaponPath != null)
+        if (weapon.deprivationWeaponPath != "")
         {
             Weapon.LoadWeaponFrom(weapon.deprivationWeaponPath, gameManager.player, true);
+        }
+        Kill();
+    }
+
+    public IEnumerator DeprivationReadyAnimation()
+    {
+        float tick = GlobalVariables.enemies_deprivation_ready_ripple_tick_time;
+        deprivateMaterials[0] = body.GetComponent<MeshRenderer>().material;
+        deprivateMaterials[1] = Resources.Load("LoadMaterials/DeprivationReady", typeof(Material)) as Material;
+
+        int iter = 0;
+        while (!is_killed)
+        {
+            body.GetComponent<MeshRenderer>().material = deprivateMaterials[iter];
+            iter = (iter + 1) % 2;
+            yield return new WaitForSeconds(tick);
         }
     }
 
