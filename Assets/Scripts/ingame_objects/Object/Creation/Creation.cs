@@ -51,7 +51,7 @@ public class Creation : MonoBehaviour
             gameObject.GetComponent<Enemy>().CheckDeprivationStatus();
     }
 
-    void Kill()
+    public void Kill()
     {
         gameManager.battleSystem.Kill(this);
     }
