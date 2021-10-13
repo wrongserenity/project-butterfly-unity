@@ -13,6 +13,7 @@ public class GameManager : MonoBehaviour
     public TriggerSystem triggerSystem;
     public MusicSystem musicSystem;
     public GameObject levelContainer;
+    public LineRenderer rewindLineRenderer;
 
     public Image deathImage;
     bool isFading = false;

@@ -10,7 +10,9 @@ public class Player : Creation
     Cooldown teleport_cooldown;
     Cooldown xitonCharge_cooldown;
 
-
+    Image healthBar;
+    Image energyBar;
+    Image xitonBar;
     Text hpEnergy;
 
     int max_energy = GlobalVariables.player_max_energy;
@@ -54,11 +56,12 @@ public class Player : Creation
 
     public List<Vector3> teleportTriggerRequest = new List<Vector3>() { };
 
-
     DeprivationSystem deprivationSystem;
     public Weapon deprivatedWeapon;
 
     SphereCollider xitonChargeCollider;
+
+    LineRenderer rewindLine;
 
 
     // Start is called before the first frame update
@@ -75,14 +78,21 @@ public class Player : Creation
         teleport_cooldown = gameManager.cooldownSystem.AddCooldown(this, GlobalVariables.player_teleport_cooldown);
         xitonCharge_cooldown = gameManager.cooldownSystem.AddCooldown(this, GlobalVariables.player_xiton_charge_cooldown);
 
+        cur_energy = 1000;
 
         Weapon.LoadWeaponFrom("Prefabs/Weapons/RheaSword", this, false);
-
-        cur_energy = 1000;
 
         hpEnergy = GameObject.Find("hp_nrj").GetComponent<Text>();
         deprivationSystem = transform.Find("DeprivationSystem").GetComponent<DeprivationSystem>();
         xitonChargeCollider = transform.Find("XitonChargeSphere").GetComponent<SphereCollider>();
+
+        healthBar = transform.Find("Interface").Find("HealthGray").Find("Health").GetComponent<Image>();
+        energyBar = transform.Find("Interface").Find("EnergyGray").Find("Energy").GetComponent<Image>();
+        xitonBar = transform.Find("Interface").Find("XitonGray").Find("Xiton").GetComponent<Image>();
+
+        rewindLine = gameManager.rewindLineRenderer;
+
+        print(healthBar + " " + energyBar + " " + xitonBar);
     }
 
     //TODO: add init and ready from godot
@@ -92,6 +102,7 @@ public class Player : Creation
     {
         cur_hp = max_hp;
         cur_energy = 0;
+        deprivatedWeapon = null;
         Teleport(gameManager.levelContainer.transform.GetChild(0).Find("SpawnPosition").position, true);
     }
 
@@ -148,15 +159,18 @@ public class Player : Creation
         }
     }
 
-    void XitonChargeAnimation()
+    bool XitonChargeAnimation()
     {
+        bool hasSource = false;
         foreach (Collider col in Physics.OverlapSphere(xitonChargeCollider.bounds.center, xitonChargeCollider.radius))
         { 
             if (col.tag == "GlowingObject")
             {
+                hasSource = true;
                 col.GetComponent<ParticlesSpawn>().SpawnParticlesRequest();
             }
         }
+        return hasSource;
     }
 
     void PlayerAction()
@@ -247,9 +261,22 @@ public class Player : Creation
             cur_tracing_step--;
         else 
         { 
-            position_trace.Add(pos);
-            health_trace.Add(cur_hp);
-            cur_tracing_step = tracing_step;
+            if (position_trace.Count == 0)
+            {
+                position_trace.Add(pos);
+                health_trace.Add(cur_hp);
+                cur_tracing_step = tracing_step;
+            }
+            else
+            {
+                if (pos != position_trace[position_trace.Count-1])
+                {
+                    position_trace.Add(pos);
+                    health_trace.Add(cur_hp);
+                    cur_tracing_step = tracing_step;
+                }
+            }
+            
         }
     }
 
@@ -287,6 +314,15 @@ public class Player : Creation
                 stateMachine.RemoveState("rewinding");
             }
         }
+    }
+    
+    void RewindVisualEffect()
+    {
+        foreach(Vector3 vec in position_trace.ToArray())
+            print(vec);
+        print("\n\n\n");
+        rewindLine.positionCount = position_trace.Count;
+        rewindLine.SetPositions(position_trace.ToArray());
     }
 
     void ShortDistanceTeleport(Vector3 pos, Vector3 dir_m_)
@@ -404,7 +440,10 @@ public class Player : Creation
         }
 
         if (stateMachine.IsActive("rewinding"))
+        {
+            RewindVisualEffect();
             DoRewind();
+        }
 
         if (!stateMachine.IsActive("rewinding") && !stateMachine.IsActive("trace_pause"))
             TraceRecording();
@@ -422,13 +461,16 @@ public class Player : Creation
             stateMachine.RemoveState("parrySoundReq");
         }
 
-        if (stateMachine.IsActive("charging"))
+        if (stateMachine.IsActive("chargingRequest"))
         {
-            XitonChargeAnimation();
-            if (xitonCharge_cooldown.Try())
+            if (XitonChargeAnimation())
             {
-                XitonTransfer(1);
+                stateMachine.AddState("charging");
+                if (xitonCharge_cooldown.Try())
+                    XitonTransfer(1);
             }
+            else
+                stateMachine.RemoveState("charging");
         }
 
         if (stateMachine.IsActive("teleportRequest"))
@@ -451,6 +493,9 @@ public class Player : Creation
         }
 
         hpEnergy.text = "hp: "+ cur_hp + "\nenergy: " + cur_energy + "\nxiton: " + curXitonCharge;
+        healthBar.fillAmount = ((float)cur_hp / (float)max_hp) / 3f;
+        energyBar.fillAmount = ((float)cur_energy / (float)max_energy) / 3f;
+        xitonBar.fillAmount = ((float)curXitonCharge / (float)maxXitonCharge) / 3f;
     }
 
     void Update()
@@ -501,9 +546,12 @@ public class Player : Creation
         }
 
         if (Input.GetKey(KeyCode.LeftShift))
-            stateMachine.AddState("charging");
+            stateMachine.AddState("chargingRequest");
         else
+        {
+            stateMachine.RemoveState("chargingRequest");
             stateMachine.RemoveState("charging");
+        }
     }
 
     public void Ping()
