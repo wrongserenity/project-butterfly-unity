@@ -34,6 +34,7 @@ public class Enemy : Creation
         spawn_position = transform.position;
         spawn_rotation = transform.rotation;
         body = transform.Find("Model").Find("Capsule").gameObject;
+        deprivateMaterials[0] = body.GetComponent<MeshRenderer>().material;
     }
 
     // Update is called once per frame
@@ -106,9 +107,11 @@ public class Enemy : Creation
     public void EnemyTurnOff()
     {
         is_killed = true;
+
         GameObject go = Resources.Load("Prefabs/Staff/EnemyKillParticles") as GameObject;
         GameObject killingParticles = Instantiate(go, new Vector3(0f, 0f, 0f), new Quaternion(0f, 0f, 0f, 1.0f));
         killingParticles.transform.position = transform.position;
+
         StartCoroutine(DeleteDeathParticles(killingParticles));
         foreach (Renderer ren in GetComponentsInChildren<Renderer>())
             ren.enabled = false;
@@ -124,13 +127,17 @@ public class Enemy : Creation
     public void EnemyReload()
     {
         is_player_noticed = false;
-        is_killed = false;
         foreach (Renderer ren in GetComponentsInChildren<Renderer>())
             ren.enabled = true;
         EnableCollision();
         transform.position = spawn_position;
         transform.rotation = spawn_rotation;
         cur_hp = max_hp;
+
+        body.GetComponent<MeshRenderer>().material = deprivateMaterials[0];
+
+        currentLineNum = -1;
+        is_killed = false;
     }
 
     public void DisableCollision()
@@ -191,7 +198,6 @@ public class Enemy : Creation
     public IEnumerator DeprivationReadyAnimation()
     {
         float tick = GlobalVariables.enemies_deprivation_ready_ripple_tick_time;
-        deprivateMaterials[0] = body.GetComponent<MeshRenderer>().material;
         deprivateMaterials[1] = Resources.Load("LoadMaterials/DeprivationReady", typeof(Material)) as Material;
 
         int iter = 0;

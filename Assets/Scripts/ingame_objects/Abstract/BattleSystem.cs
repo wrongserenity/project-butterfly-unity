@@ -160,6 +160,7 @@ public class BattleSystem : MonoBehaviour
         if (enemy.currentLineNum != -1)
         {
             lines[enemy.currentLineNum].Remove(enemy);
+            enemy.currentLineNum = -1;
         }
         else
         {
