@@ -63,6 +63,7 @@ public static class GlobalVariables
     public static int player_tracing_step = 5;
 
     public static float player_parry_window_duration = 0.2f;
+    public static float player_parry_damage_immune_duration = 1f;
 
     // enemies' varibles
     // TODO: write max_hp and max_energy

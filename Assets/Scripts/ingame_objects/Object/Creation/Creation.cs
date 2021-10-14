@@ -23,6 +23,9 @@ public class Creation : MonoBehaviour
     public Vector3 additional_force = new Vector3(0f, 0f, 0f);
     public float speed_vel;
 
+    bool isImmortal = false;
+    bool isDamageImmune = false;
+
     public CharacterController controller;
 
     public void Start()
@@ -49,11 +52,30 @@ public class Creation : MonoBehaviour
 
         if (gameObject.tag == "Enemy" && cur_hp > 0)
             gameObject.GetComponent<Enemy>().CheckDeprivationStatus();
+
+        print(gameObject.tag);
+        if (gameObject.tag == "Player")
+            gameObject.GetComponent<Player>().BarAnimation("health", "changed", 0f);
     }
 
     public void Kill()
     {
         gameManager.battleSystem.Kill(this);
+    }
+
+    public void DamageImmuneFor(float seconds)
+    {
+        StartCoroutine(DamageImmune(seconds));
+    }
+
+    public virtual void DamageImmuneAnimation(float duration) { }
+
+    public IEnumerator DamageImmune(float duration)
+    {
+        isDamageImmune = true;
+        DamageImmuneAnimation(duration);
+        yield return new WaitForSeconds(duration);
+        isDamageImmune = false;
     }
 
     public void FallingOutCheck(Vector3 position)

@@ -136,6 +136,7 @@ public class Player : Creation
         {
             cur_energy = max_energy;
         }
+        BarAnimation("energy", "changed", 0f);
     }
 
     public void XitonTransfer(int value)
@@ -144,6 +145,8 @@ public class Player : Creation
 
         if (curXitonCharge > maxXitonCharge)
             curXitonCharge = maxXitonCharge;
+
+        BarAnimation("xiton", "changed", 0f);
     }
 
     void HealSelf()
@@ -382,10 +385,62 @@ public class Player : Creation
 
     }
 
+    public override void DamageImmuneAnimation(float duration)
+    {
+        base.DamageImmuneAnimation(duration);
+        BarAnimation("health", "immune", duration);
+    }
+
+    public void BarAnimation(string type, string toDo, float duration)
+    {
+        if (type == "health")
+        {
+            if (toDo == "immune")
+            {
+
+            }else if(toDo == "changed")
+            {
+                StartCoroutine(BarPulse(healthBar));
+            }
+        }else if (type == "energy")
+        {
+            if (toDo == "changed")
+            {
+                StartCoroutine(BarPulse(energyBar));
+            }
+        }
+        else if (type == "xiton")
+        {
+            if (toDo == "changed")
+            {
+                StartCoroutine(BarPulse(xitonBar));
+            }
+        }
+    }
+
+    public IEnumerator BarPulse(Image barObject)
+    {
+        float scaleX = 1f;
+        float scaleXTarget = scaleX * 1.2f;
+        while (scaleX < scaleXTarget)
+        {
+            scaleX += 0.02f;
+            barObject.gameObject.transform.localScale = new Vector3(scaleX, scaleX, scaleX);
+            yield return new WaitForSeconds(0.01f);
+        }
+        barObject.gameObject.transform.localScale = new Vector3(1f, 1f, 1f);
+    }
+
+    public IEnumerator BarGrayColoring(Image barObject, float duration)
+    {
+        yield return new WaitForSeconds(0.01f);
+    }
+
     public Vector3 GetVeiwPoint()
     {
         return dir_v;
     }
+
 
     // Update is called once per frame
     void FixedUpdate()

@@ -202,7 +202,7 @@ public class Weapon : MonoBehaviour
                     if (player.stateMachine.IsActive("parrying"))
                     {
                         isHit = 1;
-                        print("parrying!");
+                        player.DamageImmuneFor(GlobalVariables.player_parry_damage_immune_duration);
 
                     }else if (player.stateMachine.IsActive("blocking"))
                     {
