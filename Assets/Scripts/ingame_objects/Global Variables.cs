@@ -36,6 +36,8 @@ public static class GlobalVariables
     public static float player_xiton_charge_cooldown = 0.2f;
     public static float player_deprivation_cooldown = 0.5f;
 
+    public static float player_parry_damage_boost_time = 0.5f;
+
     public static float player_teleport_distance = 5f;
 
     // DataRecorder variables
@@ -56,7 +58,7 @@ public static class GlobalVariables
     public static float player_max_speed = 7f;
     public static int player_max_xiton_charge = 100;
 
-    public static int player_trace_max_length = 250;
+    public static int player_trace_max_length = 50;
     public static int player_position_rewind_offset = 20;
     public static int player_tracing_step = 5;
 
@@ -66,7 +68,7 @@ public static class GlobalVariables
     // TODO: write max_hp and max_energy
     public static float melee_max_speed = 6f;
     public static float melee_enemy_push_force = 5f;
-    public static float push_machine_push_force = 30f;
+    public static float push_machine_push_force = 70f;
 
     public static float deprivateble_hp_percent = 0.7f;
 
@@ -74,17 +76,18 @@ public static class GlobalVariables
     // standard weapons variables
     // TODO: player_weapon_cooldown should be list
     // TODO: add push forces to enemies
-    public static int player_weapon_damage = 25;
+    public static int player_weapon_damage = 20;
     public static float player_weapon_cooldown = 0.3f;
     public static float player_weapon_push_force = 5f;
     public static int player_weapon_xiton_damage_scaling_cost = 10;
     public static float player_weapon_xiton_scaling = 5f;
+    public static float player_weapon_parry_scaling = 4f;
 
-    public static int samurai_weapon_damage = 10; // 2
-    public static List<float> samurai_weapon_cooldown = new List<float>() { 0.0f, 0.5f, 0.0f, 0.4f };
+    public static int samurai_weapon_damage = 20; // 2
+    public static List<float> samurai_weapon_cooldown = new List<float>() { 0.0f, 0.3f, 0.0f, 0.2f };
 
-    public static int swordsman_weapons_damage = 20; // 4
-    public static List<float> swordman_weapon_cooldown = new List<float>() { 0.0f, 0.8f, 0.0f, 0.9f };
+    public static int swordsman_weapons_damage = 40; // 4
+    public static List<float> swordman_weapon_cooldown = new List<float>() { 0.0f, 0.4f, 0.0f, 0.3f };
 
     public static int push_machine_weapon_damage = 0;
     public static List<float> push_machine_weapon_cooldown = new List<float>() { 0.0f, 0.2f, 0.0f, 0.8f };
