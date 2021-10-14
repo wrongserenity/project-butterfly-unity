@@ -10,6 +10,7 @@ public class Player : Creation
     Cooldown teleport_cooldown;
     Cooldown xitonCharge_cooldown;
 
+
     Image healthBar;
     Image energyBar;
     Image xitonBar;

@@ -9,6 +9,9 @@ public class RheasSword : Weapon
 
 
     GameObject blockSphere;
+    Cooldown parryDamageScaleCooldown;
+    float parryDamageScale = GlobalVariables.player_weapon_parry_scaling;
+
 
     AudioSource attack;
     AudioSource whoosh;
@@ -48,7 +51,7 @@ public class RheasSword : Weapon
         particleObject = transform.Find("particlesContainer").gameObject;
         particlesColors.Add(Color.yellow);
 
-
+        parryDamageScaleCooldown = gameManager.cooldownSystem.AddCooldown(this, GlobalVariables.player_parry_damage_boost_time);
 
 
 
@@ -59,12 +62,12 @@ public class RheasSword : Weapon
     {
         if (cooldown.Try())
         {
-            int hit = 0;
+            int hit;
             bool isXitonHit = false;
             StartCoroutine(FadeOut(GlobalVariables.player_weapon_cooldown / 2));
             if (GetOwner().tag == "Player" && GetOwner().GetComponent<Player>().curXitonCharge > xitonDamageScalingCost)
             {
-                hit = DamageAllInHitbox(true, Mathf.FloorToInt(damage * xitonDamageScaling));
+                hit = DamageAllInHitbox(true, Mathf.FloorToInt(damage * xitonDamageScaling * (parryDamageScaleCooldown.in_use ? parryDamageScale : 1)));
                 if (hit > 0)
                 {
                     GetOwner().GetComponent<Player>().XitonTransfer(-xitonDamageScalingCost);
@@ -78,9 +81,9 @@ public class RheasSword : Weapon
             {
                 if (isXitonHit)
                 {
-                    ParticlesSpawn();
                     attackXiton.Play();
                 }
+                ParticlesSpawn(2 * ((parryDamageScaleCooldown.in_use ? parryDamageScale : 1) - (isXitonHit ? 0 : 1)));
                 attack.Play();
             }
             else if (hit == 2)
@@ -103,7 +106,10 @@ public class RheasSword : Weapon
         if (GetOwner().tag == "Player")
         {
             if (parry_window_cooldown.Try())
+            {
+                parryDamageScaleCooldown.Update();
                 GetOwner().GetComponent<Player>().stateMachine.AddState("parrying");
+            }
             else
                 GetOwner().GetComponent<Player>().stateMachine.AddState("blocking");
             blockSphere.GetComponent<MeshRenderer>().enabled = true;
@@ -122,9 +128,9 @@ public class RheasSword : Weapon
         }
     }
 
-    public void ParticlesSpawn()
+    public void ParticlesSpawn(float multiplier)
     {
-        for (int i = 0; i < 20; i++)
+        for (int i = 0; i < 10*multiplier; i++)
         {
             GameObject go = Resources.Load("Prefabs/Staff/XitonParticleLine") as GameObject;
             GameObject particle = Instantiate(go, particleObject.transform.position, particleObject.transform.rotation).gameObject;
