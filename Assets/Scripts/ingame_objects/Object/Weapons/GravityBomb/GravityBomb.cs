@@ -5,6 +5,7 @@ using UnityEngine;
 public class GravityBomb : Weapon
 {
     GameObject aimSprite;
+    GameObject sphere;
     bool isUsed = false;
 
     private void Start()
@@ -13,6 +14,7 @@ public class GravityBomb : Weapon
         GameObject go = Resources.Load("Prefabs/Weapons/GravityBomb/GravityBombAim") as GameObject;
         aimSprite = Instantiate(go, new Vector3(0f, 0f, 0f), new Quaternion(0f, 0f, 0f, 1.0f));
         //aimSprite.transform.localScale = new Vector3(GlobalVariables.gravity_bomb_impact_radius, 1f, GlobalVariables.gravity_bomb_impact_radius);
+        deprivationWeaponPath = "Prefabs/Weapons/GravityBomb/GravityBomb";
     }
 
 
@@ -51,11 +53,10 @@ public class GravityBomb : Weapon
         float startSize = 0.5f * (1 + impactDirection) * impactRadius;
         float curDur = duration;
 
-        GiveWeaponTo(null);
-        gameManager.player.deprivatedWeapon = null;
+        UntieWeapon();
 
         GameObject go = Resources.Load("Prefabs/Weapons/GravityBomb/ImpactSphere") as GameObject;
-        GameObject sphere = Instantiate(go, new Vector3(0f, 0f, 0f), new Quaternion(0f, 0f, 0f, 1.0f));
+        sphere = Instantiate(go, new Vector3(0f, 0f, 0f), new Quaternion(0f, 0f, 0f, 1.0f));
         sphere.transform.localScale = new Vector3(startSize * 2, startSize * 2, startSize * 2); // because sphere with size=1 have radius=0.5
         sphere.transform.position = center;
         aimSprite.transform.position = center;
@@ -75,9 +76,22 @@ public class GravityBomb : Weapon
             curDur -= timeStep;
             yield return new WaitForSeconds(timeStep);
         }
+        DestroyWeapon();
+    }
+
+    public override void DestroyWeapon()
+    {
+        base.DestroyWeapon();
         Destroy(aimSprite);
         Destroy(sphere);
         Destroy(this);
+    }
+    public override Weapon UntieWeapon()
+    {
+        GiveWeaponTo(null);
+        gameManager.player.deprivatedWeapon = null;
+        gameManager.player.cur_deprivated_weapon_path = "";
+        return this;
     }
 
     public IEnumerator PhysicalImpact(float duration, int impactDirection, Vector3 center)

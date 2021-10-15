@@ -18,9 +18,11 @@ public class GameManager : MonoBehaviour
     public Image deathImage;
     bool isFading = false;
 
+    float startFixedDeltaTime;
     private void Start()
     {
         deathImage = GameObject.Find("death").GetComponent<Image>();
+        startFixedDeltaTime = Time.fixedDeltaTime;
     }
 
 
@@ -73,6 +75,17 @@ public class GameManager : MonoBehaviour
         player.movement_lock = false;
         player.rotation_lock = false;
         isFading = false;
+    }
+
+    public void SetTimeScale(float value)
+    {
+        Time.timeScale = value;
+        Time.fixedDeltaTime = Time.timeScale * .01f;
+    }
+    public void ReturnTimeScale()
+    {
+        Time.timeScale = 1f;
+        Time.fixedDeltaTime = startFixedDeltaTime;
     }
 
 

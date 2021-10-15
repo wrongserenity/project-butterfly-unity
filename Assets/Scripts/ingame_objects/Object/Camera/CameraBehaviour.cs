@@ -51,7 +51,7 @@ public class CameraBehaviour : MonoBehaviour
         {
             Vector3 movement_direction = (player_pos - transform.position) * speed_vel;
             vel += (movement_direction - vel) * LinearCoef;
-            controller.Move(vel * Time.deltaTime);
+            controller.Move(vel * Time.unscaledDeltaTime);
         }
         else
         {

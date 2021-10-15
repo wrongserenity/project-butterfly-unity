@@ -34,6 +34,8 @@ public class Player : Creation
 
     List<Vector3> position_trace = new List<Vector3>() { };
     List<int> health_trace = new List<int>() { };
+    List<string> weapon_path_trace = new List<string>() { };
+    public string cur_deprivated_weapon_path = "";
     int trace_max_length = GlobalVariables.player_trace_max_length;
     int position_rewind_offset = GlobalVariables.player_position_rewind_offset;
     bool is_falling = false;
@@ -56,6 +58,7 @@ public class Player : Creation
     int anim_walk_direction = 0;
 
     public List<Vector3> teleportTriggerRequest = new List<Vector3>() { };
+    public List<Vector3> teleportRequest = new List<Vector3>() { };
 
     DeprivationSystem deprivationSystem;
     public Weapon deprivatedWeapon;
@@ -180,7 +183,10 @@ public class Player : Creation
     void PlayerAction()
     {
         if (deprivationSystem.CheckReadyEnemy() && deprivatedWeapon == null)
+        {
             deprivationSystem.DeprivateClothestWeapon();
+            soundSystem.PlayOnce("equipSound");
+        }
         else
         {
             if (actionObj != null)
@@ -269,14 +275,16 @@ public class Player : Creation
             {
                 position_trace.Add(pos);
                 health_trace.Add(cur_hp);
+                weapon_path_trace.Add(cur_deprivated_weapon_path);
                 cur_tracing_step = tracing_step;
             }
             else
             {
-                if (pos != position_trace[position_trace.Count-1])
+                if (pos != position_trace[position_trace.Count-1] || cur_hp != health_trace[health_trace.Count - 1] || cur_deprivated_weapon_path != weapon_path_trace[weapon_path_trace.Count - 1])
                 {
                     position_trace.Add(pos);
                     health_trace.Add(cur_hp);
+                    weapon_path_trace.Add(cur_deprivated_weapon_path);
                     cur_tracing_step = tracing_step;
                 }
             }
@@ -288,6 +296,7 @@ public class Player : Creation
     {
         position_trace.Clear();
         health_trace.Clear();
+        weapon_path_trace.Clear();
     }
 
     public void Teleport(Vector3 new_coordinates, bool clear_trace)
@@ -297,34 +306,74 @@ public class Player : Creation
             CleanTrace();
     }
 
-    void DoRewind()
+    bool DoRewind()
     {
         if (rewind_cooldown.Try())
         {
             int count = position_trace.Count;
             if (count > 0 && cur_energy >= rewind_cost)
             {
-                Teleport(position_trace[count-1], false);
+                StartCoroutine(SmoothTeleport(position_trace[count - 1], (float)rewind_cooldown.timeout * 0.8f));
+                //Teleport(position_trace[count-1], false);
                 position_trace.RemoveAt(count-1);
-                ProcessHp(health_trace[count - 1] - cur_hp);
+                if (health_trace[count - 1] - cur_hp != 0)
+                    ProcessHp(health_trace[count - 1] - cur_hp);
                 health_trace.RemoveAt(count-1);
+                if (cur_deprivated_weapon_path != weapon_path_trace[count - 1])
+                {
+                    if (weapon_path_trace[count - 1] == "")
+                    {
+                        deprivatedWeapon.UntieWeapon().DestroyWeapon();
+                    }
+                    else
+                    {
+                        soundSystem.PlayOnce("equipSound");
+                        Weapon.LoadWeaponFrom(weapon_path_trace[count - 1], this, true);
+                    }
+                }
+                weapon_path_trace.RemoveAt(count - 1);
+
+
                 EnergyTransfer(-rewind_cost);
 
                 dataRec.AddTo("spent_on_rewind", rewind_cost);
-                stateMachine.AddState("rewinding");
+                return true;
             }
             else
             {
+                gameManager.ReturnTimeScale();
                 stateMachine.RemoveState("rewinding");
             }
+        }
+        else
+        {
+            if (position_trace.Count > 0 && cur_energy >= rewind_cost)
+            {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public IEnumerator SmoothTeleport(Vector3 destination, float duration)
+    {
+        int stepNumber = 50;
+        float curTime = 0f;
+        Vector3 curVector = transform.position;
+        Vector3 stepVector = (destination - curVector) / (stepNumber + 1);
+        float stepTime = duration / stepNumber;
+        
+        while (curTime < duration)
+        {
+            curVector += stepVector;
+            teleportRequest.Add(curVector);
+            curTime += stepTime;
+            yield return new WaitForSecondsRealtime(stepTime);
         }
     }
     
     void RewindVisualEffect()
     {
-        foreach(Vector3 vec in position_trace.ToArray())
-            print(vec);
-        print("\n\n\n");
         rewindLine.positionCount = position_trace.Count;
         rewindLine.SetPositions(position_trace.ToArray());
     }
@@ -495,13 +544,22 @@ public class Player : Creation
             //          $"model/2d_animation/heal_circle".opacity = 0
         }
 
-        if (stateMachine.IsActive("rewinding"))
+        if (stateMachine.IsActive("rewindRequest"))
         {
-            RewindVisualEffect();
-            DoRewind();
+            
+            if (DoRewind())
+            {
+                RewindVisualEffect();
+                stateMachine.AddState("rewinding");
+                gameManager.SetTimeScale(0.05f);
+            }
+            else
+            {
+                gameManager.ReturnTimeScale();
+            }
         }
 
-        if (!stateMachine.IsActive("rewinding") && !stateMachine.IsActive("trace_pause"))
+        if (!stateMachine.IsActive("rewindRequest") && !stateMachine.IsActive("rewinding") && !stateMachine.IsActive("trace_pause"))
             TraceRecording();
 
         if (stateMachine.IsActive("parrying") && !weapon.GetComponent<RheasSword>().parry_window_cooldown.in_use)
@@ -542,6 +600,12 @@ public class Player : Creation
             teleportTriggerRequest.Clear();
         }
 
+        if (teleportRequest.Count > 0)
+        {
+            Teleport(teleportRequest[teleportRequest.Count - 1], false);
+            teleportRequest.Clear();
+        }
+
         if (stateMachine.IsActive("death"))
         {
             PlayerReload();
@@ -566,10 +630,14 @@ public class Player : Creation
 
         if (Input.GetKey(KeyCode.F))
         {
-            stateMachine.AddState("rewinding");
+            stateMachine.AddState("rewindRequest");
         }
         else
+        {
+            gameManager.ReturnTimeScale();
+            stateMachine.RemoveState("rewindRequest");
             stateMachine.RemoveState("rewinding");
+        }
 
         if (Input.GetKeyDown(KeyCode.Mouse0))
         {

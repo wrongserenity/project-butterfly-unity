@@ -53,7 +53,6 @@ public class Creation : MonoBehaviour
         if (gameObject.tag == "Enemy" && cur_hp > 0)
             gameObject.GetComponent<Enemy>().CheckDeprivationStatus();
 
-        print(gameObject.tag);
         if (gameObject.tag == "Player")
             gameObject.GetComponent<Player>().BarAnimation("health", "changed", 0f);
     }

@@ -65,11 +65,18 @@ public class Weapon : MonoBehaviour
                 player.deprivatedWeapon = Instantiate(go, new Vector3(0f, 0f, 0f), new Quaternion(0f, 0f, 0f, 1.0f)).GetComponent<Weapon>();
                 player.deprivatedWeapon.transform.SetParent(player.transform.Find("Model").transform.Find("weapon").transform, false);
                 player.deprivatedWeapon.GiveWeaponTo(player);
+                player.cur_deprivated_weapon_path = pathInResources;
             }
         }
 
 
     }
+
+    public virtual void DestroyWeapon() { }
+
+    // returns weapon because it will be hard to get link in this object after untie
+    // be careful: use base.UntieWeapon() in the end of override fuction or just return this;
+    public virtual Weapon UntieWeapon() { return this; }
 
     // calls only by Enemies
     public virtual void Attack() { }
