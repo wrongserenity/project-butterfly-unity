@@ -571,6 +571,7 @@ public class Player : Creation
 
         if (stateMachine.IsActive("parrySoundReq"))
         {
+            gameManager.mainCamera.ChangeChromaticAberrationIntencityFor(1f, GlobalVariables.player_parry_window_duration);
             gameManager.SetTimeScaleFor(0.3f, GlobalVariables.player_parry_window_duration);
             weapon.gameObject.GetComponent<RheasSword>().parryDamageScaleCooldown.Update();
             soundSystem.PlayOnce("parrySound");

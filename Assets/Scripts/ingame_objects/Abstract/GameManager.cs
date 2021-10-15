@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.Rendering;
 
 public class GameManager : MonoBehaviour
 {
@@ -16,6 +17,7 @@ public class GameManager : MonoBehaviour
     public LineRenderer rewindLineRenderer;
 
     public Image deathImage;
+
     bool isFading = false;
 
     float startFixedDeltaTime;
@@ -81,6 +83,10 @@ public class GameManager : MonoBehaviour
 
     public void SetTimeScale(float value)
     {
+        if (value < 1f)
+        {
+            mainCamera.ChangeCrhomaticAberrationIntencity(1f);
+        }
         Time.timeScale = value;
         Time.fixedDeltaTime = Time.timeScale * .01f;
     }
@@ -88,6 +94,7 @@ public class GameManager : MonoBehaviour
     {
         if (!isTimeScalingRN)
         {
+            mainCamera.ChangeCrhomaticAberrationIntencity(0f);
             Time.timeScale = 1f;
             Time.fixedDeltaTime = startFixedDeltaTime;
         }
@@ -103,17 +110,17 @@ public class GameManager : MonoBehaviour
         Time.timeScale = value;
         Time.fixedDeltaTime = Time.timeScale * .01f;
         yield return new WaitForSeconds(duration);
-        Time.timeScale = 1f;
-        Time.fixedDeltaTime = startFixedDeltaTime;
         isTimeScalingRN = false;
+        ReturnTimeScale();
+        
     }
 
     public void CancelTimeScaleFor()
     {
         StopCoroutine(TimeScaleFor(0f, 0f));
-        Time.timeScale = 1f;
-        Time.fixedDeltaTime = startFixedDeltaTime;
         isTimeScalingRN = false;
+        ReturnTimeScale();
+        
     }
 
 

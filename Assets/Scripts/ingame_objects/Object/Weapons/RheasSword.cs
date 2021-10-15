@@ -75,7 +75,7 @@ public class RheasSword : Weapon
                 }
             }
             else
-                hit = DamageAllInHitbox(true, damage);
+                hit = DamageAllInHitbox(true, Mathf.FloorToInt(damage * (parryDamageScaleCooldown.in_use ? parryDamageScale : 1)));
 
             if (hit == 3)
             {

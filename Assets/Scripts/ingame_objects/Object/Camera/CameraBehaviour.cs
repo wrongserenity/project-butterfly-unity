@@ -1,6 +1,8 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Rendering;
+using UnityEngine.Rendering.Universal;
 
 public class CameraBehaviour : MonoBehaviour
 {
@@ -23,11 +25,15 @@ public class CameraBehaviour : MonoBehaviour
     Player player;
     public CharacterController controller;
 
+
+    Volume volume;
+
     void Start()
     {
         gameManager = GameObject.Find("GameManager").GetComponent<GameManager>();
         shaking = gameManager.cooldownSystem.AddCooldown(this, GlobalVariables.camera_shaking_duration);
         player = gameManager.player;
+        volume = GetComponent<Volume>();
     }
 
     void FixedUpdate()
@@ -58,7 +64,7 @@ public class CameraBehaviour : MonoBehaviour
             transform.position = player_pos;
         }
     }
-    
+
     public void Shake(float force)
     {
         if (force * force_soft_coef > shaking_amplitude)
@@ -74,4 +80,25 @@ public class CameraBehaviour : MonoBehaviour
         vel += new Vector3(Random.Range(-1f, 1f), 0, Random.Range(-1f, 1f)).normalized * shaking_amplitude;
         shaking_amplitude *= LinearCoef;
     }
+
+    public void ChangeCrhomaticAberrationIntencity(float value)
+    {
+        ChromaticAberration ChrAberration;
+        VolumeProfile profile = GetComponent<Volume>().profile;
+        profile.TryGet(out ChrAberration);
+        ChrAberration.intensity.Override(value);
+    }
+
+    public void ChangeChromaticAberrationIntencityFor(float value, float duration)
+    {
+        StartCoroutine(ChChAbInFor(value, duration));
+    }
+
+    IEnumerator ChChAbInFor(float value, float duration)
+    {
+        ChangeCrhomaticAberrationIntencity(value);
+        yield return new WaitForSeconds(duration);
+        ChangeCrhomaticAberrationIntencity(0f);
+    }
 }
+

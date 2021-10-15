@@ -3137,6 +3137,7 @@ MonoBehaviour:
   cooldownSystem: {fileID: 1549850027}
   dataRecorder: {fileID: 2115986346}
   player: {fileID: 882510277}
+  cameraObj: {fileID: 1722847263}
   mainCamera: {fileID: 1722847263}
   battleSystem: {fileID: 1488264086}
   triggerSystem: {fileID: 9157677}
