@@ -8,6 +8,8 @@ public class PushMachineWeapon : Weapon
     Color startColor;
     int fadeCount = 0;
 
+    AudioSource push;
+
     void Start()
     {
         base.Start();
@@ -17,6 +19,9 @@ public class PushMachineWeapon : Weapon
         pushForce = GlobalVariables.push_machine_push_force;
 
         deprivationWeaponPath = "Prefabs/Weapons/GravityBomb/GravityBomb";
+
+        push = gameObject.transform.Find("sounds").transform.Find("push").GetComponent<AudioSource>();
+
     }
 
     void SetBLocksList()
@@ -69,11 +74,11 @@ public class PushMachineWeapon : Weapon
         // $attack_sprite/animation.play("enemy_attack")
         if (hit == 3)
         {
-            // $"sounds/attack".play()
+            push.Play();
         }
         else if (hit == 2)
         {
-            // block attack sound
+            push.Play();
         }
         else if (hit == 1)
         {
