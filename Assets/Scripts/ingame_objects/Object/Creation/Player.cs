@@ -551,7 +551,7 @@ public class Player : Creation
             {
                 RewindVisualEffect();
                 stateMachine.AddState("rewinding");
-                gameManager.SetTimeScale(0.05f);
+                gameManager.SetTimeScale(0.3f);
             }
             else
             {
@@ -571,6 +571,8 @@ public class Player : Creation
 
         if (stateMachine.IsActive("parrySoundReq"))
         {
+            gameManager.SetTimeScaleFor(0.3f, GlobalVariables.player_parry_window_duration);
+            weapon.gameObject.GetComponent<RheasSword>().parryDamageScaleCooldown.Update();
             soundSystem.PlayOnce("parrySound");
             stateMachine.RemoveState("parrySoundReq");
         }

@@ -19,6 +19,8 @@ public class GameManager : MonoBehaviour
     bool isFading = false;
 
     float startFixedDeltaTime;
+    bool isTimeScaled = false;
+    bool isTimeScalingRN = false;
     private void Start()
     {
         deathImage = GameObject.Find("death").GetComponent<Image>();
@@ -84,8 +86,34 @@ public class GameManager : MonoBehaviour
     }
     public void ReturnTimeScale()
     {
+        if (!isTimeScalingRN)
+        {
+            Time.timeScale = 1f;
+            Time.fixedDeltaTime = startFixedDeltaTime;
+        }
+    }
+    public void SetTimeScaleFor(float value, float duration)
+    {
+        StartCoroutine(TimeScaleFor(value, duration));
+    }
+
+    IEnumerator TimeScaleFor(float value, float duration)
+    {
+        isTimeScalingRN = true;
+        Time.timeScale = value;
+        Time.fixedDeltaTime = Time.timeScale * .01f;
+        yield return new WaitForSeconds(duration);
         Time.timeScale = 1f;
         Time.fixedDeltaTime = startFixedDeltaTime;
+        isTimeScalingRN = false;
+    }
+
+    public void CancelTimeScaleFor()
+    {
+        StopCoroutine(TimeScaleFor(0f, 0f));
+        Time.timeScale = 1f;
+        Time.fixedDeltaTime = startFixedDeltaTime;
+        isTimeScalingRN = false;
     }
 
 

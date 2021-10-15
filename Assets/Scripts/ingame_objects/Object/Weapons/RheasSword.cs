@@ -9,7 +9,7 @@ public class RheasSword : Weapon
 
 
     GameObject blockSphere;
-    Cooldown parryDamageScaleCooldown;
+    public Cooldown parryDamageScaleCooldown;
     float parryDamageScale = GlobalVariables.player_weapon_parry_scaling;
 
 
@@ -85,6 +85,11 @@ public class RheasSword : Weapon
                 }
                 ParticlesSpawn(2 * ((parryDamageScaleCooldown.in_use ? parryDamageScale : 1) - (isXitonHit ? 0 : 1)));
                 attack.Play();
+
+                if (parryDamageScaleCooldown.in_use)
+                {
+                    gameManager.CancelTimeScaleFor();
+                }
             }
             else if (hit == 2)
             {
@@ -107,7 +112,7 @@ public class RheasSword : Weapon
         {
             if (parry_window_cooldown.Try())
             {
-                parryDamageScaleCooldown.Update();
+                
                 GetOwner().GetComponent<Player>().stateMachine.AddState("parrying");
             }
             else
