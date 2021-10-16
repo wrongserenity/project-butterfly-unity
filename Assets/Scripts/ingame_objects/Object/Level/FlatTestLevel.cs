@@ -13,7 +13,7 @@ public class FlatTestLevel : Level
     {
         base.FastReload();
         foreach (Enemy enemy in transform.Find("Enemies").GetComponentsInChildren<Enemy>())
-            enemy.EnemyReload();
+            enemy.deathRequest = true;
         gameManager.player.stateMachine.AddState("death");
     }
 }

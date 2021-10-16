@@ -27,6 +27,8 @@ public class Enemy : Creation
     public Vector3 playerPos = new Vector3(0f, 0f, 0f);
     public Vector3 ownPos = new Vector3(0f, 0f, 0f);
 
+    public bool deathRequest = false;
+
     // Start is called before the first frame update
     public void Start()
     {
@@ -43,6 +45,11 @@ public class Enemy : Creation
         if (!is_killed)
         {
             EnemyLogicProcess();
+        }
+        if (deathRequest)
+        {
+            EnemyReload();
+            deathRequest = false;
         }
     }
 
