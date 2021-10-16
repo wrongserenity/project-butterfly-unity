@@ -3137,7 +3137,6 @@ MonoBehaviour:
   cooldownSystem: {fileID: 1549850027}
   dataRecorder: {fileID: 2115986346}
   player: {fileID: 882510277}
-  cameraObj: {fileID: 1722847263}
   mainCamera: {fileID: 1722847263}
   battleSystem: {fileID: 1488264086}
   triggerSystem: {fileID: 9157677}
@@ -3386,7 +3385,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1722847261}
   m_LocalRotation: {x: 0.7071068, y: 0, z: 0, w: 0.7071068}
-  m_LocalPosition: {x: -13.41, y: 9.3, z: -0.36}
+  m_LocalPosition: {x: -13.41, y: 13.262, z: -0.36}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}

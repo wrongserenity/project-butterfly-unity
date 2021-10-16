@@ -54,7 +54,13 @@ public class Creation : MonoBehaviour
             gameObject.GetComponent<Enemy>().CheckDeprivationStatus();
 
         if (gameObject.tag == "Player")
+        {
             gameObject.GetComponent<Player>().BarAnimation("health", "changed", 0f);
+            if (value < 0)
+            {
+                gameManager.mainCamera.RedVignetteFor(0.1f);
+            }
+        }
     }
 
     public void Kill()

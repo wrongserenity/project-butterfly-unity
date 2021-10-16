@@ -25,7 +25,7 @@ public class CameraBehaviour : MonoBehaviour
     Player player;
     public CharacterController controller;
 
-
+    VolumeProfile profile;
     Volume volume;
 
     void Start()
@@ -34,6 +34,7 @@ public class CameraBehaviour : MonoBehaviour
         shaking = gameManager.cooldownSystem.AddCooldown(this, GlobalVariables.camera_shaking_duration);
         player = gameManager.player;
         volume = GetComponent<Volume>();
+        profile = volume.profile;
     }
 
     void FixedUpdate()
@@ -81,10 +82,82 @@ public class CameraBehaviour : MonoBehaviour
         shaking_amplitude *= LinearCoef;
     }
 
+    public void RedVignetteFor(float duration)
+    {
+        StopCoroutine(RedVignette(duration));
+        StartCoroutine(RedVignette(duration));
+    }
+
+    IEnumerator RedVignette(float duration)
+    {
+        float step = 0.02f;
+        float maxIntensity = 0.2f;
+        Vignette vignette;
+        profile.TryGet(out vignette);
+        float curIntencity = 0;
+        float timeStep = duration / (2 * (maxIntensity / step));
+        while (curIntencity < maxIntensity)
+        {
+            curIntencity += step;
+            vignette.intensity.Override(curIntencity);
+            yield return new WaitForSeconds(timeStep);
+        }
+        while (curIntencity > 0)
+        {
+            curIntencity -= 0.02f;
+            vignette.intensity.Override(curIntencity);
+            yield return new WaitForSeconds(timeStep);
+        }
+    }
+
+    public void ChangeLenseDistortion(float addValue, float duration)
+    {
+        StopCoroutine(LensDistortionSmooth(addValue, duration));
+        StartCoroutine(LensDistortionSmooth(addValue, duration));
+    }
+
+    public void ReturnLenseDistortion()
+    {
+        LensDistortion lensDistortion;
+        profile.TryGet(out lensDistortion);
+        ChangeLenseDistortion(-lensDistortion.intensity.value, 0.1f);
+    }
+
+    IEnumerator LensDistortionSmooth(float addValue, float duration)
+    {
+
+        float step = 0.02f;
+        LensDistortion lensDistortion;
+        profile.TryGet(out lensDistortion);
+
+        float curIntensity = lensDistortion.intensity.value;
+        float targetIntensity = addValue + curIntensity;
+        float timeStep = duration / (addValue / step);
+
+        if (addValue < 0)
+        {
+            while (curIntensity > targetIntensity)
+            {
+                curIntensity -= step;
+                lensDistortion.intensity.Override(curIntensity);
+                yield return new WaitForSeconds(timeStep);
+            }
+        }
+        else
+        {
+            while (curIntensity < targetIntensity)
+            {
+                curIntensity += step;
+                lensDistortion.intensity.Override(curIntensity);
+                yield return new WaitForSeconds(timeStep);
+            }
+        }
+
+    }
+
     public void ChangeCrhomaticAberrationIntencity(float value)
     {
         ChromaticAberration ChrAberration;
-        VolumeProfile profile = GetComponent<Volume>().profile;
         profile.TryGet(out ChrAberration);
         ChrAberration.intensity.Override(value);
     }
