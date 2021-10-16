@@ -639,7 +639,10 @@ public class Player : Creation
         {
             gameManager.ReturnTimeScale();
             stateMachine.RemoveState("rewindRequest");
-            stateMachine.RemoveState("rewinding");
+            if (stateMachine.IsActive("rewinding"))
+            {
+                stateMachine.RemoveState("rewinding");
+            }
         }
 
         if (Input.GetKeyDown(KeyCode.Mouse0))
