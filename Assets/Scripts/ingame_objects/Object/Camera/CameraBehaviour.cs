@@ -112,8 +112,13 @@ public class CameraBehaviour : MonoBehaviour
 
     public void ChangeLenseDistortion(float addValue, float duration)
     {
-        StopCoroutine(LensDistortionSmooth(addValue, duration));
-        StartCoroutine(LensDistortionSmooth(addValue, duration));
+        LensDistortion lensDistortion;
+        profile.TryGet(out lensDistortion);
+        if (lensDistortion.intensity.value + addValue < 0.5f)
+        {
+            StopCoroutine(LensDistortionSmooth(addValue, duration));
+            StartCoroutine(LensDistortionSmooth(addValue, duration));
+        }
     }
 
     public void ReturnLenseDistortion()

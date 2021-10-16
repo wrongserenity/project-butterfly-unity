@@ -102,4 +102,8 @@ public static class GlobalVariables
     public static float gravity_bomb_impulse_force = 5f;
     public static float gravity_bomb_impact_time_step = 0.05f;
     public static float gravity_bomb_impact_duration = 4f;
+
+    public static float firethrower_cooldown = 0.1f;
+    public static int firethrower_damage = 5;
+    public static float firethrower_push_force = 20f;
 }
