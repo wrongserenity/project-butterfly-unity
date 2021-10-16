@@ -278,6 +278,7 @@ public class BattleSystem : MonoBehaviour
         foreach (Line line in lines)
         {
             line.enemies.Clear();
+            line.current_power = 0;
         }
     }
 }
