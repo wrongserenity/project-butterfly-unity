@@ -19,6 +19,8 @@ public class SamuraiSword : Weapon
         attack = gameObject.transform.Find("sounds").transform.Find("attack").GetComponent<AudioSource>();
         whoosh = gameObject.transform.Find("sounds").transform.Find("whoosh").GetComponent<AudioSource>();
 
+        deprivationWeaponPath = "Prefabs/Weapons/Flamethrower/Flamethrower";
+
         attackSprite = transform.Find("sprites").transform.Find("attack_sprite").gameObject;
     }
 

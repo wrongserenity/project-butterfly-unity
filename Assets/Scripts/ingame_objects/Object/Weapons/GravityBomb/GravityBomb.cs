@@ -8,6 +8,8 @@ public class GravityBomb : Weapon
     GameObject sphere;
     bool isUsed = false;
 
+    AudioSource quantumDowner;
+
     private void Start()
     {
         base.Start();
@@ -15,6 +17,8 @@ public class GravityBomb : Weapon
         aimSprite = Instantiate(go, new Vector3(0f, 0f, 0f), new Quaternion(0f, 0f, 0f, 1.0f));
         //aimSprite.transform.localScale = new Vector3(GlobalVariables.gravity_bomb_impact_radius, 1f, GlobalVariables.gravity_bomb_impact_radius);
         deprivationWeaponPath = "Prefabs/Weapons/GravityBomb/GravityBomb";
+
+        quantumDowner = gameObject.transform.Find("sounds").transform.Find("QuantumDowner").GetComponent<AudioSource>();
     }
 
 
@@ -62,6 +66,8 @@ public class GravityBomb : Weapon
         aimSprite.transform.position = center;
         aimSprite.transform.localScale = new Vector3(impactRadius * 2, impactRadius * 2, impactRadius * 2);
 
+        quantumDowner.Play();
+
         while (curDur > 0)
         {
             foreach (Collider col in Physics.OverlapSphere(center, GlobalVariables.gravity_bomb_impact_radius))
@@ -76,6 +82,7 @@ public class GravityBomb : Weapon
             curDur -= timeStep;
             yield return new WaitForSeconds(timeStep);
         }
+        quantumDowner.Stop();
         DestroyWeapon();
     }
 

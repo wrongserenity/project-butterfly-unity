@@ -8,6 +8,8 @@ public class Firethrower : Weapon
     Cooldown cooldown;
     List<Light> lightSources = new List<Light>() { };
 
+    AudioSource fireSound;
+
     bool isActivated = false;
     
     // Start is called before the first frame update
@@ -19,6 +21,8 @@ public class Firethrower : Weapon
         pushForce = GlobalVariables.firethrower_push_force;
         cooldown = gameManager.cooldownSystem.AddCooldown(this, GlobalVariables.firethrower_cooldown);
         fireParticles = transform.Find("Fire").GetComponent<ParticleSystem>();
+        fireSound = gameObject.transform.Find("sounds").transform.Find("fire").GetComponent<AudioSource>();
+
         for (int i = 0; i < transform.Find("Fire").childCount; i++)
         {
             var main = transform.Find("Fire").GetChild(i).GetComponent<ParticleSystem>().main;
@@ -62,6 +66,7 @@ public class Firethrower : Weapon
         foreach (Light light in lightSources)
             light.enabled = true;
         fireParticles.Play();
+        fireSound.Play();
     }
 
     void Deactivate()
@@ -69,5 +74,6 @@ public class Firethrower : Weapon
         foreach (Light light in lightSources)
             light.enabled = false;
         fireParticles.Stop();
+        fireSound.Stop();
     }
 }

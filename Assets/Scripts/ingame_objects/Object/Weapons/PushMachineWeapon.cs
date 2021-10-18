@@ -18,7 +18,7 @@ public class PushMachineWeapon : Weapon
         damage = GlobalVariables.push_machine_weapon_damage;
         pushForce = GlobalVariables.push_machine_push_force;
 
-        deprivationWeaponPath = "Prefabs/Weapons/Flamethrower/Flamethrower";
+        deprivationWeaponPath = "Prefabs/Weapons/GravityBomb/GravityBomb";
 
         push = gameObject.transform.Find("sounds").transform.Find("push").GetComponent<AudioSource>();
 
