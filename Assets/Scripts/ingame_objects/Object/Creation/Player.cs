@@ -33,6 +33,7 @@ public class Player : Creation
     List<Vector3> position_trace = new List<Vector3>() { };
     List<int> health_trace = new List<int>() { };
     List<string> weapon_path_trace = new List<string>() { };
+    string last_deprivated_path = "";
     public string cur_deprivated_weapon_path = "";
     int trace_max_length = GlobalVariables.player_trace_max_length;
     int position_rewind_offset = GlobalVariables.player_position_rewind_offset;
@@ -279,7 +280,13 @@ public class Player : Creation
                 {
                     position_trace.Add(pos);
                     health_trace.Add(cur_hp);
-                    weapon_path_trace.Add(cur_deprivated_weapon_path);
+                    if (last_deprivated_path != cur_deprivated_weapon_path)
+                        weapon_path_trace.Add(cur_deprivated_weapon_path);
+                    else
+                        weapon_path_trace.Add("");
+
+                    if (cur_deprivated_weapon_path == "")
+                        last_deprivated_path = "";
                     cur_tracing_step = tracing_step;
                 }
             }
@@ -318,12 +325,13 @@ public class Player : Creation
                 {
                     if (weapon_path_trace[count - 1] == "")
                     {
-                        deprivatedWeapon.UntieWeapon().DestroyWeapon();
+                        //deprivatedWeapon.UntieWeapon().DestroyWeapon();
                     }
                     else
                     {
                         soundSystem.PlayOnce("equipSound");
                         Weapon.LoadWeaponFrom(weapon_path_trace[count - 1], this, true);
+                        ClearLastDeprivatedWith(weapon_path_trace[count - 1]);
                     }
                 }
                 weapon_path_trace.RemoveAt(count - 1);
@@ -348,6 +356,22 @@ public class Player : Creation
             }
         }
         return false;
+    }
+
+    public void ClearLastDeprivatedWith(string path)
+    {
+        bool isEmptyFound = false;
+        for (int i = weapon_path_trace.Count - 1; i >= 0; i--)
+        {
+            if (!isEmptyFound)
+            {
+                if (weapon_path_trace[i] == path)
+                    weapon_path_trace[i] = "";
+                else
+                    isEmptyFound = true;
+            }
+        }
+        last_deprivated_path = path;
     }
 
     public IEnumerator SmoothTeleport(Vector3 destination, float duration)

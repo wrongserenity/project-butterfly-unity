@@ -39,6 +39,7 @@ public class Firethrower : Weapon
 
         fuel_consumption = fuel / (GlobalVariables.firethrower_fuel_duration_sec / GlobalVariables.firethrower_cooldown);
         gameManager.player.interfaceObject.ShowAdditional();
+        gameManager.player.interfaceObject.RefreshAdditionalData(fuel);
 
     }
 
@@ -80,6 +81,7 @@ public class Firethrower : Weapon
         gameManager.player.deprivatedWeapon = null;
         gameManager.player.cur_deprivated_weapon_path = "";
         gameManager.player.interfaceObject.HideAdditional();
+        //gameManager.player.ClearLastDeprivatedWith("Prefabs/Weapons/Flamethrower/Flamethrower");
         return this;
     }
 

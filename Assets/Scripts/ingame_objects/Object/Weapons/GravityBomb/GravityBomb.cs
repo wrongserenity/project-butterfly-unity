@@ -98,6 +98,7 @@ public class GravityBomb : Weapon
         GiveWeaponTo(null);
         gameManager.player.deprivatedWeapon = null;
         gameManager.player.cur_deprivated_weapon_path = "";
+        //gameManager.player.ClearLastDeprivatedWith("Prefabs/Weapons/GravityBomb/GravityBomb");
         return this;
     }
 
