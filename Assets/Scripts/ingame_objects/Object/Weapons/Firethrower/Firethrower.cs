@@ -8,6 +8,9 @@ public class Firethrower : Weapon
     Cooldown cooldown;
     List<Light> lightSources = new List<Light>() { };
 
+    float fuel = 1.0f;
+    float fuel_consumption;
+
     AudioSource fireSound;
 
     bool isActivated = false;
@@ -33,6 +36,10 @@ public class Firethrower : Weapon
             lightSources.Add(transform.Find("Light").GetChild(i).GetComponent<Light>());
         }
         Deactivate();
+
+        fuel_consumption = fuel / (GlobalVariables.firethrower_fuel_duration_sec / GlobalVariables.firethrower_cooldown);
+        gameManager.player.interfaceObject.ShowAdditional();
+
     }
 
     // Update is called once per frame
@@ -40,12 +47,42 @@ public class Firethrower : Weapon
     {
         if (isActivated)
         {
-            if (cooldown.Try())
+            if (fuel > 0.00001)
             {
-                DamageAllInHitbox(true, damage);
+                if (cooldown.Try())
+                {
+                    fuel -= fuel_consumption;
+                    gameManager.player.interfaceObject.BarAnimation("additional", "changed", 0f);
+                    gameManager.player.interfaceObject.RefreshAdditionalData(fuel);
+                    DamageAllInHitbox(true, damage);
+                }
             }
+            else
+            {
+                UntieWeapon();
+                DestroyWeapon();
+            }
+            
         }
     }
+
+    public override void DestroyWeapon()
+    {
+        base.DestroyWeapon();
+        Deactivate();
+        Destroy(fireParticles);
+        Destroy(this);
+    }
+
+    public override Weapon UntieWeapon()
+    {
+        GiveWeaponTo(null);
+        gameManager.player.deprivatedWeapon = null;
+        gameManager.player.cur_deprivated_weapon_path = "";
+        gameManager.player.interfaceObject.HideAdditional();
+        return this;
+    }
+
 
     public override void Attack()
     {

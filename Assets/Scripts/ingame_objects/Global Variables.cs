@@ -106,4 +106,5 @@ public static class GlobalVariables
     public static float firethrower_cooldown = 0.1f;
     public static int firethrower_damage = 5;
     public static float firethrower_push_force = 20f;
+    public static float firethrower_fuel_duration_sec = 4f;
 }

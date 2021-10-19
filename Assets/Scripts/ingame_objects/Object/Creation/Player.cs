@@ -11,12 +11,10 @@ public class Player : Creation
     Cooldown xitonCharge_cooldown;
 
 
-    Image healthBar;
-    Image energyBar;
-    Image xitonBar;
+    public InterfaceSystem interfaceObject;
     Text hpEnergy;
 
-    int max_energy = GlobalVariables.player_max_energy;
+    public int max_energy = GlobalVariables.player_max_energy;
 
     public GameObject hit_box;
     public Camera camera_obj;
@@ -90,13 +88,9 @@ public class Player : Creation
         deprivationSystem = transform.Find("DeprivationSystem").GetComponent<DeprivationSystem>();
         xitonChargeCollider = transform.Find("XitonChargeSphere").GetComponent<SphereCollider>();
 
-        healthBar = transform.Find("Interface").Find("HealthGray").Find("Health").GetComponent<Image>();
-        energyBar = transform.Find("Interface").Find("EnergyGray").Find("Energy").GetComponent<Image>();
-        xitonBar = transform.Find("Interface").Find("XitonGray").Find("Xiton").GetComponent<Image>();
+        interfaceObject = transform.Find("Interface").GetComponent<InterfaceSystem>();
 
         rewindLine = gameManager.rewindLineRenderer;
-
-        print(healthBar + " " + energyBar + " " + xitonBar);
     }
 
     //TODO: add init and ready from godot
@@ -108,6 +102,7 @@ public class Player : Creation
         cur_energy = 0;
         deprivatedWeapon = null;
         Teleport(gameManager.levelContainer.transform.GetChild(0).Find("SpawnPosition").position, true);
+        interfaceObject.BarAnimation("health", "changed", 0f);
     }
 
     // there should be weapon instead true in if costruction
@@ -139,7 +134,7 @@ public class Player : Creation
         {
             cur_energy = max_energy;
         }
-        BarAnimation("energy", "changed", 0f);
+        interfaceObject.BarAnimation("energy", "changed", 0f);
     }
 
     public void XitonTransfer(int value)
@@ -149,7 +144,7 @@ public class Player : Creation
         if (curXitonCharge > maxXitonCharge)
             curXitonCharge = maxXitonCharge;
 
-        BarAnimation("xiton", "changed", 0f);
+        interfaceObject.BarAnimation("xiton", "changed", 0f);
     }
 
     void HealSelf()
@@ -437,52 +432,7 @@ public class Player : Creation
     public override void DamageImmuneAnimation(float duration)
     {
         base.DamageImmuneAnimation(duration);
-        BarAnimation("health", "immune", duration);
-    }
-
-    public void BarAnimation(string type, string toDo, float duration)
-    {
-        if (type == "health")
-        {
-            if (toDo == "immune")
-            {
-
-            }else if(toDo == "changed")
-            {
-                StartCoroutine(BarPulse(healthBar));
-            }
-        }else if (type == "energy")
-        {
-            if (toDo == "changed")
-            {
-                StartCoroutine(BarPulse(energyBar));
-            }
-        }
-        else if (type == "xiton")
-        {
-            if (toDo == "changed")
-            {
-                StartCoroutine(BarPulse(xitonBar));
-            }
-        }
-    }
-
-    public IEnumerator BarPulse(Image barObject)
-    {
-        float scaleX = 1f;
-        float scaleXTarget = scaleX * 1.2f;
-        while (scaleX < scaleXTarget)
-        {
-            scaleX += 0.02f;
-            barObject.gameObject.transform.localScale = new Vector3(scaleX, scaleX, scaleX);
-            yield return new WaitForSeconds(0.01f);
-        }
-        barObject.gameObject.transform.localScale = new Vector3(1f, 1f, 1f);
-    }
-
-    public IEnumerator BarGrayColoring(Image barObject, float duration)
-    {
-        yield return new WaitForSeconds(0.01f);
+        interfaceObject.BarAnimation("health", "immune", duration);
     }
 
     public Vector3 GetVeiwPoint()
@@ -616,9 +566,6 @@ public class Player : Creation
         }
 
         hpEnergy.text = "hp: "+ cur_hp + "\nenergy: " + cur_energy + "\nxiton: " + curXitonCharge;
-        healthBar.fillAmount = ((float)cur_hp / (float)max_hp) / 3f;
-        energyBar.fillAmount = ((float)cur_energy / (float)max_energy) / 3f;
-        xitonBar.fillAmount = ((float)curXitonCharge / (float)maxXitonCharge) / 3f;
     }
 
     void Update()

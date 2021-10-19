@@ -55,7 +55,7 @@ public class Creation : MonoBehaviour
 
         if (gameObject.tag == "Player")
         {
-            gameObject.GetComponent<Player>().BarAnimation("health", "changed", 0f);
+            gameObject.GetComponent<Player>().interfaceObject.BarAnimation("health", "changed", 0f);
             if (value < 0)
             {
                 gameManager.mainCamera.RedVignetteFor(0.1f);
