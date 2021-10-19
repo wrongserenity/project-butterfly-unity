@@ -19,7 +19,6 @@ public class PushMachineLogic : Enemy
         title = "pushmachine";
         speed_vel = GlobalVariables.melee_max_speed;
         
-
         Weapon.LoadWeaponFrom("Prefabs/Weapons/PushMachineWeapon", this, false);
     }
 

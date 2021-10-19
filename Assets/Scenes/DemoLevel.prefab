@@ -27,8 +27,8 @@ Transform:
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
-  - {fileID: 3556986415253253171}
   - {fileID: 7870632245560503743}
+  - {fileID: 3556986415253253171}
   - {fileID: 7931673943130424739}
   - {fileID: 792183640999563816}
   m_Father: {fileID: 3428631371767550481}
@@ -524,7 +524,7 @@ GameObject:
   - component: {fileID: 4487259771575701515}
   - component: {fileID: 973870051786390225}
   - component: {fileID: 8060781411565657028}
-  - component: {fileID: 205843168353206343}
+  - component: {fileID: 7300218116872171340}
   m_Layer: 0
   m_Name: CubeYellow
   m_TagString: GlowingObject
@@ -544,7 +544,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 6505108331867487331}
-  m_RootOrder: 0
+  m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!33 &4487259771575701515
 MeshFilter:
@@ -608,7 +608,7 @@ BoxCollider:
   serializedVersion: 2
   m_Size: {x: 1, y: 1, z: 1}
   m_Center: {x: 0, y: 0, z: 0}
---- !u!114 &205843168353206343
+--- !u!114 &7300218116872171340
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -617,7 +617,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 4188800365190833745}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ff85ae93580ecfd49a5c0defe913e191, type: 3}
+  m_Script: {fileID: 11500000, guid: 90f68f0524d07bb4cae50a69d73e6f16, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   particleObject: {fileID: 8043191554831424877}
@@ -882,7 +882,7 @@ GameObject:
   - component: {fileID: 7521695035415088972}
   - component: {fileID: 1147423302075749610}
   - component: {fileID: 886131502522225410}
-  - component: {fileID: 8405326967034248813}
+  - component: {fileID: 4260326950288702085}
   m_Layer: 0
   m_Name: CubePurple
   m_TagString: GlowingObject
@@ -966,7 +966,7 @@ BoxCollider:
   serializedVersion: 2
   m_Size: {x: 1, y: 1, z: 1}
   m_Center: {x: 0, y: 0, z: 0}
---- !u!114 &8405326967034248813
+--- !u!114 &4260326950288702085
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -975,7 +975,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 5402494332412090215}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ff85ae93580ecfd49a5c0defe913e191, type: 3}
+  m_Script: {fileID: 11500000, guid: 90f68f0524d07bb4cae50a69d73e6f16, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   particleObject: {fileID: 8043191554831424877}
@@ -1357,7 +1357,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 6505108331867487331}
-  m_RootOrder: 1
+  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &8729727738504249375
 GameObject:
@@ -1371,7 +1371,7 @@ GameObject:
   - component: {fileID: 5620568086730006082}
   - component: {fileID: 3224967389624763299}
   - component: {fileID: 6532131456954863019}
-  - component: {fileID: 3027441215439765446}
+  - component: {fileID: 7431781967415160026}
   m_Layer: 0
   m_Name: CubeBlue
   m_TagString: GlowingObject
@@ -1455,7 +1455,7 @@ BoxCollider:
   serializedVersion: 2
   m_Size: {x: 1, y: 1, z: 1}
   m_Center: {x: 0, y: 0, z: 0}
---- !u!114 &3027441215439765446
+--- !u!114 &7431781967415160026
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -1464,7 +1464,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 8729727738504249375}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ff85ae93580ecfd49a5c0defe913e191, type: 3}
+  m_Script: {fileID: 11500000, guid: 90f68f0524d07bb4cae50a69d73e6f16, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   particleObject: {fileID: 8043191554831424877}

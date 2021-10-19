@@ -1052,7 +1052,7 @@ MonoBehaviour:
   m_PreserveAspect: 0
   m_FillCenter: 1
   m_FillMethod: 4
-  m_FillAmount: 0.235
+  m_FillAmount: 0.264
   m_FillClockwise: 1
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
@@ -1937,6 +1937,8 @@ MonoBehaviour:
   additional_force: {x: 0, y: 0, z: 0}
   speed_vel: 0
   controller: {fileID: 882510278}
+  interfaceObject: {fileID: 0}
+  max_energy: 1000
   hit_box: {fileID: 0}
   camera_obj: {fileID: 1722847266}
   hitbox_bottom: {fileID: 0}

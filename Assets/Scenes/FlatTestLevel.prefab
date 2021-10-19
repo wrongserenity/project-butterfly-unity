@@ -27,8 +27,8 @@ Transform:
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
-  - {fileID: 3556986415253253171}
   - {fileID: 7870632245560503743}
+  - {fileID: 3556986415253253171}
   - {fileID: 7931673943130424739}
   - {fileID: 792183640999563816}
   - {fileID: 1066090608659071948}
@@ -133,7 +133,7 @@ GameObject:
   - component: {fileID: 8497862113383314204}
   - component: {fileID: 3528108020622408545}
   - component: {fileID: 6110095297597934682}
-  - component: {fileID: 8049067535060372067}
+  - component: {fileID: 3963659785559181565}
   m_Layer: 0
   m_Name: CubeYellow (2)
   m_TagString: GlowingObject
@@ -217,7 +217,7 @@ BoxCollider:
   serializedVersion: 2
   m_Size: {x: 1, y: 1, z: 1}
   m_Center: {x: 0, y: 0, z: 0}
---- !u!114 &8049067535060372067
+--- !u!114 &3963659785559181565
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -226,7 +226,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 364335568591643330}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ff85ae93580ecfd49a5c0defe913e191, type: 3}
+  m_Script: {fileID: 11500000, guid: 90f68f0524d07bb4cae50a69d73e6f16, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   particleObject: {fileID: 8043191554831424877}
@@ -608,7 +608,7 @@ GameObject:
   - component: {fileID: 4548051065009318814}
   - component: {fileID: 5921729985082315938}
   - component: {fileID: 2896686220844412166}
-  - component: {fileID: 6957732693843748082}
+  - component: {fileID: 5291629323861229173}
   m_Layer: 0
   m_Name: CubePurple (2)
   m_TagString: GlowingObject
@@ -692,7 +692,7 @@ BoxCollider:
   serializedVersion: 2
   m_Size: {x: 1, y: 1, z: 1}
   m_Center: {x: 0, y: 0, z: 0}
---- !u!114 &6957732693843748082
+--- !u!114 &5291629323861229173
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -701,7 +701,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 1250898513787532198}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ff85ae93580ecfd49a5c0defe913e191, type: 3}
+  m_Script: {fileID: 11500000, guid: 90f68f0524d07bb4cae50a69d73e6f16, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   particleObject: {fileID: 8043191554831424877}
@@ -1634,7 +1634,7 @@ GameObject:
   - component: {fileID: 793862002275984231}
   - component: {fileID: 3812178498849390466}
   - component: {fileID: 3822253568132910723}
-  - component: {fileID: 8234545339287202366}
+  - component: {fileID: 7064819380978551727}
   m_Layer: 0
   m_Name: CubeBlue (2)
   m_TagString: GlowingObject
@@ -1718,7 +1718,7 @@ BoxCollider:
   serializedVersion: 2
   m_Size: {x: 1, y: 1, z: 1}
   m_Center: {x: 0, y: 0, z: 0}
---- !u!114 &8234545339287202366
+--- !u!114 &7064819380978551727
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -1727,7 +1727,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 2207931010419929358}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ff85ae93580ecfd49a5c0defe913e191, type: 3}
+  m_Script: {fileID: 11500000, guid: 90f68f0524d07bb4cae50a69d73e6f16, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   particleObject: {fileID: 8043191554831424877}
@@ -2283,7 +2283,7 @@ GameObject:
   - component: {fileID: 4487259771575701515}
   - component: {fileID: 973870051786390225}
   - component: {fileID: 8060781411565657028}
-  - component: {fileID: 205843168353206343}
+  - component: {fileID: 6066393236273196185}
   m_Layer: 0
   m_Name: CubeYellow
   m_TagString: GlowingObject
@@ -2303,7 +2303,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 6505108331867487331}
-  m_RootOrder: 0
+  m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!33 &4487259771575701515
 MeshFilter:
@@ -2367,7 +2367,7 @@ BoxCollider:
   serializedVersion: 2
   m_Size: {x: 1, y: 1, z: 1}
   m_Center: {x: 0, y: 0, z: 0}
---- !u!114 &205843168353206343
+--- !u!114 &6066393236273196185
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -2376,7 +2376,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 4188800365190833745}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ff85ae93580ecfd49a5c0defe913e191, type: 3}
+  m_Script: {fileID: 11500000, guid: 90f68f0524d07bb4cae50a69d73e6f16, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   particleObject: {fileID: 8043191554831424877}
@@ -2653,7 +2653,7 @@ GameObject:
   - component: {fileID: 3590270971797958753}
   - component: {fileID: 5886972032796746582}
   - component: {fileID: 4132718237244606693}
-  - component: {fileID: 8324468010427102841}
+  - component: {fileID: 743145022237765868}
   m_Layer: 0
   m_Name: CubeBlue (1)
   m_TagString: GlowingObject
@@ -2737,7 +2737,7 @@ BoxCollider:
   serializedVersion: 2
   m_Size: {x: 1, y: 1, z: 1}
   m_Center: {x: -0.0028830464, y: 0, z: 0}
---- !u!114 &8324468010427102841
+--- !u!114 &743145022237765868
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -2746,7 +2746,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 5014283557620414526}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ff85ae93580ecfd49a5c0defe913e191, type: 3}
+  m_Script: {fileID: 11500000, guid: 90f68f0524d07bb4cae50a69d73e6f16, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   particleObject: {fileID: 8043191554831424877}
@@ -2762,7 +2762,7 @@ GameObject:
   - component: {fileID: 7521695035415088972}
   - component: {fileID: 1147423302075749610}
   - component: {fileID: 886131502522225410}
-  - component: {fileID: 8405326967034248813}
+  - component: {fileID: 6896326958807596607}
   m_Layer: 0
   m_Name: CubePurple
   m_TagString: GlowingObject
@@ -2846,7 +2846,7 @@ BoxCollider:
   serializedVersion: 2
   m_Size: {x: 1, y: 1, z: 1}
   m_Center: {x: 0, y: 0, z: 0}
---- !u!114 &8405326967034248813
+--- !u!114 &6896326958807596607
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -2855,7 +2855,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 5402494332412090215}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ff85ae93580ecfd49a5c0defe913e191, type: 3}
+  m_Script: {fileID: 11500000, guid: 90f68f0524d07bb4cae50a69d73e6f16, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   particleObject: {fileID: 8043191554831424877}
@@ -3302,7 +3302,7 @@ GameObject:
   - component: {fileID: 3266491729880114286}
   - component: {fileID: 3699969035629863564}
   - component: {fileID: 1923041176473859822}
-  - component: {fileID: 1220842019934515209}
+  - component: {fileID: 2415588489947255534}
   m_Layer: 0
   m_Name: CubeYellow (1)
   m_TagString: GlowingObject
@@ -3386,7 +3386,7 @@ BoxCollider:
   serializedVersion: 2
   m_Size: {x: 1, y: 1, z: 1}
   m_Center: {x: 0, y: 0, z: 0}
---- !u!114 &1220842019934515209
+--- !u!114 &2415588489947255534
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -3395,7 +3395,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 6132762086740724987}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ff85ae93580ecfd49a5c0defe913e191, type: 3}
+  m_Script: {fileID: 11500000, guid: 90f68f0524d07bb4cae50a69d73e6f16, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   particleObject: {fileID: 8043191554831424877}
@@ -3630,7 +3630,7 @@ GameObject:
   - component: {fileID: 5730366049295075377}
   - component: {fileID: 8337951018440112287}
   - component: {fileID: 2129603554004184102}
-  - component: {fileID: 8498614175943759089}
+  - component: {fileID: 4353955087199826614}
   m_Layer: 0
   m_Name: CubePurple (1)
   m_TagString: GlowingObject
@@ -3714,7 +3714,7 @@ BoxCollider:
   serializedVersion: 2
   m_Size: {x: 1, y: 1, z: 1}
   m_Center: {x: 0, y: 0, z: 0}
---- !u!114 &8498614175943759089
+--- !u!114 &4353955087199826614
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -3723,7 +3723,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 7081579089350588751}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ff85ae93580ecfd49a5c0defe913e191, type: 3}
+  m_Script: {fileID: 11500000, guid: 90f68f0524d07bb4cae50a69d73e6f16, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   particleObject: {fileID: 8043191554831424877}
@@ -3947,7 +3947,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 6505108331867487331}
-  m_RootOrder: 1
+  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &8227427115077106433
 GameObject:
@@ -4056,7 +4056,7 @@ GameObject:
   - component: {fileID: 5620568086730006082}
   - component: {fileID: 3224967389624763299}
   - component: {fileID: 6532131456954863019}
-  - component: {fileID: 3027441215439765446}
+  - component: {fileID: 631398725877457204}
   m_Layer: 0
   m_Name: CubeBlue
   m_TagString: GlowingObject
@@ -4140,7 +4140,7 @@ BoxCollider:
   serializedVersion: 2
   m_Size: {x: 1, y: 1, z: 1}
   m_Center: {x: 0, y: 0, z: 0}
---- !u!114 &3027441215439765446
+--- !u!114 &631398725877457204
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -4149,7 +4149,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 8729727738504249375}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ff85ae93580ecfd49a5c0defe913e191, type: 3}
+  m_Script: {fileID: 11500000, guid: 90f68f0524d07bb4cae50a69d73e6f16, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   particleObject: {fileID: 8043191554831424877}

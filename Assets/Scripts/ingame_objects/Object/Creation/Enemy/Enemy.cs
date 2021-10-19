@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class Enemy : Creation
 {
@@ -29,6 +30,8 @@ public class Enemy : Creation
 
     public bool deathRequest = false;
 
+    Image healthBar;
+
     // Start is called before the first frame update
     public void Start()
     {
@@ -37,6 +40,10 @@ public class Enemy : Creation
         spawn_rotation = transform.rotation;
         body = transform.Find("Model").Find("Capsule").gameObject;
         deprivateMaterials[0] = body.GetComponent<MeshRenderer>().material;
+
+        transform.Find("Interface").GetComponent<Canvas>().worldCamera = gameManager.mainCamera.gameObject.GetComponent<Camera>();
+        transform.Find("Interface").GetComponent<Canvas>().enabled = false;
+        healthBar = transform.Find("Interface").Find("EnemyHealth").Find("Health").GetComponent<Image>();
     }
 
     // Update is called once per frame
@@ -54,6 +61,30 @@ public class Enemy : Creation
     }
 
     public virtual void EnemyLogicProcess() {}
+
+    public void EnemyHealthBarAnimation(string toDo)
+    {
+        if (toDo == "changed")
+        {
+            if (!transform.Find("Interface").GetComponent<Canvas>().enabled)
+                transform.Find("Interface").GetComponent<Canvas>().enabled = true;
+            StartCoroutine(BarPulse());
+            healthBar.fillAmount = (float)cur_hp / (float)max_hp; 
+        }
+    }
+
+    public IEnumerator BarPulse()
+    {
+        float scaleX = 1f;
+        float scaleXTarget = scaleX * 1.2f;
+        while (scaleX < scaleXTarget)
+        {
+            scaleX += 0.02f;
+            healthBar.gameObject.transform.localScale = new Vector3(scaleX, scaleX, scaleX);
+            yield return new WaitForSeconds(0.01f);
+        }
+        healthBar.gameObject.transform.localScale = new Vector3(1f, 1f, 1f);
+    }
 
     public void Attack()
     {
@@ -123,6 +154,8 @@ public class Enemy : Creation
         foreach (Renderer ren in GetComponentsInChildren<Renderer>())
             ren.enabled = false;
         DisableCollision();
+
+        transform.Find("Interface").GetComponent<Canvas>().enabled = false;
     }
 
     public IEnumerator DeleteDeathParticles(GameObject part)
@@ -140,10 +173,15 @@ public class Enemy : Creation
         transform.position = spawn_position;
         transform.rotation = spawn_rotation;
         cur_hp = max_hp;
+        isReadyToDeprivate = false;
+
+        EnemyHealthBarAnimation("changed");
+        transform.Find("Interface").GetComponent<Canvas>().enabled = false;
 
         body.GetComponent<MeshRenderer>().material = deprivateMaterials[0];
 
         currentLineNum = -1;
+
         is_killed = false;
     }
 
@@ -208,7 +246,7 @@ public class Enemy : Creation
         deprivateMaterials[1] = Resources.Load("LoadMaterials/DeprivationReady", typeof(Material)) as Material;
 
         int iter = 0;
-        while (!is_killed)
+        while (!is_killed && isReadyToDeprivate)
         {
             body.GetComponent<MeshRenderer>().material = deprivateMaterials[iter];
             iter = (iter + 1) % 2;

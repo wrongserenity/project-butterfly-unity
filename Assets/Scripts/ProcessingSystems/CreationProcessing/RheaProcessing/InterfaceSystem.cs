@@ -13,7 +13,7 @@ public class InterfaceSystem : MonoBehaviour
     bool isAdditionalActivated = false;
     Player player;
 
-    private void Start()
+    public void LoadInterface()
     {
         healthBar = transform.Find("HealthGray").Find("Health").GetComponent<Image>();
         energyBar = transform.Find("EnergyGray").Find("Energy").GetComponent<Image>();
