@@ -73,7 +73,6 @@ public class Player : Creation
         base.Start();
 
         max_hp = GlobalVariables.player_max_hp;
-        cur_hp = max_hp;
         speed_vel = GlobalVariables.player_max_speed;
 
         heal_cooldown = gameManager.cooldownSystem.AddCooldown(this, GlobalVariables.player_teleport_cooldown);
@@ -81,7 +80,6 @@ public class Player : Creation
         teleport_cooldown = gameManager.cooldownSystem.AddCooldown(this, GlobalVariables.player_teleport_cooldown);
         xitonCharge_cooldown = gameManager.cooldownSystem.AddCooldown(this, GlobalVariables.player_xiton_charge_cooldown);
 
-        cur_energy = 1000;
 
         Weapon.LoadWeaponFrom("Prefabs/Weapons/RheaSword", this, false);
 
@@ -90,8 +88,11 @@ public class Player : Creation
         xitonChargeCollider = transform.Find("XitonChargeSphere").GetComponent<SphereCollider>();
 
         interfaceObject = transform.Find("Interface").GetComponent<InterfaceSystem>();
+        interfaceObject.LoadInterface();
 
         rewindLine = gameManager.rewindLineRenderer;
+
+        PlayerReload();
     }
 
     //TODO: add init and ready from godot
@@ -167,10 +168,9 @@ public class Player : Creation
         bool hasSource = false;
         foreach (Collider col in Physics.OverlapSphere(xitonChargeCollider.bounds.center, xitonChargeCollider.radius))
         { 
-            if (col.tag == "GlowingObject")
+            if (col.tag == "GlowingObject" && col.GetComponent<GlowingObject>().SpawnParticlesRequest())
             {
                 hasSource = true;
-                col.GetComponent<ParticlesSpawn>().SpawnParticlesRequest();
             }
         }
         return hasSource;
@@ -589,7 +589,7 @@ public class Player : Creation
             stateMachine.RemoveState("death");
         }
 
-        hpEnergy.text = "hp: "+ cur_hp + "\nenergy: " + cur_energy + "\nxiton: " + curXitonCharge;
+        //hpEnergy.text = "hp: "+ cur_hp + "\nenergy: " + cur_energy + "\nxiton: " + curXitonCharge;
     }
 
     void Update()

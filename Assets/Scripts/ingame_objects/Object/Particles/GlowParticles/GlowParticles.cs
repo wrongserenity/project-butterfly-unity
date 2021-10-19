@@ -7,7 +7,7 @@ public class GlowParticles : MonoBehaviour
     Cooldown lifeTimer;
     int iterator = 1;
     Vector3 needPos;
-    public ParticlesSpawn spawnerObject;
+    public GlowingObject spawnerObject;
 
     GameManager gameManager;
     public Vector3 NextDestinationPosition(Vector3 playerPos)
