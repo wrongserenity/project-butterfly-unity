@@ -13,10 +13,17 @@ public class TriggerSystem : MonoBehaviour
         gameManager = GameObject.Find("GameManager").GetComponent<GameManager>();
     }
 
-    public void Reload()
+    public void Clean()
     {
         triggersList.Clear();
         triggered = false;
+    }
+
+    public void Reload()
+    {
+        triggered = false;
+        foreach(Trigger trigger in triggersList)
+                trigger.ReloadTrigged();
     }
 
     public void NewTriggerToLevel(Trigger trigger)
