@@ -92,18 +92,24 @@ public class Player : Creation
 
         rewindLine = gameManager.rewindLineRenderer;
 
-        PlayerReload();
+        PlayerRespawn();
     }
 
     //TODO: add init and ready from godot
 
     // for future ver.: game should save hp and energy on level's start
-    public void PlayerReload()
+    public void PlayerRespawn()
     {
         cur_hp = max_hp;
         cur_energy = 0;
         deprivatedWeapon = null;
-        Teleport(gameManager.levelContainer.transform.GetChild(0).Find("SpawnPosition").position, true);
+        teleportTriggerRequest.Add(gameManager.levelContainer.transform.GetChild(0).Find("SpawnPosition").position);
+        interfaceObject.BarAnimation("health", "changed", 0f);
+    }
+
+    public void PlayerReloadToCheckPoint()
+    {
+        teleportTriggerRequest.Add(gameManager.currentCheckpoint);
         interfaceObject.BarAnimation("health", "changed", 0f);
     }
 
@@ -585,8 +591,14 @@ public class Player : Creation
 
         if (stateMachine.IsActive("death"))
         {
-            PlayerReload();
+            PlayerRespawn();
             stateMachine.RemoveState("death");
+        }
+
+        if (stateMachine.IsActive("checkPointLoad"))
+        {
+            PlayerReloadToCheckPoint();
+            stateMachine.RemoveState("checkPointLoad");
         }
 
         //hpEnergy.text = "hp: "+ cur_hp + "\nenergy: " + cur_energy + "\nxiton: " + curXitonCharge;

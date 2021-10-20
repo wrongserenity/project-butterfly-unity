@@ -36,6 +36,7 @@ public class RoboSwordsman : Enemy
         {
             gameManager.battleSystem.AddToBattle(this);
             is_player_noticed = true;
+            gameManager.AddEnemyToReload(this);
         }
 
         directrionAvailable = GetAvailableDirections();

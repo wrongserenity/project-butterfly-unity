@@ -29,6 +29,8 @@ public class Enemy : Creation
     public Vector3 ownPos = new Vector3(0f, 0f, 0f);
 
     public bool deathRequest = false;
+    public bool isLogicBlocked = false;
+    public bool deprivationActivateRequest = false;
 
     Image healthBar;
 
@@ -49,7 +51,7 @@ public class Enemy : Creation
     // Update is called once per frame
     void FixedUpdate()
     {
-        if (!is_killed)
+        if (!is_killed && !isLogicBlocked)
         {
             EnemyLogicProcess();
         }
@@ -57,6 +59,12 @@ public class Enemy : Creation
         {
             EnemyReload();
             deathRequest = false;
+        }
+        if (deprivationActivateRequest)
+        {
+            isReadyToDeprivate = true;
+            StartCoroutine(DeprivationReadyAnimation());
+            deprivationActivateRequest = false;
         }
     }
 
@@ -218,8 +226,7 @@ public class Enemy : Creation
     {
         if (cur_hp <= max_hp * GlobalVariables.deprivateble_hp_percent)
         {
-            isReadyToDeprivate = true;
-            StartCoroutine(DeprivationReadyAnimation());
+            deprivationActivateRequest = true;
             //print("ready to deprivate");
         }
     }

@@ -9,4 +9,6 @@ public class Trigger : MonoBehaviour
     public virtual bool CheckCondition() { return false; }
 
     public virtual void Activate() { }
+
+    public virtual void ReloadTrigged() { }
 }

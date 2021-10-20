@@ -132,7 +132,7 @@ public class BattleSystem : MonoBehaviour
     {
         if (object_.tag == "Player")
         {
-            gameManager.ReloadCurrentLevel();
+            gameManager.ReloadToCheckPoint();
         }
 
         if (object_.tag == "Enemy")
@@ -150,7 +150,7 @@ public class BattleSystem : MonoBehaviour
             RemoveEnemy(enemy_);
             enemy_.EnemyTurnOff();
             gameManager.player.EnergyTransfer(enemy_.power * GlobalVariables.enemy_power_price);
-                
+            gameManager.AddEnemyToReload(enemy_);
         }
 
     }

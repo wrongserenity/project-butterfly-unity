@@ -15,4 +15,6 @@ public class Level : MonoBehaviour
     // Update is called once per frame
 
     public virtual void FastReload() { }
+
+    public virtual void LoadCheckPoint(List<Enemy> enemies) { }
 }
