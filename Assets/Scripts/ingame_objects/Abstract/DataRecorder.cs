@@ -93,7 +93,8 @@ public class DataRecorder : MonoBehaviour
         isWriting = false;
         movementTrace.AddRange(curLifeTrace);
         dataRepMenu.SetActive(true);
-        dataRepText.text = totalPassingTime + "\n" +
+        dataRepText.text = totalPassingTime +
+            "\n" +
             deathCounter[1] + "\n" +
             deathCounter[0] + "\n" + 
             "\n" +
