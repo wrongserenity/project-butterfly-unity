@@ -149,6 +149,15 @@ public class Player : Creation
     {
         curXitonCharge += value;
 
+        if (value > 0)
+        {
+            dataRec.AddTo("xiton_charged", value);
+        }
+        else
+        {
+            dataRec.AddTo("xiton_spent", -value);
+        }
+
         if (curXitonCharge > maxXitonCharge)
             curXitonCharge = maxXitonCharge;
 

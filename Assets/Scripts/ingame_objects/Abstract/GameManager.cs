@@ -46,7 +46,9 @@ public class GameManager : MonoBehaviour
         if (curLevelIndex == 0)
             player.gameObject.SetActive(true);
         curLevelIndex++;
-        if (curLevelIndex < (levelsPathList.Count - 1))
+        if (curLevelIndex == (levelsPathList.Count - 1))
+            dataRecorder.StoreData();
+        if (curLevelIndex <= (levelsPathList.Count - 1))
             LoadLevelFrom(levelsPathList[curLevelIndex]);
         else
             Debug.Log("ERROR: there is only " + (levelsPathList.Count - 1) + " levels. But called " + curLevelIndex);
@@ -54,6 +56,8 @@ public class GameManager : MonoBehaviour
 
     public void LoadLevelFrom(string path)
     {
+        for (int i = 0; i < levelContainer.transform.childCount; i++)
+            Destroy(levelContainer.transform.GetChild(i).gameObject);
         GameObject go = Resources.Load(path) as GameObject;
         curLevel = Instantiate(go, new Vector3(0f, 0f, 0f), transform.rotation).GetComponent<Level>();
         curLevel.transform.SetParent(levelContainer.transform, false);

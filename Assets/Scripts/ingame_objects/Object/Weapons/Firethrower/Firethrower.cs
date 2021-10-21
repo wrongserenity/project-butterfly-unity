@@ -40,7 +40,6 @@ public class Firethrower : Weapon
         fuel_consumption = fuel / (GlobalVariables.firethrower_fuel_duration_sec / GlobalVariables.firethrower_cooldown);
         gameManager.player.interfaceObject.ShowAdditional();
         gameManager.player.interfaceObject.RefreshAdditionalData(fuel);
-
     }
 
     // Update is called once per frame

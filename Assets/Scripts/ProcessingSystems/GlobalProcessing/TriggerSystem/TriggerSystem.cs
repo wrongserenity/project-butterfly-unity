@@ -33,6 +33,7 @@ public class TriggerSystem : MonoBehaviour
 
     public void Check()
     {
+        List<Trigger> needToDelete = new List<Trigger>() { };
         triggered = false;
         foreach(Trigger trigger in triggersList)
         {
@@ -44,9 +45,12 @@ public class TriggerSystem : MonoBehaviour
             else
             {
                 if (triggersList.Contains(trigger))
-                    triggersList.Remove(trigger);
+                    needToDelete.Add(trigger);
             }
         }
+
+        foreach (Trigger trigger in needToDelete)
+            triggersList.Remove(trigger);
         if (!triggered)
         {
             if (gameManager.player.actionObj != null)

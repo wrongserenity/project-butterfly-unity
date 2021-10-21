@@ -88,6 +88,7 @@ public class RheasSword : Weapon
 
                 if (parryDamageScaleCooldown.in_use)
                 {
+                    gameManager.dataRecorder.AddTo("parry_damage", Mathf.FloorToInt(damage * (parryDamageScale - 1)));
                     gameManager.CancelTimeScaleFor();
                 }
             }

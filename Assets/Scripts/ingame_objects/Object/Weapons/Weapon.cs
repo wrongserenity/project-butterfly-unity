@@ -66,6 +66,12 @@ public class Weapon : MonoBehaviour
                 player.deprivatedWeapon.transform.SetParent(player.transform.Find("Model").transform.Find("weapon").transform, false);
                 player.deprivatedWeapon.GiveWeaponTo(player);
                 player.cur_deprivated_weapon_path = pathInResources;
+
+                if (player.deprivatedWeapon.GetComponent<Firethrower>())
+                    GameObject.Find("GameManager").GetComponent<GameManager>().dataRecorder.AddTo("depr_flamethrower", 1);
+
+                if (player.deprivatedWeapon.GetComponent<GravityBomb>())
+                    GameObject.Find("GameManager").GetComponent<GameManager>().dataRecorder.AddTo("depr_gravitybomb", 1);
             }
         }
 
@@ -211,13 +217,16 @@ public class Weapon : MonoBehaviour
                         isHit = 1;
                         player.DamageImmuneFor(GlobalVariables.player_parry_damage_immune_duration);
 
-                    }else if (player.stateMachine.IsActive("blocking"))
+                        gameManager.dataRecorder.AddTo("parry_times", 1);
+
+                    }
+                    else if (player.stateMachine.IsActive("blocking"))
                     {
-                        print("blocked!");
                         isHit = 2;
                         player.ProcessHp(-Mathf.FloorToInt(damage_/2));
                         Impulse(player, 0.5f);
                         damaged = true;
+                        gameManager.dataRecorder.AddTo("damage_blocked", Mathf.FloorToInt(damage_ / 2));
                     }
                     else
                     {
