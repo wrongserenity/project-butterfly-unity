@@ -78,6 +78,7 @@ public class DoorTrigger : Trigger
     {
         door.SetActive(true);
         activatedButton.enabled = false;
+        activatedButton.fillAmount = 0.0f;
         isOpen = false;
     }
 }
