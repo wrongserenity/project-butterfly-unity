@@ -15,6 +15,7 @@ public class GameManager : MonoBehaviour
     public MusicSystem musicSystem;
     public GameObject levelContainer;
     public LineRenderer rewindLineRenderer;
+    public PauseMenu pauseMenu;
 
     List<Enemy> enemyAfterCheckPoint = new List<Enemy>() { };
     public Vector3 currentCheckpoint;
@@ -26,12 +27,37 @@ public class GameManager : MonoBehaviour
     bool isFading = false;
 
     float startFixedDeltaTime;
-    bool isTimeScaled = false;
+    public bool isTimeScaled = false;
     bool isTimeScalingRN = false;
+
+    List<string> levelsPathList = new List<string>() { "", "Prefabs/Levels/DemoLevel", "Prefabs/Levels/VoidLevel" };
+    int curLevelIndex = 0;
+    Level curLevel;
+
     private void Start()
     {
         deathImage = GameObject.Find("death").GetComponent<Image>();
         startFixedDeltaTime = Time.fixedDeltaTime;
+        deathImage.gameObject.SetActive(false);
+    }
+
+    public void NextLevel()
+    {
+        if (curLevelIndex == 0)
+            player.gameObject.SetActive(true);
+        curLevelIndex++;
+        if (curLevelIndex < (levelsPathList.Count - 1))
+            LoadLevelFrom(levelsPathList[curLevelIndex]);
+        else
+            Debug.Log("ERROR: there is only " + (levelsPathList.Count - 1) + " levels. But called " + curLevelIndex);
+    }
+
+    public void LoadLevelFrom(string path)
+    {
+        GameObject go = Resources.Load(path) as GameObject;
+        curLevel = Instantiate(go, new Vector3(0f, 0f, 0f), transform.rotation).GetComponent<Level>();
+        curLevel.transform.SetParent(levelContainer.transform, false);
+        ReloadCurrentLevel();
     }
 
 
@@ -77,7 +103,7 @@ public class GameManager : MonoBehaviour
 
     public IEnumerator LevelReloadToCheckPoint()
     {
-
+        deathImage.gameObject.SetActive(true);
         isFading = true;
         player.movement_lock = true;
         player.rotation_lock = true;
@@ -115,11 +141,13 @@ public class GameManager : MonoBehaviour
         player.movement_lock = false;
         player.rotation_lock = false;
         isFading = false;
+        deathImage.gameObject.SetActive(false);
     }
 
 
     public IEnumerator LevelReloadFadeInOut()
     {
+        deathImage.gameObject.SetActive(true);
         isFading = true;
         player.movement_lock = true;
         player.rotation_lock = true;
@@ -156,9 +184,10 @@ public class GameManager : MonoBehaviour
         player.movement_lock = false;
         player.rotation_lock = false;
         isFading = false;
+        deathImage.gameObject.SetActive(false);
     }
 
-    public void SetTimeScale(float value)
+    public void SetTimeScale(float value, bool isFromPlayer)
     {
         if (value < 1f)
         {
@@ -166,6 +195,8 @@ public class GameManager : MonoBehaviour
         }
         Time.timeScale = value;
         Time.fixedDeltaTime = Time.timeScale * .01f;
+        if (isFromPlayer)
+            isTimeScaled = true;
     }
     public void ReturnTimeScale()
     {
@@ -175,6 +206,7 @@ public class GameManager : MonoBehaviour
             Time.timeScale = 1f;
             Time.fixedDeltaTime = startFixedDeltaTime;
         }
+        isTimeScaled = false;
     }
     public void SetTimeScaleFor(float value, float duration)
     {

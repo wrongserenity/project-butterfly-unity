@@ -350,7 +350,8 @@ public class Player : Creation
             }
             else
             {
-                gameManager.ReturnTimeScale();
+                if(gameManager.isTimeScaled)
+                    gameManager.ReturnTimeScale();
                 stateMachine.RemoveState("rewinding");
             }
         }
@@ -531,11 +532,12 @@ public class Player : Creation
             {
                 RewindVisualEffect();
                 stateMachine.AddState("rewinding");
-                gameManager.SetTimeScale(0.3f);
+                gameManager.SetTimeScale(0.3f, true);
             }
             else
             {
-                gameManager.ReturnTimeScale();
+                if (gameManager.isTimeScaled)
+                    gameManager.ReturnTimeScale();
             }
         }
 
@@ -620,7 +622,8 @@ public class Player : Creation
         }
         else
         {
-            gameManager.ReturnTimeScale();
+            if (gameManager.isTimeScaled)
+                gameManager.ReturnTimeScale();
             stateMachine.RemoveState("rewindRequest");
             if (stateMachine.IsActive("rewinding"))
             {
@@ -664,6 +667,14 @@ public class Player : Creation
         {
             stateMachine.RemoveState("chargingRequest");
             stateMachine.RemoveState("charging");
+        }
+
+        if (Input.GetKeyDown(KeyCode.Escape))
+        {
+            if (!gameManager.pauseMenu.isPaused)
+                gameManager.pauseMenu.Pause();
+            else
+                gameManager.pauseMenu.Resume();
         }
     }
 
