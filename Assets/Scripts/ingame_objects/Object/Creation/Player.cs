@@ -103,7 +103,12 @@ public class Player : Creation
         cur_hp = max_hp;
         cur_energy = 0;
         deprivatedWeapon = null;
-        teleportTriggerRequest.Add(gameManager.levelContainer.transform.GetChild(0).Find("SpawnPosition").position);
+        if(gameManager.levelContainer.transform.childCount != 0)
+            teleportTriggerRequest.Add(gameManager.levelContainer.transform.GetChild(0).Find("SpawnPosition").position);
+        else
+        {
+            Debug.Log("PlayerRespawn: there is no level in levelContainer");
+        }
         interfaceObject.BarAnimation("health", "changed", 0f);
     }
 
@@ -195,8 +200,11 @@ public class Player : Creation
     {
         if (deprivationSystem.CheckReadyEnemy() && deprivatedWeapon == null)
         {
-            deprivationSystem.DeprivateClothestWeapon();
-            soundSystem.PlayOnce("equipSound");
+            if (Input.GetKeyDown(KeyCode.E))
+            {
+                deprivationSystem.DeprivateClothestWeapon();
+                soundSystem.PlayOnce("equipSound");
+            }      
         }
         else
         {
@@ -428,7 +436,8 @@ public class Player : Creation
                 {
                     foreach(Enemy enemy in line.enemies)
                     {
-                        enemy.DisableCollision();
+                        if (enemy != null)
+                            enemy.DisableCollision();
                     }
                 }
                 controller.Move((telep - pos));

@@ -43,21 +43,27 @@ public class GameManager : MonoBehaviour
 
     public void NextLevel()
     {
-        if (curLevelIndex == 0)
-            player.gameObject.SetActive(true);
         curLevelIndex++;
         if (curLevelIndex == (levelsPathList.Count - 1))
             dataRecorder.StoreData();
+        DestroyLevel();
         if (curLevelIndex <= (levelsPathList.Count - 1))
             LoadLevelFrom(levelsPathList[curLevelIndex]);
         else
             Debug.Log("ERROR: there is only " + (levelsPathList.Count - 1) + " levels. But called " + curLevelIndex);
+
+        player.gameObject.SetActive(true);
     }
 
+    public void DestroyLevel()
+    {
+        for (int i = levelContainer.transform.childCount - 1; i >= 0 ; i--)
+            Destroy(levelContainer.transform.GetChild(i).gameObject);
+        levelContainer.transform.DetachChildren();
+        Debug.Log("Destroyed levels, childCount: " + levelContainer.transform.childCount);
+    }
     public void LoadLevelFrom(string path)
     {
-        for (int i = 0; i < levelContainer.transform.childCount; i++)
-            Destroy(levelContainer.transform.GetChild(i).gameObject);
         GameObject go = Resources.Load(path) as GameObject;
         curLevel = Instantiate(go, new Vector3(0f, 0f, 0f), transform.rotation).GetComponent<Level>();
         curLevel.transform.SetParent(levelContainer.transform, false);
@@ -133,6 +139,7 @@ public class GameManager : MonoBehaviour
         player.cur_energy = currentCheckPointData[1];
         player.curXitonCharge = currentCheckPointData[2];
         battleSystem.Reload();
+        triggerSystem.Reload();
         yield return new WaitForSeconds(0.5f);
 
         while (curAlpha > 0.0f)
