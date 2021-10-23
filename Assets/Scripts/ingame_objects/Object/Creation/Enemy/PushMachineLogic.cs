@@ -15,7 +15,7 @@ public class PushMachineLogic : Enemy
         max_hp = 100;
         cur_hp = 100;
         type = 'e';
-        power = 5;
+        power = 3;
         title = "pushmachine";
         speed_vel = GlobalVariables.melee_max_speed;
         

@@ -8,7 +8,7 @@ public class ChestTrigger : Trigger
 
     Collider area;
 
-    List<string> randomObjects = new List<string>() { "50", "flamethrower", "gravitybomb" };
+    List<string> randomObjects = new List<string>() { "5", "flamethrower", "gravitybomb" };
 
 
     void Start()
@@ -48,8 +48,15 @@ public class ChestTrigger : Trigger
 
     void ProcessByTag(string tag)
     {
-        if (tag == "50")
-            gameManager.player.EnergyTransfer(50);
+        if (tag == "5")
+        {
+            for (int i = 0; i < 5; i++)
+            {
+                GameObject goES = Resources.Load("Prefabs/Staff/EnergySphere") as GameObject;
+                GameObject energySphere = Instantiate(goES, new Vector3(0f, 0f, 0f), new Quaternion(0f, 0f, 0f, 1.0f));
+                energySphere.transform.position = transform.position + new Vector3(Random.Range(0f, 1f), Random.Range(0f, 1f), Random.Range(0f, 1f)).normalized;
+            }
+        }
         else if (tag == "flamethrower")
             Weapon.LoadWeaponFrom("Prefabs/Weapons/Flamethrower/Flamethrower", gameManager.player, true);
         else if (tag == "gravitybomb")

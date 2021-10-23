@@ -16,6 +16,12 @@ public static class GlobalVariables
     public static float short_distance_teleport_circle_timestep = 0.05f;
     public static float enemies_deprivation_ready_ripple_tick_time = 0.5f;
 
+    public static float energy_sphere_life_time = 5f;
+    public static float energy_sphere_no_move_time = 0.5f;
+    public static float energy_sphere_max_collect_distance = 10f;
+    public static float energy_sphere_min_collect_distance = 1f;
+    public static float energy_sphere_speed = 10f;
+
     // level objects variables
     public static float glowing_object_step_time_charge = 0.1f;
     public static float glowing_object_step_charge = 0.02f;

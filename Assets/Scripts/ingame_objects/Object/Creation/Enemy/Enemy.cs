@@ -173,9 +173,16 @@ public class Enemy : Creation
     public void EnemyTurnOff()
     {
         is_killed = true;
+        for (int i=0; i < power; i++)
+        {
+            GameObject goES = Resources.Load("Prefabs/Staff/EnergySphere") as GameObject;
+            GameObject energySphere = Instantiate(goES, new Vector3(0f, 0f, 0f), new Quaternion(0f, 0f, 0f, 1.0f));
+            energySphere.transform.position = transform.position + new Vector3(Random.Range(0f, 1f), Random.Range(0f, 1f), Random.Range(0f, 1f)).normalized;
+        }
 
-        GameObject go = Resources.Load("Prefabs/Staff/EnemyKillParticles") as GameObject;
-        GameObject killingParticles = Instantiate(go, new Vector3(0f, 0f, 0f), new Quaternion(0f, 0f, 0f, 1.0f));
+
+        GameObject goKP = Resources.Load("Prefabs/Staff/EnemyKillParticles") as GameObject;
+        GameObject killingParticles = Instantiate(goKP, new Vector3(0f, 0f, 0f), new Quaternion(0f, 0f, 0f, 1.0f));
         killingParticles.transform.position = transform.position;
 
         StartCoroutine(DeleteDeathParticles(killingParticles));

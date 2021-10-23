@@ -13,6 +13,11 @@ public class TriggerSystem : MonoBehaviour
         gameManager = GameObject.Find("GameManager").GetComponent<GameManager>();
     }
 
+    public void Delete(Trigger trigger)
+    {
+        triggersList.Remove(trigger);
+    }
+
     public void Clean()
     {
         triggersList.Clear();
