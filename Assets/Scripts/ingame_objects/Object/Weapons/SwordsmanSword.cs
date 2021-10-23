@@ -48,7 +48,7 @@ public class SwordsmanSword : Weapon
         }
         else if (hit == 2)
         {
-            // block attack sound
+            gameManager.player.stateMachine.AddState("blockSoundReq");
         }
         else if (hit == 1)
         {
