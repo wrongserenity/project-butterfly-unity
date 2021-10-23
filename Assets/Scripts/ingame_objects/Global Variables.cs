@@ -26,6 +26,7 @@ public static class GlobalVariables
     public static float glowing_object_step_time_charge = 0.1f;
     public static float glowing_object_step_charge = 0.02f;
     public static float glowing_object_step_using = 0.01f;
+    public static float glowing_object_recharge_delay = 3f;
 
     public static float gravity_trigger_tick_cooldown = 0.05f;
     public static float gravity_trigger_push_force = 3f;

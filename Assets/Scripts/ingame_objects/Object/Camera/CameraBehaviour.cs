@@ -28,6 +28,8 @@ public class CameraBehaviour : MonoBehaviour
     VolumeProfile profile;
     Volume volume;
 
+    GameObject followingObject;
+
     void Start()
     {
         gameManager = GameObject.Find("GameManager").GetComponent<GameManager>();
@@ -35,6 +37,7 @@ public class CameraBehaviour : MonoBehaviour
         player = gameManager.player;
         volume = GetComponent<Volume>();
         profile = volume.profile;
+        followingObject = player.gameObject;
     }
 
     void FixedUpdate()
@@ -50,19 +53,43 @@ public class CameraBehaviour : MonoBehaviour
             }
         }
 
-        Vector3 player_pos = player.transform.position;
-        player_pos.y += distance_offset;
+        Vector3 targetVector;
+        targetVector = followingObject.transform.position;
+        targetVector.y += distance_offset;
 
-
-        if ((player_pos - transform.position).magnitude < critical_distance)
+        if ((targetVector - transform.position).magnitude < critical_distance)
         {
-            Vector3 movement_direction = (player_pos - transform.position) * speed_vel;
+            Vector3 movement_direction = (targetVector - transform.position) * speed_vel;
             vel += (movement_direction - vel) * LinearCoef;
             controller.Move(vel * Time.unscaledDeltaTime);
         }
         else
         {
-            transform.position = player_pos;
+            transform.position = targetVector;
+        }
+
+    }
+
+    public void SetFollowingObjectFor(GameObject go, float duration, bool freezePlayer)
+    {
+        if (followingObject == player.gameObject)
+            StartCoroutine(SetFollowingObject(go, duration, freezePlayer));
+    }
+
+    IEnumerator SetFollowingObject(GameObject go, float duration, bool freezePlayer)
+    {
+        if (freezePlayer)
+        {
+            player.rotation_lock = true;
+            player.movement_lock = true;
+        }
+        followingObject = go;
+        yield return new WaitForSeconds(duration);
+        followingObject = player.gameObject;
+        if (freezePlayer)
+        {
+            player.rotation_lock = false;
+            player.movement_lock = false;
         }
     }
 
@@ -130,7 +157,6 @@ public class CameraBehaviour : MonoBehaviour
 
     IEnumerator LensDistortionSmooth(float addValue, float duration)
     {
-
         float step = 0.02f;
         LensDistortion lensDistortion;
         profile.TryGet(out lensDistortion);

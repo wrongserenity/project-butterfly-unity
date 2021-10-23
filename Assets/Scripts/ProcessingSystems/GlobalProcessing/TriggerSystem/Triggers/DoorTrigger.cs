@@ -60,6 +60,8 @@ public class DoorTrigger : Trigger
         float curFill = 0f;
         float timeStep = openDelay / (1f / step);
 
+        gameManager.mainCamera.SetFollowingObjectFor(door, 2f, false);
+
         Color sCol = door.GetComponent<MeshRenderer>().material.color;
 
         while (curFill < 1f)

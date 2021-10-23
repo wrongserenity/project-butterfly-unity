@@ -10,6 +10,7 @@ public class GlowingObject : MonoBehaviour
     public GameObject particleObject;
 
     Cooldown stepTimeCharge;
+    Cooldown rechargeDelay;
     float stepCharge = GlobalVariables.glowing_object_step_charge;
     float stepUsing = GlobalVariables.glowing_object_step_using;
     float curCharge = 1.0f;
@@ -30,6 +31,7 @@ public class GlowingObject : MonoBehaviour
         ownColor = GetComponent<MeshRenderer>().material.GetColor("_EmissionColor");
 
         stepTimeCharge = gameManager.cooldownSystem.AddCooldown(this, GlobalVariables.glowing_object_step_time_charge);
+        rechargeDelay = gameManager.cooldownSystem.AddCooldown(this, GlobalVariables.glowing_object_recharge_delay);
     }
 
     private void FixedUpdate()
@@ -40,7 +42,8 @@ public class GlowingObject : MonoBehaviour
         {
             print("charging, and now: " + curCharge);
             stepTimeCharge.Try();
-            ChargeTransfer(stepCharge);
+            if(!rechargeDelay.in_use)
+                ChargeTransfer(stepCharge);
             isUsing = false;
         }
     }
@@ -56,7 +59,10 @@ public class GlowingObject : MonoBehaviour
         curCharge += value;
         GetComponent<MeshRenderer>().material.SetColor("_EmissionColor", ownColor * curCharge);
         if (curCharge < stepUsing)
+        {
             isBlockedToCharge = true;
+            rechargeDelay.Update();
+        }
         if (curCharge + stepCharge > 1.0f)
             isBlockedToCharge = false;
     }
