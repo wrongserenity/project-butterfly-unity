@@ -4037,6 +4037,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 21c286b389d75e144a1afb2ac52015af, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  game_difficulty: 3
   allowed_power: 050000000f00000006000000090000000500000064000000
 --- !u!4 &1488264087
 Transform:
@@ -4372,6 +4373,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1556647070}
   - component: {fileID: 1556647071}
+  - component: {fileID: 1556647072}
   m_Layer: 0
   m_Name: DifficultSlider
   m_TagString: Untagged
@@ -4452,6 +4454,18 @@ MonoBehaviour:
   m_OnValueChanged:
     m_PersistentCalls:
       m_Calls: []
+--- !u!114 &1556647072
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1556647069}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ae810aa70bceeda4abb8784be8bbd9e6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1561562185
 GameObject:
   m_ObjectHideFlags: 0
@@ -5460,6 +5474,18 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 1
         m_CallState: 2
+      - m_Target: {fileID: 1556647072}
+        m_TargetAssemblyTypeName: DifficultySlider, Assembly-CSharp
+        m_MethodName: CheckChangeValue
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 1
+        m_CallState: 2
 --- !u!114 &1882384810
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -5746,6 +5772,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1946734374}
   - component: {fileID: 1946734375}
+  - component: {fileID: 1946734376}
   m_Layer: 0
   m_Name: VolumeSlider
   m_TagString: Untagged
@@ -5825,7 +5852,31 @@ MonoBehaviour:
   m_Value: 0.387
   m_OnValueChanged:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 1946734376}
+        m_TargetAssemblyTypeName: VolumeSlider, Assembly-CSharp
+        m_MethodName: CheckChangeValue
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+--- !u!114 &1946734376
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1946734373}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: eb346f232599215458dae22a7d52d192, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1962963140
 GameObject:
   m_ObjectHideFlags: 0
@@ -6407,6 +6458,7 @@ GameObject:
   m_Component:
   - component: {fileID: 722308867466841069}
   - component: {fileID: 722308867466841070}
+  - component: {fileID: 722308867466841071}
   m_Layer: 0
   m_Name: VolumeSlider
   m_TagString: Untagged
@@ -6486,7 +6538,31 @@ MonoBehaviour:
   m_Value: 0.387
   m_OnValueChanged:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 722308867466841071}
+        m_TargetAssemblyTypeName: VolumeSlider, Assembly-CSharp
+        m_MethodName: CheckChangeValue
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+--- !u!114 &722308867466841071
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 722308867466841068}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: eb346f232599215458dae22a7d52d192, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &722308867527812345
 GameObject:
   m_ObjectHideFlags: 0
@@ -6723,6 +6799,7 @@ GameObject:
   m_Component:
   - component: {fileID: 722308868008192705}
   - component: {fileID: 722308868008192706}
+  - component: {fileID: 722308868008192707}
   m_Layer: 0
   m_Name: DifficultSlider
   m_TagString: Untagged
@@ -6803,6 +6880,18 @@ MonoBehaviour:
   m_OnValueChanged:
     m_PersistentCalls:
       m_Calls: []
+--- !u!114 &722308868008192707
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 722308868008192704}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ae810aa70bceeda4abb8784be8bbd9e6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &722308868035220805
 GameObject:
   m_ObjectHideFlags: 0
@@ -7068,6 +7157,18 @@ MonoBehaviour:
         m_TargetAssemblyTypeName: UnityEngine.GameObject, UnityEngine
         m_MethodName: SetActive
         m_Mode: 6
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 1
+        m_CallState: 2
+      - m_Target: {fileID: 722308868008192707}
+        m_TargetAssemblyTypeName: DifficultySlider, Assembly-CSharp
+        m_MethodName: CheckChangeValue
+        m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
