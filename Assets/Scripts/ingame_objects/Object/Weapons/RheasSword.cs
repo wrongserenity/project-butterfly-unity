@@ -113,11 +113,13 @@ public class RheasSword : Weapon
         {
             if (parry_window_cooldown.Try())
             {
-                
+                GetOwner().GetComponent<Player>().stateMachine.AddState("blockSoundReq");
                 GetOwner().GetComponent<Player>().stateMachine.AddState("parrying");
             }
-            else
+            else if (!GetOwner().GetComponent<Player>().stateMachine.IsActive("blocking"))
+            {
                 GetOwner().GetComponent<Player>().stateMachine.AddState("blocking");
+            }
             blockSphere.GetComponent<MeshRenderer>().enabled = true;
         }
     }

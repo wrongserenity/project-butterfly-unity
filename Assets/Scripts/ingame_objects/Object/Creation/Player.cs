@@ -578,6 +578,12 @@ public class Player : Creation
             stateMachine.RemoveState("parrySoundReq");
         }
 
+        if (stateMachine.IsActive("blockSoundReq"))
+        {
+            soundSystem.PlayOnce("blockSound");
+            stateMachine.RemoveState("blockSoundReq");
+        }
+
         if (stateMachine.IsActive("chargingRequest"))
         {
             if (XitonChargeAnimation())
