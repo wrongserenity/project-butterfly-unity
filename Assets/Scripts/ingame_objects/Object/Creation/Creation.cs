@@ -54,6 +54,7 @@ public class Creation : MonoBehaviour
         {
             gameObject.GetComponent<Enemy>().CheckDeprivationStatus();
             gameObject.GetComponent<Enemy>().EnemyHealthBarAnimation("changed");
+            gameObject.GetComponent<Enemy>().DamagedAnimationPlay();
         }
 
         if (gameObject.tag == "Player")

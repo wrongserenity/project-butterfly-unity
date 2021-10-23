@@ -22,6 +22,7 @@ public class Enemy : Creation
 
     public bool isReadyToDeprivate = false;
     List<Material> deprivateMaterials = new List<Material>() { null, null };
+    List<Material> damageMaterials = new List<Material>() { null, null };
     public GameObject body;
 
     bool moving_to_original_position = false;
@@ -32,6 +33,9 @@ public class Enemy : Creation
     public bool deathRequest = false;
     public bool isLogicBlocked = false;
     public bool deprivationActivateRequest = false;
+    bool isDamagedAnimating = false;
+    float damagingAnimationDuration = GlobalVariables.enemies_damaged_animation_duration;
+
 
     Image healthBar;
     AudioSource steps;
@@ -46,6 +50,7 @@ public class Enemy : Creation
         spawn_rotation = transform.rotation;
         body = transform.Find("Model").Find("Capsule").gameObject;
         deprivateMaterials[0] = body.GetComponent<MeshRenderer>().material;
+        damageMaterials[0] = body.GetComponent<MeshRenderer>().material;
 
         transform.Find("Interface").GetComponent<Canvas>().worldCamera = gameManager.mainCamera.gameObject.GetComponent<Camera>();
         transform.Find("Interface").GetComponent<Canvas>().enabled = false;
@@ -177,7 +182,7 @@ public class Enemy : Creation
         {
             GameObject goES = Resources.Load("Prefabs/Staff/EnergySphere") as GameObject;
             GameObject energySphere = Instantiate(goES, new Vector3(0f, 0f, 0f), new Quaternion(0f, 0f, 0f, 1.0f));
-            energySphere.transform.position = transform.position + new Vector3(Random.Range(0f, 1f), Random.Range(0f, 1f), Random.Range(0f, 1f)).normalized;
+            energySphere.transform.position = transform.position + new Vector3(Random.Range(0f, 1f), Random.Range(0f, 1f), Random.Range(0f, 1f)).normalized * 1.5f;
         }
 
 
@@ -291,6 +296,12 @@ public class Enemy : Creation
         Kill();
     }
 
+    public void DamagedAnimationPlay()
+    {
+        if (!isDamagedAnimating)
+            StartCoroutine(DamageAnimation(damagingAnimationDuration));
+    }
+
     public IEnumerator DeprivationReadyAnimation()
     {
         float tick = GlobalVariables.enemies_deprivation_ready_ripple_tick_time;
@@ -303,7 +314,26 @@ public class Enemy : Creation
             iter = (iter + 1) % 2;
             yield return new WaitForSeconds(tick);
         }
+        body.GetComponent<MeshRenderer>().material = deprivateMaterials[0];
     }
 
+    public IEnumerator DamageAnimation(float duration)
+    {
+        isDamagedAnimating = true;
+        float tick = GlobalVariables.enemies_damaged_animation_tick_time;
+        float curTime = 0f;
+        damageMaterials[1] = Resources.Load("LoadMaterials/Damaged", typeof(Material)) as Material;
+
+        int iter = 0;
+        while (curTime < duration)
+        {
+            body.GetComponent<MeshRenderer>().material = damageMaterials[iter];
+            iter = (iter + 1) % 2;
+            curTime += tick;
+            yield return new WaitForSeconds(tick);
+        }
+        body.GetComponent<MeshRenderer>().material = damageMaterials[0];
+        isDamagedAnimating = false;
+    }
 
 }

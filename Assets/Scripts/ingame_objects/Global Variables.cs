@@ -15,12 +15,14 @@ public static class GlobalVariables
     public static float short_distance_teleport_circle_lifetime = 0.5f;
     public static float short_distance_teleport_circle_timestep = 0.05f;
     public static float enemies_deprivation_ready_ripple_tick_time = 0.5f;
+    public static float enemies_damaged_animation_tick_time = 0.1f;
+    public static float enemies_damaged_animation_duration = 0.5f;
 
     public static float energy_sphere_life_time = 5f;
     public static float energy_sphere_no_move_time = 0.5f;
     public static float energy_sphere_max_collect_distance = 10f;
     public static float energy_sphere_min_collect_distance = 1f;
-    public static float energy_sphere_speed = 10f;
+    public static float energy_sphere_speed = 15f;
 
     // level objects variables
     public static float glowing_object_step_time_charge = 0.1f;
@@ -118,6 +120,7 @@ public static class GlobalVariables
     public static float gravity_bomb_impulse_force = 5f;
     public static float gravity_bomb_impact_time_step = 0.05f;
     public static float gravity_bomb_impact_duration = 4f;
+    public static int gravity_bomb_damage = 3;
 
     public static float firethrower_cooldown = 0.1f;
     public static int firethrower_damage = 5;

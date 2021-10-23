@@ -19,6 +19,7 @@ public class GravityBomb : Weapon
         deprivationWeaponPath = "Prefabs/Weapons/GravityBomb/GravityBomb";
 
         quantumDowner = gameObject.transform.Find("sounds").transform.Find("QuantumDowner").GetComponent<AudioSource>();
+        damage = GlobalVariables.gravity_bomb_damage;
     }
 
 
@@ -76,8 +77,10 @@ public class GravityBomb : Weapon
                 {
                     Enemy enemy = col.gameObject.GetComponent<Enemy>();
                     enemy.GetImpulse(center - enemy.transform.position, impactDirection * GlobalVariables.gravity_bomb_impulse_force / (center - enemy.transform.position).magnitude);
+                    enemy.ProcessHp(-damage);
                 }
             }
+            
             sphere.transform.localScale = sphere.transform.localScale - impactDirection * new Vector3(sizeStep*2, sizeStep*2, sizeStep*2);
             curDur -= timeStep;
             yield return new WaitForSeconds(timeStep);
