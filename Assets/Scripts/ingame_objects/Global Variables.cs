@@ -30,7 +30,8 @@ public static class GlobalVariables
     // battle system variables
     public static double line_radius = 1f;
     public static int game_difficult = 3;
-    public static float default_notice_range = 7.0f;
+    public static float default_notice_range = 7f;
+    public static float default_forget_range = 20f;
 
     // balance variables
     public static int player_heal_cost = 10;

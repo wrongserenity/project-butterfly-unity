@@ -8,6 +8,7 @@ public class Enemy : Creation
     public bool is_player_noticed = false;
     [System.NonSerialized]
     public float notice_range = GlobalVariables.default_notice_range;
+    public float forget_range = GlobalVariables.default_forget_range;
 
     /// 0- forward, 1 - backward, 2 - right, 3 - left
     public Collider[] movementHitbox;
@@ -33,6 +34,9 @@ public class Enemy : Creation
     public bool deprivationActivateRequest = false;
 
     Image healthBar;
+    AudioSource steps;
+    AudioSource death;
+    public AudioSource playerNotice;
 
     // Start is called before the first frame update
     public void Start()
@@ -46,6 +50,10 @@ public class Enemy : Creation
         transform.Find("Interface").GetComponent<Canvas>().worldCamera = gameManager.mainCamera.gameObject.GetComponent<Camera>();
         transform.Find("Interface").GetComponent<Canvas>().enabled = false;
         healthBar = transform.Find("Interface").Find("EnemyHealth").Find("Health").GetComponent<Image>();
+
+        steps = transform.Find("Sounds").Find("steps").GetComponent<AudioSource>();
+        death = transform.Find("Sounds").Find("death").GetComponent<AudioSource>();
+        playerNotice = transform.Find("Sounds").Find("playerNotice").GetComponent<AudioSource>();
     }
 
     // Update is called once per frame
@@ -53,6 +61,18 @@ public class Enemy : Creation
     {
         if (!is_killed && !isLogicBlocked)
         {
+            if (steps != null && is_player_noticed)
+            {
+                if (vel.magnitude > 0.01f)
+                {
+                    if (!steps.isPlaying)
+                        steps.Play();
+                }
+                else if (steps.isPlaying)
+                    steps.Stop();
+            }
+                
+
             EnemyLogicProcess();
         }
         if (deathRequest)
@@ -164,6 +184,8 @@ public class Enemy : Creation
         DisableCollision();
 
         transform.Find("Interface").GetComponent<Canvas>().enabled = false;
+        death.Play();
+
     }
 
     public IEnumerator DeleteDeathParticles(GameObject part)
@@ -228,6 +250,21 @@ public class Enemy : Creation
         {
             deprivationActivateRequest = true;
             //print("ready to deprivate");
+        }
+    }
+
+    public void CheckPlayerNoticing()
+    {
+        if (!is_player_noticed && GetDistanceToPlayer() <= notice_range)
+        {
+            gameManager.battleSystem.AddToBattle(this);
+            is_player_noticed = true;
+            gameManager.AddEnemyToReload(this);
+        }
+        if (is_player_noticed && GetDistanceToPlayer() >= forget_range)
+        {
+            gameManager.battleSystem.RemoveEnemy(this);
+            is_player_noticed = false;
         }
     }
 
