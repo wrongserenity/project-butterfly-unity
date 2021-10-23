@@ -8,11 +8,12 @@ public class MusicSystem : MonoBehaviour
     BattleSystem battleSystem;
 
     int playing = 0;
+    int playingRequest = 0;
     int fadeCalls = 0;
     public List<AudioSource> music;
 
     float fadeStepSec = 0.05f;
-    float fadeDelaySec = 0f;
+    float fadeDelaySec = 4f;
     float fadeDurationSec = 0.2f;
 
     float beatTime = 1.333f;
@@ -45,22 +46,54 @@ public class MusicSystem : MonoBehaviour
     // Update is called once per frame
     void FixedUpdate()
     {
-        int temp_playing = EstimateBattleState();
-        if (temp_playing != playing && fadeCalls == 0)
+        playingRequest = EstimateBattleState();
+        if (playingRequest != playing && fadeCalls == 0)
         {
-            ChangeMusic(temp_playing);
+            ChangeMusic();
         }
     }
 
-    void ChangeMusic(int what_to_play)
+    void ChangeMusic()
     {
-        if (playing != what_to_play)
+        if (playing != playingRequest)
         {
-            music[what_to_play].time = music[playing].time;
-            StartCoroutine(FadeOut(playing, fadeDurationSec));
-            StartCoroutine(FadeIn(what_to_play, fadeDurationSec));
-            playing = what_to_play;
+            StartCoroutine(FadeInOut(fadeDurationSec));
+            //StartCoroutine(FadeOut(playing, fadeDurationSec));
+            //StartCoroutine(FadeIn(playingRequest, fadeDurationSec));
         }
+    }
+
+
+    IEnumerator FadeInOut(float duration)
+    {
+        fadeCalls++;
+        if (playing > playingRequest)
+            yield return new WaitForSeconds(fadeDelaySec);
+
+        if (EstimateBattleState() == playingRequest)
+        {
+            float tempStartVolume = music[playing].volume;
+            float tempEndVolume = music[playingRequest].volume;
+            float step = tempStartVolume / (duration / fadeStepSec);
+
+            music[playingRequest].volume = 0f;
+            music[playingRequest].Play();
+
+            yield return new WaitForSeconds(DistanceToNextBar(music[playing].time));
+            music[playingRequest].time = music[playing].time;
+
+            while (music[playing].volume > step)
+            {
+                music[playing].volume -= step;
+                music[playingRequest].volume += step;
+                yield return new WaitForSeconds(fadeStepSec);
+            }
+            music[playing].Stop();
+            music[playing].volume = tempStartVolume;
+
+            playing = playingRequest;
+        }
+        fadeCalls--;
     }
 
     IEnumerator FadeOut(int track_number, float duration)
@@ -68,19 +101,25 @@ public class MusicSystem : MonoBehaviour
         fadeCalls++;
         float tempStartVolume = music[track_number].volume;
         float step = tempStartVolume / (duration / fadeStepSec);
-        yield return new WaitForSeconds(fadeDelaySec);
+        if (playing > track_number)
+            yield return new WaitForSeconds(fadeDelaySec);
 
-        // for rythmic
-        yield return new WaitForSeconds(DistanceToNextBar(music[track_number].time));
-
-        while (music[track_number].volume > step)
+        if(EstimateBattleState() == track_number)
         {
-            //Debug.Log("Out " + track_number + ": " + music[track_number].volume);
-            music[track_number].volume -= step;
-            yield return new WaitForSeconds(fadeStepSec);
+            // for rythmic
+            yield return new WaitForSeconds(DistanceToNextBar(music[track_number].time));
+
+            while (music[track_number].volume > step)
+            {
+                //Debug.Log("Out " + track_number + ": " + music[track_number].volume);
+                music[track_number].volume -= step;
+                yield return new WaitForSeconds(fadeStepSec);
+            }
+            music[track_number].Stop();
+            music[track_number].volume = tempStartVolume;
         }
-        music[track_number].Stop();
-        music[track_number].volume = tempStartVolume;
+
+        
         fadeCalls--;
     }
 
@@ -91,17 +130,22 @@ public class MusicSystem : MonoBehaviour
         music[track_number].volume = 0f;
         music[track_number].Play();
         float step = tempEndVolume / (duration / fadeStepSec);
-        yield return new WaitForSeconds(fadeDelaySec);
+        if (playing > track_number)
+            yield return new WaitForSeconds(fadeDelaySec);
 
-        // for rythmic
-        yield return new WaitForSeconds(DistanceToNextBar(music[track_number].time));
-
-        while (music[track_number].volume < tempEndVolume - step)
+        if(EstimateBattleState() == track_number)
         {
-            //Debug.Log("Out " + track_number + ": " + music[track_number].volume);
-            music[track_number].volume += step;
-            yield return new WaitForSeconds(fadeStepSec);
+            // for rythmic
+            yield return new WaitForSeconds(DistanceToNextBar(music[track_number].time));
+
+            while (music[track_number].volume < tempEndVolume - step)
+            {
+                //Debug.Log("Out " + track_number + ": " + music[track_number].volume);
+                music[track_number].volume += step;
+                yield return new WaitForSeconds(fadeStepSec);
+            }
         }
+        
         fadeCalls--;
     }
 
