@@ -55,6 +55,8 @@ public class EnergySphere : Trigger
 
     public void FixedUpdate()
     {
+        if (transform.position.y < 0)
+            StartCoroutine(selfDestroy());
         if (isActivated && !isDestroyed)
         {
             MoveToPlayer();

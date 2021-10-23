@@ -209,6 +209,16 @@ public class Weapon : MonoBehaviour
             }
             else
             {
+                int dif = gameManager.battleSystem.game_difficulty;
+                if (dif == 1)
+                    damage = Mathf.FloorToInt(damage * 1.5f);
+                else if (dif == 2)
+                    damage = Mathf.FloorToInt(damage * 1.2f);
+                else if (dif == 3)
+                    damage = Mathf.FloorToInt(damage * 1f);
+                else if (dif == 4)
+                    damage = Mathf.FloorToInt(damage * 0.7f);
+
                 Player player = col.GetComponent<Player>();
                 if (player != null)
                 {
