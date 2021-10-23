@@ -109,6 +109,9 @@ public class BattleSystem : MonoBehaviour
 
     public void AddToBattle(Enemy target)
     {
+        if (CalculateEnemiesCount() == 0)
+            target.playerNotice.Play();
+
         int available_line = GetAvailableLineNum(target);
         bool result = AddTo(target, available_line);
         if (!result)
@@ -155,7 +158,7 @@ public class BattleSystem : MonoBehaviour
 
     }
 
-    void RemoveEnemy(Enemy enemy)
+    public void RemoveEnemy(Enemy enemy)
     {
         if (enemy.currentLineNum != -1)
         {
@@ -210,7 +213,7 @@ public class BattleSystem : MonoBehaviour
             }
         }else if (param == "distance")
         {
-            if (CalcDistanceToPlayer(first_enemy) > CalcDistanceToPlayer(second_enemy))
+            if (first_enemy.GetDistanceToPlayer() > second_enemy.GetDistanceToPlayer())
             {
                 return true;
             }
@@ -220,11 +223,6 @@ public class BattleSystem : MonoBehaviour
             Debug.Log("ERROR: unknown parameter for battle optimization");
         }
         return false;
-    }
-
-    float CalcDistanceToPlayer(Enemy enemy)
-    {
-        return (enemy.transform.position - gameManager.player.transform.position).magnitude;
     }
 
     void SwapEnemies(Enemy first, Enemy second)

@@ -28,15 +28,7 @@ public class RoboSamuraiLogic : Enemy
         if (initialPosition.magnitude == 0)
             initialPosition = transform.position;
 
-        playerPos = gameManager.player.transform.position;
-        ownPos = transform.position;
-        float distance = (playerPos - ownPos).magnitude;
-        if (distance <= notice_range && !is_player_noticed)
-        {
-            gameManager.battleSystem.AddToBattle(this);
-            is_player_noticed = true;
-            gameManager.AddEnemyToReload(this);
-        }
+        CheckPlayerNoticing();
 
         directrionAvailable = GetAvailableDirections();
 
