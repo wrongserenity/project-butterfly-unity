@@ -243,6 +243,15 @@ public class GameManager : MonoBehaviour
         
     }
 
+    public void ChangeDifficultyOn(int difficulty)
+    {
+        if (battleSystem.game_difficulty != difficulty)
+        {
+            battleSystem.game_difficulty = difficulty;
+            battleSystem.Reload();
+        }
+    }
+
 
     public string Ping()
     {

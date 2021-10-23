@@ -52,7 +52,7 @@ public class BattleSystem : MonoBehaviour
     public List<List<string>> allowed_enemies;
 
     private const int lines_num = 6;
-    int game_difficulty = GlobalVariables.game_difficult;
+    public int game_difficulty = GlobalVariables.game_difficult;
     double default_line_radius = GlobalVariables.line_radius;
     
     public List<int> allowed_power = new List<int> {5, 15, 6, 9, 5, 100};
@@ -66,15 +66,36 @@ public class BattleSystem : MonoBehaviour
         RefreshVariables();
     }
 
-    void RefreshVariables()
+    public void RefreshVariables()
     {
-        if (game_difficulty == 3)
+        lines.Clear();
+        if (game_difficulty <= 2)
         {
             lines.Add(new Line(new List<char> { 'e' }, 5, default_line_radius));
+            lines.Add(new Line(new List<char> { 'm', 'r' }, 10, default_line_radius * 2));
+            lines.Add(new Line(new List<char> { 'm', 'r', 'e' }, 6, default_line_radius * 3));
+            lines.Add(new Line(new List<char> { 'r', 'e' }, 9, default_line_radius * 4));
+            lines.Add(new Line(new List<char> { 's' }, 5, default_line_radius * 5));
+            lines.Add(new Line(new List<char> { 'm', 'r', 's', 'e' }, 100, default_line_radius * 6));
+        }
+
+        if (game_difficulty == 3)
+        {
+            lines.Add(new Line(new List<char> { 'e' }, 10, default_line_radius));
             lines.Add(new Line(new List<char> { 'm', 'r' }, 15, default_line_radius * 2));
             lines.Add(new Line(new List<char> { 'm', 'r', 'e' }, 6, default_line_radius * 3));
             lines.Add(new Line(new List<char> { 'r', 'e' }, 9, default_line_radius * 4));
             lines.Add(new Line(new List<char> { 's' }, 5, default_line_radius * 5));
+            lines.Add(new Line(new List<char> { 'm', 'r', 's', 'e' }, 100, default_line_radius * 6));
+        }
+        
+        if ( game_difficulty >= 4)
+        {
+            lines.Add(new Line(new List<char> { 'e' }, 15, default_line_radius));
+            lines.Add(new Line(new List<char> { 'm', 'r' }, 20, default_line_radius * 2));
+            lines.Add(new Line(new List<char> { 'm', 'r', 'e' }, 10, default_line_radius * 3));
+            lines.Add(new Line(new List<char> { 'r', 'e' }, 12, default_line_radius * 4));
+            lines.Add(new Line(new List<char> { 's' }, 15, default_line_radius * 5));
             lines.Add(new Line(new List<char> { 'm', 'r', 's', 'e' }, 100, default_line_radius * 6));
         }
     }
@@ -152,7 +173,7 @@ public class BattleSystem : MonoBehaviour
 
             RemoveEnemy(enemy_);
             enemy_.EnemyTurnOff();
-            gameManager.player.EnergyTransfer(enemy_.power * GlobalVariables.enemy_power_price);
+            //gameManager.player.EnergyTransfer(enemy_.power * GlobalVariables.enemy_power_price);
             gameManager.AddEnemyToReload(enemy_);
         }
 
@@ -237,23 +258,30 @@ public class BattleSystem : MonoBehaviour
     /// field optimizator
     void FixedUpdate()
     {
-        for (int i = 0; i < lines_num; i++)
+        if (game_difficulty >= 3)
         {
-            foreach(Enemy enemy in lines[i].enemies.ToArray()) 
+            for (int i = 0; i < lines_num; i++)
             {
-                for (int j = 0; j < i; j++)
+                foreach (Enemy enemy in lines[i].enemies.ToArray())
                 {
-                    if (lines[j].CanAdd(enemy))
+                    for (int j = 0; j < i; j++)
                     {
-                        AddTo(enemy, j);
-                    }
-                    if (i == 0 || i == 1)
-                    {
-                        FindProfitSwap(enemy, "distance");
-                    }
-                    if (enemy.cur_hp < enemy.max_hp)
-                    {
-                        FindProfitSwap(enemy, "health");
+                        if (lines[j].CanAdd(enemy))
+                        {
+                            AddTo(enemy, j);
+                        }
+                        if (i == 0 || i == 1)
+                        {
+                            FindProfitSwap(enemy, "distance");
+                        }
+                        if (game_difficulty >= 4)
+                        {
+                            if (enemy.cur_hp < enemy.max_hp)
+                            {
+                                FindProfitSwap(enemy, "health");
+                            }
+                        }
+                        
                     }
                 }
             }
@@ -272,11 +300,11 @@ public class BattleSystem : MonoBehaviour
 
     public void Reload()
     {
-        RefreshVariables();
         foreach (Line line in lines)
         {
             line.enemies.Clear();
             line.current_power = 0;
         }
+        RefreshVariables();
     }
 }
