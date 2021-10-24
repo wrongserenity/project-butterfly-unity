@@ -30,7 +30,7 @@ public class GameManager : MonoBehaviour
     public bool isTimeScaled = false;
     bool isTimeScalingRN = false;
 
-    List<string> levelsPathList = new List<string>() { "", "Prefabs/Levels/DemoLevel", "Prefabs/Levels/VoidLevel" };
+    List<string> levelsPathList = new List<string>() { "", "Prefabs/Levels/DemoLevel",  "Prefabs/Levels/VoidLevel" };
     int curLevelIndex = 0;
     Level curLevel;
 

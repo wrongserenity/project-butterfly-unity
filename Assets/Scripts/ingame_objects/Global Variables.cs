@@ -99,7 +99,7 @@ public static class GlobalVariables
     public static float player_weapon_cooldown = 0.3f;
     public static float player_weapon_push_force = 5f;
     public static int player_weapon_xiton_damage_scaling_cost = 10;
-    public static float player_weapon_xiton_scaling = 5f;
+    public static float player_weapon_xiton_scaling = 3f;
     public static float player_weapon_parry_scaling = 4f;
 
     public static int samurai_weapon_damage = 20; // 2
@@ -120,7 +120,7 @@ public static class GlobalVariables
     public static float gravity_bomb_impulse_force = 5f;
     public static float gravity_bomb_impact_time_step = 0.05f;
     public static float gravity_bomb_impact_duration = 4f;
-    public static int gravity_bomb_damage = 3;
+    public static int gravity_bomb_damage = 2;
 
     public static float firethrower_cooldown = 0.1f;
     public static int firethrower_damage = 5;

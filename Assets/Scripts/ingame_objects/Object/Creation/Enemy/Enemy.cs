@@ -85,11 +85,10 @@ public class Enemy : Creation
             EnemyReload();
             deathRequest = false;
         }
-        if (deprivationActivateRequest)
+        if (deprivationActivateRequest && !isReadyToDeprivate)
         {
             isReadyToDeprivate = true;
             StartCoroutine(DeprivationReadyAnimation());
-            deprivationActivateRequest = false;
         }
     }
 
@@ -197,6 +196,8 @@ public class Enemy : Creation
 
         transform.Find("Interface").GetComponent<Canvas>().enabled = false;
         death.Play();
+        if (steps != null)
+            steps.Stop();
 
     }
 

@@ -26,6 +26,8 @@ public class Creation : MonoBehaviour
     bool isImmortal = false;
     bool isDamageImmune = false;
 
+    bool isFallen = false;
+
     public CharacterController controller;
 
     public void Start()
@@ -89,13 +91,16 @@ public class Creation : MonoBehaviour
 
     public void FallingOutCheck(Vector3 position)
     {
-        if (position.y < -5) {
+        if (position.y < -5 && !isFallen) {
             if (gameObject.tag == "Player")
             {
                 dataRec.PlayerKilled(true);
             }
             Kill();
+            isFallen = true;
         }
+        if (position.y > -5 && isFallen)
+            isFallen = false;
     }
 
     void RotationSmooth(Vector3 direction)

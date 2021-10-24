@@ -13,7 +13,7 @@ public class MusicSystem : MonoBehaviour
     public List<AudioSource> music;
 
     float fadeStepSec = 0.05f;
-    float fadeDelaySec = 4f;
+    float fadeDelaySec = 0f;
     float fadeDurationSec = 0.2f;
 
     float beatTime = 1.333f;
@@ -57,9 +57,11 @@ public class MusicSystem : MonoBehaviour
     {
         if (playing != playingRequest)
         {
-            StartCoroutine(FadeInOut(fadeDurationSec));
-            //StartCoroutine(FadeOut(playing, fadeDurationSec));
-            //StartCoroutine(FadeIn(playingRequest, fadeDurationSec));
+            music[playingRequest].time = music[playing].time;
+            //StartCoroutine(FadeInOut(fadeDurationSec));
+            StartCoroutine(FadeOut(playing, fadeDurationSec));
+            StartCoroutine(FadeIn(playingRequest, fadeDurationSec));
+            playing = playingRequest;
         }
     }
 
@@ -68,7 +70,13 @@ public class MusicSystem : MonoBehaviour
     {
         fadeCalls++;
         if (playing > playingRequest)
+        {
+            fadeCalls--;
             yield return new WaitForSeconds(fadeDelaySec);
+            if (EstimateBattleState() == playingRequest)
+                fadeCalls++;
+
+        }
 
         if (EstimateBattleState() == playingRequest)
         {
@@ -92,8 +100,8 @@ public class MusicSystem : MonoBehaviour
             music[playing].volume = tempStartVolume;
 
             playing = playingRequest;
+            fadeCalls--;
         }
-        fadeCalls--;
     }
 
     IEnumerator FadeOut(int track_number, float duration)
@@ -101,23 +109,18 @@ public class MusicSystem : MonoBehaviour
         fadeCalls++;
         float tempStartVolume = music[track_number].volume;
         float step = tempStartVolume / (duration / fadeStepSec);
-        if (playing > track_number)
-            yield return new WaitForSeconds(fadeDelaySec);
 
-        if(EstimateBattleState() == track_number)
+        // for rythmic
+        yield return new WaitForSeconds(DistanceToNextBar(music[track_number].time));
+
+        while (music[track_number].volume > step)
         {
-            // for rythmic
-            yield return new WaitForSeconds(DistanceToNextBar(music[track_number].time));
-
-            while (music[track_number].volume > step)
-            {
-                //Debug.Log("Out " + track_number + ": " + music[track_number].volume);
-                music[track_number].volume -= step;
-                yield return new WaitForSeconds(fadeStepSec);
-            }
-            music[track_number].Stop();
-            music[track_number].volume = tempStartVolume;
+            //Debug.Log("Out " + track_number + ": " + music[track_number].volume);
+            music[track_number].volume -= step;
+            yield return new WaitForSeconds(fadeStepSec);
         }
+        music[track_number].Stop();
+        music[track_number].volume = tempStartVolume;
 
         
         fadeCalls--;
@@ -130,20 +133,15 @@ public class MusicSystem : MonoBehaviour
         music[track_number].volume = 0f;
         music[track_number].Play();
         float step = tempEndVolume / (duration / fadeStepSec);
-        if (playing > track_number)
-            yield return new WaitForSeconds(fadeDelaySec);
 
-        if(EstimateBattleState() == track_number)
+        // for rythmic
+        yield return new WaitForSeconds(DistanceToNextBar(music[track_number].time));
+
+        while (music[track_number].volume < tempEndVolume - step)
         {
-            // for rythmic
-            yield return new WaitForSeconds(DistanceToNextBar(music[track_number].time));
-
-            while (music[track_number].volume < tempEndVolume - step)
-            {
-                //Debug.Log("Out " + track_number + ": " + music[track_number].volume);
-                music[track_number].volume += step;
-                yield return new WaitForSeconds(fadeStepSec);
-            }
+            //Debug.Log("Out " + track_number + ": " + music[track_number].volume);
+            music[track_number].volume += step;
+            yield return new WaitForSeconds(fadeStepSec);
         }
         
         fadeCalls--;
