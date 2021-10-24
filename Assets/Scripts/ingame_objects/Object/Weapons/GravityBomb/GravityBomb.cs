@@ -31,7 +31,7 @@ public class GravityBomb : Weapon
             if (mousePoint.magnitude > GlobalVariables.gravity_bomb_throw_distance)
                 mousePoint = mousePoint.normalized * GlobalVariables.gravity_bomb_throw_distance + gameManager.player.transform.position;
             else
-                mousePoint = mousePoint + gameManager.player.transform.position;
+                mousePoint += gameManager.player.transform.position;
             aimSprite.transform.position = mousePoint;
         }
     }

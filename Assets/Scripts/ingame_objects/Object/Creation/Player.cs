@@ -502,6 +502,7 @@ public class Player : Creation
 
         Ray cameraRay = camera_obj.ScreenPointToRay(Input.mousePosition);
         Plane groundPlane = new Plane(Vector3.up, Vector3.zero);
+        groundPlane.Translate(new Vector3(0f, -transform.position.y, 0f));
         float rayLength;
 
         if (groundPlane.Raycast(cameraRay, out rayLength))
