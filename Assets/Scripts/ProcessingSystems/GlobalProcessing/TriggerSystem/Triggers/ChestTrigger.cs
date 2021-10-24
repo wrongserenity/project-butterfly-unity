@@ -42,7 +42,7 @@ public class ChestTrigger : Trigger
 
     public override void Activate()
     {
-        ProcessByTag(randomObjects[Random.Range(0, randomObjects.Count - 1)]);
+        ProcessByTag(randomObjects[Random.Range(0, randomObjects.Count)]);
         gameObject.SetActive(false);
     }
 
