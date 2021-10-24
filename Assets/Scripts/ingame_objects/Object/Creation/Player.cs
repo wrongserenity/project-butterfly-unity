@@ -37,7 +37,7 @@ public class Player : Creation
     public string cur_deprivated_weapon_path = "";
     int trace_max_length = GlobalVariables.player_trace_max_length;
     int position_rewind_offset = GlobalVariables.player_position_rewind_offset;
-    bool is_falling = false;
+    bool isLineCleaning = false;
     int tracing_step = GlobalVariables.player_tracing_step;
     int cur_tracing_step = 0;
 
@@ -116,6 +116,12 @@ public class Player : Creation
     {
         teleportTriggerRequest.Add(gameManager.currentCheckpoint);
         interfaceObject.BarAnimation("health", "changed", 0f);
+        if (deprivatedWeapon != null)
+        {
+            deprivatedWeapon.UntieWeapon().DestroyWeapon();
+            deprivatedWeapon = null;
+        }
+        
     }
 
     // there should be weapon instead true in if costruction
@@ -400,7 +406,7 @@ public class Player : Creation
 
     public IEnumerator SmoothTeleport(Vector3 destination, float duration)
     {
-        int stepNumber = 50;
+        int stepNumber = 5;
         float curTime = 0f;
         Vector3 curVector = transform.position;
         Vector3 stepVector = (destination - curVector) / (stepNumber + 1);
@@ -476,6 +482,18 @@ public class Player : Creation
         }
         circles.Clear();
 
+    }
+
+    public IEnumerator CleanTraceLine(float stepTime)
+    {
+        isLineCleaning = true;
+        for (int i = rewindLine.positionCount; i>=0; i--)
+        {
+            if (!stateMachine.IsActive("rewindRequest") && !stateMachine.IsActive("rewinding") && !stateMachine.IsActive("trace_pause"))
+                rewindLine.positionCount = i;
+            yield return new WaitForSeconds(stepTime);
+        }
+        isLineCleaning = false;
     }
 
     public override void DamageImmuneAnimation(float duration)
@@ -561,7 +579,11 @@ public class Player : Creation
         }
 
         if (!stateMachine.IsActive("rewindRequest") && !stateMachine.IsActive("rewinding") && !stateMachine.IsActive("trace_pause"))
+        {
             TraceRecording();
+            if (!isLineCleaning && rewindLine.positionCount > 0)
+                StartCoroutine(CleanTraceLine(0.1f));
+        }
 
         if (stateMachine.IsActive("parrying") && !weapon.GetComponent<RheasSword>().parry_window_cooldown.in_use)
         {
@@ -701,6 +723,9 @@ public class Player : Creation
             else
                 gameManager.pauseMenu.Resume();
         }
+
+        if (Input.GetKeyDown(KeyCode.R))
+            gameManager.ReloadToCheckPoint();
     }
 
     public void Ping()
