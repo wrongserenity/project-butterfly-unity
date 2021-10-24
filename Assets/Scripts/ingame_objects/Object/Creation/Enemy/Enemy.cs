@@ -33,6 +33,7 @@ public class Enemy : Creation
     public bool deathRequest = false;
     public bool isLogicBlocked = false;
     public bool deprivationActivateRequest = false;
+    public bool deprivationActivateLife = false;
     bool isDamagedAnimating = false;
     float damagingAnimationDuration = GlobalVariables.enemies_damaged_animation_duration;
 
@@ -86,6 +87,12 @@ public class Enemy : Creation
             deathRequest = false;
         }
         if (deprivationActivateRequest && !isReadyToDeprivate)
+        {
+            isReadyToDeprivate = true;
+            StartCoroutine(DeprivationReadyAnimation());
+            deprivationActivateRequest = false;
+        }
+        if (deprivationActivateLife && !isReadyToDeprivate)
         {
             isReadyToDeprivate = true;
             StartCoroutine(DeprivationReadyAnimation());
@@ -210,6 +217,9 @@ public class Enemy : Creation
     public void EnemyReload()
     {
         is_player_noticed = false;
+
+        if (steps != null)
+            steps.Stop();
         foreach (Renderer ren in GetComponentsInChildren<Renderer>())
             ren.enabled = true;
         EnableCollision();
