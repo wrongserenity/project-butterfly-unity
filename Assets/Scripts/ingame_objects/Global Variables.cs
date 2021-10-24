@@ -66,7 +66,7 @@ public static class GlobalVariables
     public static float camera_shaking_duration = 0.3f;
     public static float camera_shaking_amplitude = 0f;
     public static float camera_force_soft_coef = 1f;
-    public static float camera_distance_offset = 13.5f;
+    public static float camera_distance_offset = 17f;
     public static float camera_critical_distance = 30f;
 
 
@@ -120,7 +120,7 @@ public static class GlobalVariables
     public static float gravity_bomb_impulse_force = 5f;
     public static float gravity_bomb_impact_time_step = 0.05f;
     public static float gravity_bomb_impact_duration = 4f;
-    public static int gravity_bomb_damage = 2;
+    public static int gravity_bomb_damage = 1;
 
     public static float firethrower_cooldown = 0.1f;
     public static int firethrower_damage = 5;

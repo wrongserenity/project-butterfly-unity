@@ -113,6 +113,7 @@ public class GameManager : MonoBehaviour
 
     public IEnumerator LevelReloadToCheckPoint()
     {
+        SetTimeScale(0f, false);
         deathImage.gameObject.SetActive(true);
         isFading = true;
         player.movement_lock = true;
@@ -130,15 +131,18 @@ public class GameManager : MonoBehaviour
         {
             curAlpha += 0.05f;
             deathImage.color = new Color(0f, 0f, 0f, curAlpha);
-            yield return new WaitForSeconds(0.05f);
+            yield return new WaitForSecondsRealtime(0.05f);
         }
+        bool isReturned = false;
+        while (!isReturned)
+            isReturned = ReturnTimeScale();
 
         yield return new WaitForSeconds(0.5f);
+        battleSystem.Reload();
         levelContainer.transform.GetChild(0).GetComponent<Level>().LoadCheckPoint(enemyAfterCheckPoint);
         player.cur_hp = currentCheckPointData[0];
         player.cur_energy = currentCheckPointData[1];
         player.curXitonCharge = currentCheckPointData[2];
-        battleSystem.Reload();
         triggerSystem.Reload();
         yield return new WaitForSeconds(0.5f);
 
@@ -209,15 +213,18 @@ public class GameManager : MonoBehaviour
         if (isFromPlayer)
             isTimeScaled = true;
     }
-    public void ReturnTimeScale()
+    public bool ReturnTimeScale()
     {
         if (!isTimeScalingRN)
         {
             mainCamera.ChangeCrhomaticAberrationIntencity(0f);
             Time.timeScale = 1f;
             Time.fixedDeltaTime = startFixedDeltaTime;
+            isTimeScaled = false;
+            return true;
         }
-        isTimeScaled = false;
+        return false;
+        
     }
     public void SetTimeScaleFor(float value, float duration)
     {
