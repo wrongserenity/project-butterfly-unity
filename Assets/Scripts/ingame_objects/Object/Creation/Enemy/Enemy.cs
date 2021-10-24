@@ -65,7 +65,12 @@ public class Enemy : Creation
     // Update is called once per frame
     void FixedUpdate()
     {
-        if (!is_killed && !isLogicBlocked)
+        if (deathRequest)
+        {
+            EnemyReload();
+            deathRequest = false;
+        }
+        else if (!is_killed && !isLogicBlocked)
         {
             if (steps != null && is_player_noticed)
             {
@@ -77,15 +82,10 @@ public class Enemy : Creation
                 else if (steps.isPlaying)
                     steps.Stop();
             }
-                
 
             EnemyLogicProcess();
         }
-        if (deathRequest)
-        {
-            EnemyReload();
-            deathRequest = false;
-        }
+
         if (deprivationActivateRequest && !isReadyToDeprivate)
         {
             isReadyToDeprivate = true;
@@ -321,9 +321,14 @@ public class Enemy : Creation
         int iter = 0;
         while (!is_killed && isReadyToDeprivate)
         {
-            body.GetComponent<MeshRenderer>().material = deprivateMaterials[iter];
-            iter = (iter + 1) % 2;
+            if (!isDamagedAnimating)
+            {
+                body.GetComponent<MeshRenderer>().material = deprivateMaterials[iter];
+                iter = (iter + 1) % 2;
+            }
             yield return new WaitForSeconds(tick);
+            if (!isReadyToDeprivate)
+                break;
         }
         body.GetComponent<MeshRenderer>().material = deprivateMaterials[0];
     }
