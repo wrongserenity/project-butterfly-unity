@@ -42,7 +42,6 @@ public class Creation : MonoBehaviour
         {
             if (gameObject.tag == "Player")
             {
-                print("player killed");
                 dataRec.PlayerKilled(false);
             }
             Kill();
@@ -141,7 +140,7 @@ public class Creation : MonoBehaviour
         }
         else
         {
-            Debug.Log("not identified object movement call: add any tag");
+            Debug.Log("ERROR: not identified object movement call: add any tag. Creation.ProcessMovement");
         }
         controller.Move(vel * Time.deltaTime);
     }

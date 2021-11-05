@@ -107,7 +107,7 @@ public class Player : Creation
             teleportTriggerRequest.Add(gameManager.levelContainer.transform.GetChild(0).Find("SpawnPosition").position);
         else
         {
-            Debug.Log("PlayerRespawn: there is no level in levelContainer");
+            Debug.Log("ERROR: there is no level in levelContainer");
         }
         interfaceObject.BarAnimation("health", "changed", 0f);
     }
@@ -730,6 +730,6 @@ public class Player : Creation
 
     public void Ping()
     {
-        print("Player ping!");
+        Debug.Log("Player ping!");
     }
 }

@@ -11,7 +11,7 @@ public class SoundSystem : MonoBehaviour
     {
         foreach(AudioSource sound in GetComponentsInChildren<AudioSource>())
         {
-            print("in sound system: " + sound.name);        
+            //Debug.Log("in sound system: " + sound.name);        
         }
     }
 

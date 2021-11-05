@@ -62,6 +62,17 @@ public class Enemy : Creation
         playerNotice = transform.Find("Sounds").Find("playerNotice").GetComponent<AudioSource>();
     }
 
+
+    IEnumerator DisableLogicFor(float seconds)
+    {
+        if (!isLogicBlocked)
+        {
+            isLogicBlocked = true;
+            yield return new WaitForSeconds(seconds);
+            isLogicBlocked = false;
+        }   
+    }
+
     // Update is called once per frame
     void FixedUpdate()
     {
@@ -88,12 +99,14 @@ public class Enemy : Creation
 
         if (deprivationActivateRequest && !isReadyToDeprivate)
         {
+            //Debug.Log("deprivation activate request processing");
             isReadyToDeprivate = true;
             StartCoroutine(DeprivationReadyAnimation());
             deprivationActivateRequest = false;
         }
         if (deprivationActivateLife && !isReadyToDeprivate)
         {
+            //Debug.Log("deprivation activate life processing");
             isReadyToDeprivate = true;
             StartCoroutine(DeprivationReadyAnimation());
         }
@@ -216,7 +229,7 @@ public class Enemy : Creation
 
     public void EnemyReload()
     {
-        is_player_noticed = false;
+        StartCoroutine(DisableLogicFor(1f));
 
         if (steps != null)
             steps.Stop();
@@ -226,15 +239,18 @@ public class Enemy : Creation
         transform.position = spawn_position;
         transform.rotation = spawn_rotation;
         cur_hp = max_hp;
-        isReadyToDeprivate = false;
 
         EnemyHealthBarAnimation("changed");
         transform.Find("Interface").GetComponent<Canvas>().enabled = false;
 
         body.GetComponent<MeshRenderer>().material = deprivateMaterials[0];
 
-        currentLineNum = -1;
+        gameManager.battleSystem.RemoveEnemy(this);
 
+        StopCoroutine(DeprivationReadyAnimation());
+        isReadyToDeprivate = false;
+        deprivationActivateRequest = false;
+        is_player_noticed = false;
         is_killed = false;
     }
 
@@ -272,8 +288,8 @@ public class Enemy : Creation
         if (cur_hp <= max_hp * GlobalVariables.deprivateble_hp_percent)
         {
             deprivationActivateRequest = true;
-            //print("ready to deprivate");
-        }
+        }else
+            deprivationActivateRequest = false;
     }
 
     public void CheckPlayerNoticing()
@@ -321,14 +337,14 @@ public class Enemy : Creation
         int iter = 0;
         while (!is_killed && isReadyToDeprivate)
         {
+            if (!isReadyToDeprivate)
+                break;
             if (!isDamagedAnimating)
             {
                 body.GetComponent<MeshRenderer>().material = deprivateMaterials[iter];
                 iter = (iter + 1) % 2;
             }
             yield return new WaitForSeconds(tick);
-            if (!isReadyToDeprivate)
-                break;
         }
         body.GetComponent<MeshRenderer>().material = deprivateMaterials[0];
     }

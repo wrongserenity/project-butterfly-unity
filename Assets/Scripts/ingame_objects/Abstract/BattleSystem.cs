@@ -137,11 +137,11 @@ public class BattleSystem : MonoBehaviour
         bool result = AddTo(target, available_line);
         if (!result)
         {
-            Debug.Log("Could not add object to line" + available_line + ". Target: " + target);
+            Debug.Log("ERROR: Could not add enemy to line" + available_line + ". Target: " + target);
         }
         else
         {
-            Debug.Log("successfully added to: " + available_line);
+            //Debug.Log("successfully added to: " + available_line);
         }
 
     }

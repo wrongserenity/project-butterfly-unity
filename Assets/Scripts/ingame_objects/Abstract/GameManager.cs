@@ -60,7 +60,7 @@ public class GameManager : MonoBehaviour
         for (int i = levelContainer.transform.childCount - 1; i >= 0 ; i--)
             Destroy(levelContainer.transform.GetChild(i).gameObject);
         levelContainer.transform.DetachChildren();
-        Debug.Log("Destroyed levels, childCount: " + levelContainer.transform.childCount);
+        //Debug.Log("Destroyed levels, childCount: " + levelContainer.transform.childCount);
     }
     public void LoadLevelFrom(string path)
     {
@@ -74,7 +74,7 @@ public class GameManager : MonoBehaviour
     public void ReloadCurrentLevel()
     {
         if (levelContainer.transform.childCount != 1)
-            Debug.Log("There should be only one level");
+            Debug.Log("ERROR: There should be only one level");
         else
         {
             currentCheckpoint = levelContainer.transform.GetChild(0).Find("SpawnPosition").position;
@@ -103,7 +103,7 @@ public class GameManager : MonoBehaviour
     public void ReloadToCheckPoint()
     {
         if (levelContainer.transform.childCount != 1)
-            Debug.Log("There should be only one level");
+            Debug.Log("ERROR: There should be only one level");
         else
         {
             if (!isFading)
@@ -138,8 +138,9 @@ public class GameManager : MonoBehaviour
             isReturned = ReturnTimeScale();
 
         yield return new WaitForSeconds(0.5f);
-        battleSystem.Reload();
         levelContainer.transform.GetChild(0).GetComponent<Level>().LoadCheckPoint(enemyAfterCheckPoint);
+        enemyAfterCheckPoint.Clear();
+        battleSystem.Reload();
         player.cur_hp = currentCheckPointData[0];
         player.cur_energy = currentCheckPointData[1];
         player.curXitonCharge = currentCheckPointData[2];

@@ -22,14 +22,14 @@ public class DeprivationSystem : MonoBehaviour
     {
         if (!cooldown.in_use)
         {
-            print("deprivating...");
+
             List<Enemy> readyEnemies = new List<Enemy>() { };
             foreach (Collider col in Physics.OverlapSphere(sphereCollider.bounds.center, sphereCollider.radius))
             {
                 if (col.gameObject.tag == "Enemy" && col.gameObject.GetComponent<Enemy>().isReadyToDeprivate)
                     readyEnemies.Add(col.gameObject.GetComponent<Enemy>());
             }
-            print("ready enemy count: " + readyEnemies.Count);
+
 
             float distance = 0f;
             int clothestEnemyIndex = -1;
@@ -47,7 +47,7 @@ public class DeprivationSystem : MonoBehaviour
                     clothestEnemyIndex = i;
                 }
             }
-            print("clothest index " + clothestEnemyIndex);
+            //Debug.Log("clothest index " + clothestEnemyIndex);
             if (clothestEnemyIndex >= 0)
             {
                 readyEnemies[clothestEnemyIndex].GiveWeaponToPlayer();

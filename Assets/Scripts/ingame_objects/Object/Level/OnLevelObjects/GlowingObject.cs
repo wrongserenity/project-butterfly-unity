@@ -40,7 +40,6 @@ public class GlowingObject : MonoBehaviour
             isUsing = false;
         if (curCharge < 1.0 && !stepTimeCharge.in_use && !isUsing)
         {
-            print("charging, and now: " + curCharge);
             stepTimeCharge.Try();
             if(!rechargeDelay.in_use)
                 ChargeTransfer(stepCharge);
@@ -91,7 +90,6 @@ public class GlowingObject : MonoBehaviour
                     particles.RemoveRange(0, particles.Count - 30);
                 }
                 ChargeTransfer(-stepUsing);
-                print("spent, and now: " + curCharge);
                 isUsing = true;
             }
             else
