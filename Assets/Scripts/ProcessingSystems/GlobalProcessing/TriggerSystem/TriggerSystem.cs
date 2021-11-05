@@ -13,10 +13,22 @@ public class TriggerSystem : MonoBehaviour
         gameManager = GameObject.Find("GameManager").GetComponent<GameManager>();
     }
 
-    public void Reload()
+    public void Delete(Trigger trigger)
+    {
+        triggersList.Remove(trigger);
+    }
+
+    public void Clean()
     {
         triggersList.Clear();
         triggered = false;
+    }
+
+    public void Reload()
+    {
+        triggered = false;
+        foreach(Trigger trigger in triggersList)
+                trigger.ReloadTrigged();
     }
 
     public void NewTriggerToLevel(Trigger trigger)
@@ -26,6 +38,7 @@ public class TriggerSystem : MonoBehaviour
 
     public void Check()
     {
+        List<Trigger> needToDelete = new List<Trigger>() { };
         triggered = false;
         foreach(Trigger trigger in triggersList)
         {
@@ -37,9 +50,12 @@ public class TriggerSystem : MonoBehaviour
             else
             {
                 if (triggersList.Contains(trigger))
-                    triggersList.Remove(trigger);
+                    needToDelete.Add(trigger);
             }
         }
+
+        foreach (Trigger trigger in needToDelete)
+            triggersList.Remove(trigger);
         if (!triggered)
         {
             if (gameManager.player.actionObj != null)

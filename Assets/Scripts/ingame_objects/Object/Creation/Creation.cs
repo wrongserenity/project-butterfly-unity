@@ -23,6 +23,11 @@ public class Creation : MonoBehaviour
     public Vector3 additional_force = new Vector3(0f, 0f, 0f);
     public float speed_vel;
 
+    bool isImmortal = false;
+    bool isDamageImmune = false;
+
+    bool isFallen = false;
+
     public CharacterController controller;
 
     public void Start()
@@ -47,22 +52,55 @@ public class Creation : MonoBehaviour
             cur_hp = max_hp;
         }
 
+        if (gameObject.tag == "Enemy" && cur_hp > 0)
+        {
+            gameObject.GetComponent<Enemy>().CheckDeprivationStatus();
+            gameObject.GetComponent<Enemy>().EnemyHealthBarAnimation("changed");
+            gameObject.GetComponent<Enemy>().DamagedAnimationPlay();
+        }
+
+        if (gameObject.tag == "Player")
+        {
+            gameObject.GetComponent<Player>().interfaceObject.BarAnimation("health", "changed", 0f);
+            if (value < 0)
+            {
+                gameManager.mainCamera.RedVignetteFor(0.1f);
+            }
+        }
     }
 
-    void Kill()
+    public void Kill()
     {
         gameManager.battleSystem.Kill(this);
     }
 
+    public void DamageImmuneFor(float seconds)
+    {
+        StartCoroutine(DamageImmune(seconds));
+    }
+
+    public virtual void DamageImmuneAnimation(float duration) { }
+
+    public IEnumerator DamageImmune(float duration)
+    {
+        isDamageImmune = true;
+        DamageImmuneAnimation(duration);
+        yield return new WaitForSeconds(duration);
+        isDamageImmune = false;
+    }
+
     public void FallingOutCheck(Vector3 position)
     {
-        if (position.y < -5) {
+        if (position.y < -5 && !isFallen) {
             if (gameObject.tag == "Player")
             {
                 dataRec.PlayerKilled(true);
             }
             Kill();
+            isFallen = true;
         }
+        if (position.y > -5 && isFallen)
+            isFallen = false;
     }
 
     void RotationSmooth(Vector3 direction)

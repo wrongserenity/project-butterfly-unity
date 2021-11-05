@@ -52,7 +52,7 @@ public class BattleSystem : MonoBehaviour
     public List<List<string>> allowed_enemies;
 
     private const int lines_num = 6;
-    int game_difficulty = GlobalVariables.game_difficult;
+    public int game_difficulty = GlobalVariables.game_difficult;
     double default_line_radius = GlobalVariables.line_radius;
     
     public List<int> allowed_power = new List<int> {5, 15, 6, 9, 5, 100};
@@ -61,15 +61,41 @@ public class BattleSystem : MonoBehaviour
         gameManager = GameObject.Find("GameManager").GetComponent<GameManager>();
         dataRec = gameManager.dataRecorder;
 
-        lines = new List<Line>(); 
+        lines = new List<Line>();
+
+        RefreshVariables();
+    }
+
+    public void RefreshVariables()
+    {
+        lines.Clear();
+        if (game_difficulty <= 2)
+        {
+            lines.Add(new Line(new List<char> { 'e' }, 5, default_line_radius));
+            lines.Add(new Line(new List<char> { 'm', 'r' }, 10, default_line_radius * 2));
+            lines.Add(new Line(new List<char> { 'm', 'r', 'e' }, 6, default_line_radius * 3));
+            lines.Add(new Line(new List<char> { 'r', 'e' }, 9, default_line_radius * 4));
+            lines.Add(new Line(new List<char> { 's' }, 5, default_line_radius * 5));
+            lines.Add(new Line(new List<char> { 'm', 'r', 's', 'e' }, 100, default_line_radius * 6));
+        }
 
         if (game_difficulty == 3)
         {
-            lines.Add(new Line(new List<char> {'e'}, 5, default_line_radius));
-            lines.Add(new Line(new List<char> {'m', 'r'}, 15, default_line_radius * 2));
-            lines.Add(new Line(new List<char> { 'm', 'r', 'e'}, 6, default_line_radius * 3));
+            lines.Add(new Line(new List<char> { 'e' }, 10, default_line_radius));
+            lines.Add(new Line(new List<char> { 'm', 'r' }, 15, default_line_radius * 2));
+            lines.Add(new Line(new List<char> { 'm', 'r', 'e' }, 6, default_line_radius * 3));
             lines.Add(new Line(new List<char> { 'r', 'e' }, 9, default_line_radius * 4));
-            lines.Add(new Line(new List<char> {'s'}, 5, default_line_radius * 5));
+            lines.Add(new Line(new List<char> { 's' }, 5, default_line_radius * 5));
+            lines.Add(new Line(new List<char> { 'm', 'r', 's', 'e' }, 100, default_line_radius * 6));
+        }
+        
+        if ( game_difficulty >= 4)
+        {
+            lines.Add(new Line(new List<char> { 'e' }, 15, default_line_radius));
+            lines.Add(new Line(new List<char> { 'm', 'r' }, 20, default_line_radius * 2));
+            lines.Add(new Line(new List<char> { 'm', 'r', 'e' }, 10, default_line_radius * 3));
+            lines.Add(new Line(new List<char> { 'r', 'e' }, 12, default_line_radius * 4));
+            lines.Add(new Line(new List<char> { 's' }, 15, default_line_radius * 5));
             lines.Add(new Line(new List<char> { 'm', 'r', 's', 'e' }, 100, default_line_radius * 6));
         }
     }
@@ -104,6 +130,9 @@ public class BattleSystem : MonoBehaviour
 
     public void AddToBattle(Enemy target)
     {
+        if (CalculateEnemiesCount() == 0)
+            target.playerNotice.Play();
+
         int available_line = GetAvailableLineNum(target);
         bool result = AddTo(target, available_line);
         if (!result)
@@ -127,13 +156,13 @@ public class BattleSystem : MonoBehaviour
     {
         if (object_.tag == "Player")
         {
-            /// Global.game.reload_current_level()
+            gameManager.ReloadToCheckPoint();
         }
 
         if (object_.tag == "Enemy")
         {
             Enemy enemy_ = (Enemy)object_;
-            if (enemy_.title == "push_machine")
+            if (enemy_.title == "pushmachine")
                 dataRec.AddTo("push_killed", 1);
             else if (enemy_.title == "robosamurai")
                 dataRec.AddTo("samu_killed", 1);
@@ -144,17 +173,18 @@ public class BattleSystem : MonoBehaviour
 
             RemoveEnemy(enemy_);
             enemy_.EnemyTurnOff();
-            gameManager.player.EnergyTransfer(enemy_.power * GlobalVariables.enemy_power_price);
-                
+            //gameManager.player.EnergyTransfer(enemy_.power * GlobalVariables.enemy_power_price);
+            gameManager.AddEnemyToReload(enemy_);
         }
 
     }
 
-    void RemoveEnemy(Enemy enemy)
+    public void RemoveEnemy(Enemy enemy)
     {
         if (enemy.currentLineNum != -1)
         {
             lines[enemy.currentLineNum].Remove(enemy);
+            enemy.currentLineNum = -1;
         }
         else
         {
@@ -204,7 +234,7 @@ public class BattleSystem : MonoBehaviour
             }
         }else if (param == "distance")
         {
-            if (CalcDistanceToPlayer(first_enemy) > CalcDistanceToPlayer(second_enemy))
+            if (first_enemy.GetDistanceToPlayer() > second_enemy.GetDistanceToPlayer())
             {
                 return true;
             }
@@ -214,11 +244,6 @@ public class BattleSystem : MonoBehaviour
             Debug.Log("ERROR: unknown parameter for battle optimization");
         }
         return false;
-    }
-
-    float CalcDistanceToPlayer(Enemy enemy)
-    {
-        return (enemy.transform.position - gameManager.player.transform.position).magnitude;
     }
 
     void SwapEnemies(Enemy first, Enemy second)
@@ -233,23 +258,30 @@ public class BattleSystem : MonoBehaviour
     /// field optimizator
     void FixedUpdate()
     {
-        for (int i = 0; i < lines_num; i++)
+        if (game_difficulty >= 3)
         {
-            foreach(Enemy enemy in lines[i].enemies.ToArray()) 
+            for (int i = 0; i < lines_num; i++)
             {
-                for (int j = 0; j < i; j++)
+                foreach (Enemy enemy in lines[i].enemies.ToArray())
                 {
-                    if (lines[j].CanAdd(enemy))
+                    for (int j = 0; j < i; j++)
                     {
-                        AddTo(enemy, j);
-                    }
-                    if (i == 0 || i == 1)
-                    {
-                        FindProfitSwap(enemy, "distance");
-                    }
-                    if (enemy.cur_hp < enemy.max_hp)
-                    {
-                        FindProfitSwap(enemy, "health");
+                        if (lines[j].CanAdd(enemy))
+                        {
+                            AddTo(enemy, j);
+                        }
+                        if (i == 0 || i == 1)
+                        {
+                            FindProfitSwap(enemy, "distance");
+                        }
+                        if (game_difficulty >= 4)
+                        {
+                            if (enemy.cur_hp < enemy.max_hp)
+                            {
+                                FindProfitSwap(enemy, "health");
+                            }
+                        }
+                        
                     }
                 }
             }
@@ -264,5 +296,15 @@ public class BattleSystem : MonoBehaviour
             sum += line.enemies.Count;
         }
         return sum;
+    }
+
+    public void Reload()
+    {
+        foreach (Line line in lines)
+        {
+            line.enemies.Clear();
+            line.current_power = 0;
+        }
+        RefreshVariables();
     }
 }

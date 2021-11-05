@@ -8,6 +8,7 @@ public class MusicSystem : MonoBehaviour
     BattleSystem battleSystem;
 
     int playing = 0;
+    int playingRequest = 0;
     int fadeCalls = 0;
     public List<AudioSource> music;
 
@@ -45,21 +46,61 @@ public class MusicSystem : MonoBehaviour
     // Update is called once per frame
     void FixedUpdate()
     {
-        int temp_playing = EstimateBattleState();
-        if (temp_playing != playing && fadeCalls == 0)
+        playingRequest = EstimateBattleState();
+        if (playingRequest != playing && fadeCalls == 0)
         {
-            ChangeMusic(temp_playing);
+            ChangeMusic();
         }
     }
 
-    void ChangeMusic(int what_to_play)
+    void ChangeMusic()
     {
-        if (playing != what_to_play)
+        if (playing != playingRequest)
         {
-            music[what_to_play].time = music[playing].time;
+            music[playingRequest].time = music[playing].time;
+            //StartCoroutine(FadeInOut(fadeDurationSec));
             StartCoroutine(FadeOut(playing, fadeDurationSec));
-            StartCoroutine(FadeIn(what_to_play, fadeDurationSec));
-            playing = what_to_play;
+            StartCoroutine(FadeIn(playingRequest, fadeDurationSec));
+            playing = playingRequest;
+        }
+    }
+
+
+    IEnumerator FadeInOut(float duration)
+    {
+        fadeCalls++;
+        if (playing > playingRequest)
+        {
+            fadeCalls--;
+            yield return new WaitForSeconds(fadeDelaySec);
+            if (EstimateBattleState() == playingRequest)
+                fadeCalls++;
+
+        }
+
+        if (EstimateBattleState() == playingRequest)
+        {
+            float tempStartVolume = music[playing].volume;
+            float tempEndVolume = music[playingRequest].volume;
+            float step = tempStartVolume / (duration / fadeStepSec);
+
+            music[playingRequest].volume = 0f;
+            music[playingRequest].Play();
+
+            yield return new WaitForSeconds(DistanceToNextBar(music[playing].time));
+            music[playingRequest].time = music[playing].time;
+
+            while (music[playing].volume > step)
+            {
+                music[playing].volume -= step;
+                music[playingRequest].volume += step;
+                yield return new WaitForSeconds(fadeStepSec);
+            }
+            music[playing].Stop();
+            music[playing].volume = tempStartVolume;
+
+            playing = playingRequest;
+            fadeCalls--;
         }
     }
 
@@ -68,7 +109,6 @@ public class MusicSystem : MonoBehaviour
         fadeCalls++;
         float tempStartVolume = music[track_number].volume;
         float step = tempStartVolume / (duration / fadeStepSec);
-        yield return new WaitForSeconds(fadeDelaySec);
 
         // for rythmic
         yield return new WaitForSeconds(DistanceToNextBar(music[track_number].time));
@@ -81,6 +121,8 @@ public class MusicSystem : MonoBehaviour
         }
         music[track_number].Stop();
         music[track_number].volume = tempStartVolume;
+
+        
         fadeCalls--;
     }
 
@@ -91,7 +133,6 @@ public class MusicSystem : MonoBehaviour
         music[track_number].volume = 0f;
         music[track_number].Play();
         float step = tempEndVolume / (duration / fadeStepSec);
-        yield return new WaitForSeconds(fadeDelaySec);
 
         // for rythmic
         yield return new WaitForSeconds(DistanceToNextBar(music[track_number].time));
@@ -102,6 +143,7 @@ public class MusicSystem : MonoBehaviour
             music[track_number].volume += step;
             yield return new WaitForSeconds(fadeStepSec);
         }
+        
         fadeCalls--;
     }
 
@@ -138,7 +180,7 @@ public class MusicSystem : MonoBehaviour
             int step = (int)Mathf.Floor(mostEpicEnemyAmount / (lenList - 1));
             for (int i = 0; i < lenList - 1; i++)
             {
-                int tempNumber = step * (lenList - 1 + i);
+                int tempNumber = step * (i+1);
                 if (tempNumber != 0)
                     enoughtEnemyAmount.Add(tempNumber);
                 else

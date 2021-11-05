@@ -6,8 +6,6 @@ public class RoboSwordsman : Enemy
 {
     int tickCount = 0;
     Vector3 initialPosition = new Vector3(0f, 0f, 0f);
-    Vector3 playerPos = new Vector3(0f, 0f, 0f);
-    Vector3 ownPos = new Vector3(0f, 0f, 0f);
 
     List<bool> directrionAvailable = new List<bool>() { false, false, false, false };
 
@@ -21,10 +19,8 @@ public class RoboSwordsman : Enemy
         title = "roboswordsman";
         speed_vel = GlobalVariables.melee_max_speed;
 
-        GameObject go = Resources.Load("Prefabs/Weapons/SwordsmanWeapon") as GameObject;
-        weapon = Instantiate(go, new Vector3(0f, 0f, 0f), transform.rotation).GetComponent<Weapon>();
-        weapon.transform.SetParent(transform.Find("Model").transform.Find("weapon").transform, false);
-        weapon.GiveWeaponTo(this);
+
+        Weapon.LoadWeaponFrom("Prefabs/Weapons/SwordsmanWeapon", this, false);
     }
 
     // Update is called once per frame
@@ -33,14 +29,7 @@ public class RoboSwordsman : Enemy
         if (initialPosition.magnitude == 0)
             initialPosition = transform.position;
 
-        playerPos = gameManager.player.transform.position;
-        ownPos = transform.position;
-        float distance = (playerPos - ownPos).magnitude;
-        if (distance <= notice_range && !is_player_noticed)
-        {
-            gameManager.battleSystem.AddToBattle(this);
-            is_player_noticed = true;
-        }
+        CheckPlayerNoticing();
 
         directrionAvailable = GetAvailableDirections();
 

@@ -5,12 +5,16 @@ using UnityEngine.UI;
 
 public class Player : Creation
 {
-    Cooldown player_heal_cooldown;
-    Cooldown player_rewind_cooldown;
+    Cooldown heal_cooldown;
+    Cooldown rewind_cooldown;
+    Cooldown teleport_cooldown;
+    Cooldown xitonCharge_cooldown;
 
+
+    public InterfaceSystem interfaceObject;
     Text hpEnergy;
 
-    int max_energy = GlobalVariables.player_max_energy;
+    public int max_energy = GlobalVariables.player_max_energy;
 
     public GameObject hit_box;
     public Camera camera_obj;
@@ -28,9 +32,12 @@ public class Player : Creation
 
     List<Vector3> position_trace = new List<Vector3>() { };
     List<int> health_trace = new List<int>() { };
+    List<string> weapon_path_trace = new List<string>() { };
+    string last_deprivated_path = "";
+    public string cur_deprivated_weapon_path = "";
     int trace_max_length = GlobalVariables.player_trace_max_length;
     int position_rewind_offset = GlobalVariables.player_position_rewind_offset;
-    bool is_falling = false;
+    bool isLineCleaning = false;
     int tracing_step = GlobalVariables.player_tracing_step;
     int cur_tracing_step = 0;
 
@@ -42,13 +49,22 @@ public class Player : Creation
     public Vector3 prev_dir_m = new Vector3(0f, 0f, 0f);
 
     public int cur_energy = 0;
+    public int curXitonCharge = 0;
+    public int maxXitonCharge = GlobalVariables.player_max_xiton_charge;
 
     // animation variables
     // 0 - forward, 1 - backward, 2 - to the right, 3 - to the left (inversed right)
     int anim_walk_direction = 0;
 
-    bool telepRequest = false;
     public List<Vector3> teleportTriggerRequest = new List<Vector3>() { };
+    public List<Vector3> teleportRequest = new List<Vector3>() { };
+
+    DeprivationSystem deprivationSystem;
+    public Weapon deprivatedWeapon;
+
+    SphereCollider xitonChargeCollider;
+
+    LineRenderer rewindLine;
 
 
     // Start is called before the first frame update
@@ -57,39 +73,67 @@ public class Player : Creation
         base.Start();
 
         max_hp = GlobalVariables.player_max_hp;
-        cur_hp = max_hp;
         speed_vel = GlobalVariables.player_max_speed;
 
-        player_heal_cooldown = gameManager.cooldownSystem.AddCooldown(this, GlobalVariables.player_teleport_cooldown);
-        player_rewind_cooldown = gameManager.cooldownSystem.AddCooldown(this, GlobalVariables.player_position_rewind_cooldown);
+        heal_cooldown = gameManager.cooldownSystem.AddCooldown(this, GlobalVariables.player_teleport_cooldown);
+        rewind_cooldown = gameManager.cooldownSystem.AddCooldown(this, GlobalVariables.player_position_rewind_cooldown);
+        teleport_cooldown = gameManager.cooldownSystem.AddCooldown(this, GlobalVariables.player_teleport_cooldown);
+        xitonCharge_cooldown = gameManager.cooldownSystem.AddCooldown(this, GlobalVariables.player_xiton_charge_cooldown);
 
-        GameObject go = Resources.Load("Prefabs/Weapons/RheaSword") as GameObject;
-        weapon = Instantiate(go, new Vector3(0f, 0f, 0f), transform.rotation).GetComponent<Weapon>();
-        weapon.transform.SetParent(this.transform, false);
-        weapon.GiveWeaponTo(this);
 
-        cur_energy = 1000;
+        Weapon.LoadWeaponFrom("Prefabs/Weapons/RheaSword", this, false);
 
         hpEnergy = GameObject.Find("hp_nrj").GetComponent<Text>();
+        deprivationSystem = transform.Find("DeprivationSystem").GetComponent<DeprivationSystem>();
+        xitonChargeCollider = transform.Find("XitonChargeSphere").GetComponent<SphereCollider>();
+
+        interfaceObject = transform.Find("Interface").GetComponent<InterfaceSystem>();
+        interfaceObject.LoadInterface();
+
+        rewindLine = gameManager.rewindLineRenderer;
+
+        PlayerRespawn();
     }
 
     //TODO: add init and ready from godot
 
     // for future ver.: game should save hp and energy on level's start
-    void PlayerReload()
+    public void PlayerRespawn()
     {
         cur_hp = max_hp;
         cur_energy = 0;
-        // Teleport(Global.level_start_point.translation(), true)
+        deprivatedWeapon = null;
+        if(gameManager.levelContainer.transform.childCount != 0)
+            teleportTriggerRequest.Add(gameManager.levelContainer.transform.GetChild(0).Find("SpawnPosition").position);
+        else
+        {
+            Debug.Log("PlayerRespawn: there is no level in levelContainer");
+        }
+        interfaceObject.BarAnimation("health", "changed", 0f);
+    }
+
+    public void PlayerReloadToCheckPoint()
+    {
+        teleportTriggerRequest.Add(gameManager.currentCheckpoint);
+        interfaceObject.BarAnimation("health", "changed", 0f);
+        if (deprivatedWeapon != null)
+        {
+            deprivatedWeapon.UntieWeapon().DestroyWeapon();
+            deprivatedWeapon = null;
+        }
+        
     }
 
     // there should be weapon instead true in if costruction
     void Attack()
     {
-        if (weapon != null)
+        if (deprivatedWeapon == null)
         {
-            weapon.PlayerAttack();
+            if (weapon != null)
+                weapon.Attack();
         }
+        else 
+            deprivatedWeapon.Attack();
     }
 
     // TODO:  idea: make it return boolean, with returning false if had no enoght energy
@@ -109,6 +153,26 @@ public class Player : Creation
         {
             cur_energy = max_energy;
         }
+        interfaceObject.BarAnimation("energy", "changed", 0f);
+    }
+
+    public void XitonTransfer(int value)
+    {
+        curXitonCharge += value;
+
+        if (value > 0)
+        {
+            dataRec.AddTo("xiton_charged", value);
+        }
+        else
+        {
+            dataRec.AddTo("xiton_spent", -value);
+        }
+
+        if (curXitonCharge > maxXitonCharge)
+            curXitonCharge = maxXitonCharge;
+
+        interfaceObject.BarAnimation("xiton", "changed", 0f);
     }
 
     void HealSelf()
@@ -116,7 +180,7 @@ public class Player : Creation
         if (cur_hp < max_hp && cur_energy >= heal_cost)
         {
             stateMachine.AddState("healing");
-            if (player_heal_cooldown.Try())
+            if (heal_cooldown.Try())
             {
                 ProcessHp(1);
                 dataRec.AddTo("restored_hp", 1);
@@ -125,25 +189,43 @@ public class Player : Creation
         }
     }
 
+    bool XitonChargeAnimation()
+    {
+        bool hasSource = false;
+        foreach (Collider col in Physics.OverlapSphere(xitonChargeCollider.bounds.center, xitonChargeCollider.radius))
+        { 
+            if (col.tag == "GlowingObject" && col.GetComponent<GlowingObject>().SpawnParticlesRequest())
+            {
+                hasSource = true;
+            }
+        }
+        return hasSource;
+    }
+
     void PlayerAction()
     {
-        if (actionObj != null)
+        if (deprivationSystem.CheckReadyEnemy() && deprivatedWeapon == null)
         {
-            if (!actionObj.isIterative)
+            if (Input.GetKeyDown(KeyCode.E))
             {
-                if (Input.GetKeyDown(KeyCode.E))
-                {
-                    actionObj.Activate();
-                }
-            }
-            else
-            {
-                actionObj.Activate();
-            }
+                deprivationSystem.DeprivateClothestWeapon();
+                soundSystem.PlayOnce("equipSound");
+            }      
         }
         else
         {
-            HealSelf();
+            if (actionObj != null)
+            {
+                if (!actionObj.isIterative)
+                {
+                    if (Input.GetKeyDown(KeyCode.E))
+                        actionObj.Activate();
+                }
+                else
+                    actionObj.Activate();
+            }
+            else
+                HealSelf();
         }
     }
 
@@ -214,9 +296,30 @@ public class Player : Creation
             cur_tracing_step--;
         else 
         { 
-            position_trace.Add(pos);
-            health_trace.Add(cur_hp);
-            cur_tracing_step = tracing_step;
+            if (position_trace.Count == 0)
+            {
+                position_trace.Add(pos);
+                health_trace.Add(cur_hp);
+                weapon_path_trace.Add(cur_deprivated_weapon_path);
+                cur_tracing_step = tracing_step;
+            }
+            else
+            {
+                if (pos != position_trace[position_trace.Count-1] || cur_hp != health_trace[health_trace.Count - 1] || cur_deprivated_weapon_path != weapon_path_trace[weapon_path_trace.Count - 1])
+                {
+                    position_trace.Add(pos);
+                    health_trace.Add(cur_hp);
+                    if (last_deprivated_path != cur_deprivated_weapon_path)
+                        weapon_path_trace.Add(cur_deprivated_weapon_path);
+                    else
+                        weapon_path_trace.Add("");
+
+                    if (cur_deprivated_weapon_path == "")
+                        last_deprivated_path = "";
+                    cur_tracing_step = tracing_step;
+                }
+            }
+            
         }
     }
 
@@ -224,6 +327,7 @@ public class Player : Creation
     {
         position_trace.Clear();
         health_trace.Clear();
+        weapon_path_trace.Clear();
     }
 
     public void Teleport(Vector3 new_coordinates, bool clear_trace)
@@ -233,33 +337,102 @@ public class Player : Creation
             CleanTrace();
     }
 
-    void DoRewind()
+    bool DoRewind()
     {
-        if (player_rewind_cooldown.Try())
+        if (rewind_cooldown.Try())
         {
             int count = position_trace.Count;
             if (count > 0 && cur_energy >= rewind_cost)
             {
-                Teleport(position_trace[count-1], false);
+                StartCoroutine(SmoothTeleport(position_trace[count - 1], (float)rewind_cooldown.timeout * 0.8f));
+                //Teleport(position_trace[count-1], false);
                 position_trace.RemoveAt(count-1);
-                ProcessHp(health_trace[count - 1] - cur_hp);
+                if (health_trace[count - 1] - cur_hp != 0)
+                    ProcessHp(health_trace[count - 1] - cur_hp);
                 health_trace.RemoveAt(count-1);
+                if (cur_deprivated_weapon_path != weapon_path_trace[count - 1])
+                {
+                    if (weapon_path_trace[count - 1] == "")
+                    {
+                        //deprivatedWeapon.UntieWeapon().DestroyWeapon();
+                    }
+                    else
+                    {
+                        soundSystem.PlayOnce("equipSound");
+                        Weapon.LoadWeaponFrom(weapon_path_trace[count - 1], this, true);
+                        ClearLastDeprivatedWith(weapon_path_trace[count - 1]);
+                    }
+                }
+                weapon_path_trace.RemoveAt(count - 1);
+
+
                 EnergyTransfer(-rewind_cost);
 
                 dataRec.AddTo("spent_on_rewind", rewind_cost);
-                stateMachine.AddState("rewinding");
+                return true;
             }
             else
             {
+                if(gameManager.isTimeScaled)
+                    gameManager.ReturnTimeScale();
                 stateMachine.RemoveState("rewinding");
             }
         }
+        else
+        {
+            if (position_trace.Count > 0 && cur_energy >= rewind_cost)
+            {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public void ClearLastDeprivatedWith(string path)
+    {
+        bool isEmptyFound = false;
+        for (int i = weapon_path_trace.Count - 1; i >= 0; i--)
+        {
+            if (!isEmptyFound)
+            {
+                if (weapon_path_trace[i] == path)
+                    weapon_path_trace[i] = "";
+                else
+                    isEmptyFound = true;
+            }
+        }
+        last_deprivated_path = path;
+    }
+
+    public IEnumerator SmoothTeleport(Vector3 destination, float duration)
+    {
+        int stepNumber = 5;
+        float curTime = 0f;
+        Vector3 curVector = transform.position;
+        Vector3 stepVector = (destination - curVector) / (stepNumber + 1);
+        float stepTime = duration / stepNumber;
+        
+        while (curTime < duration)
+        {
+            curVector += stepVector;
+            teleportRequest.Add(curVector);
+            curTime += stepTime;
+            yield return new WaitForSecondsRealtime(stepTime);
+        }
+    }
+    
+    void RewindVisualEffect()
+    {
+        rewindLine.positionCount = position_trace.Count;
+        rewindLine.SetPositions(position_trace.ToArray());
     }
 
     void ShortDistanceTeleport(Vector3 pos, Vector3 dir_m_)
     {
         if (cur_energy >= teleport_cost)
         {
+            StartCoroutine(AnimateShortDistanceTeleport(pos, dir_m_));
+
             telep = pos + dir_m_.normalized * teleport_distance;
             // disables enemy collision for passing through them
             // immediately enables after
@@ -269,10 +442,11 @@ public class Player : Creation
                 {
                     foreach(Enemy enemy in line.enemies)
                     {
-                        enemy.DisableCollision();
+                        if (enemy != null)
+                            enemy.DisableCollision();
                     }
                 }
-                controller.Move((telep - pos) * Time.deltaTime);
+                controller.Move((telep - pos));
                 telep *= 0;
                 foreach (Line line in gameManager.battleSystem.lines)
                 {
@@ -287,6 +461,53 @@ public class Player : Creation
         }
     }
 
+    public IEnumerator AnimateShortDistanceTeleport(Vector3 pos, Vector3 dir_m_)
+    {
+        List<GameObject> circles = new List<GameObject>() { };
+        float step = teleport_distance / (GlobalVariables.short_distance_teleport_circle_count);
+        GameObject go = Resources.Load("Prefabs/Player/TeleportCircle") as GameObject;
+        for (int i = 0; i < GlobalVariables.short_distance_teleport_circle_count; i++)
+        {
+            circles.Add(Instantiate(go, new Vector3(0f, 0f, 0f), new Quaternion(0f, 0f, 0f, 1.0f)));
+            circles[circles.Count - 1].transform.position = pos + (i + 1) * step * dir_m_.normalized;
+            circles[circles.Count - 1].transform.rotation = Quaternion.LookRotation(dir_m_.normalized);
+            yield return new WaitForSeconds(GlobalVariables.short_distance_teleport_circle_timestep);
+
+        }
+        yield return new WaitForSeconds(GlobalVariables.short_distance_teleport_circle_lifetime);
+        foreach(GameObject circle in circles)
+        {
+            Destroy(circle);
+            yield return new WaitForSeconds(GlobalVariables.short_distance_teleport_circle_timestep);
+        }
+        circles.Clear();
+
+    }
+
+    public IEnumerator CleanTraceLine(float stepTime)
+    {
+        isLineCleaning = true;
+        for (int i = rewindLine.positionCount; i>=0; i--)
+        {
+            if (!stateMachine.IsActive("rewindRequest") && !stateMachine.IsActive("rewinding") && !stateMachine.IsActive("trace_pause"))
+                rewindLine.positionCount = i;
+            yield return new WaitForSeconds(stepTime);
+        }
+        isLineCleaning = false;
+    }
+
+    public override void DamageImmuneAnimation(float duration)
+    {
+        base.DamageImmuneAnimation(duration);
+        interfaceObject.BarAnimation("health", "immune", duration);
+    }
+
+    public Vector3 GetVeiwPoint()
+    {
+        return dir_v;
+    }
+
+
     // Update is called once per frame
     void FixedUpdate()
     {
@@ -299,6 +520,7 @@ public class Player : Creation
 
         Ray cameraRay = camera_obj.ScreenPointToRay(Input.mousePosition);
         Plane groundPlane = new Plane(Vector3.up, Vector3.zero);
+        groundPlane.Translate(new Vector3(0f, -transform.position.y, 0f));
         float rayLength;
 
         if (groundPlane.Raycast(cameraRay, out rayLength))
@@ -340,25 +562,95 @@ public class Player : Creation
             //          $"model/2d_animation/heal_circle".opacity = 0
         }
 
-        if (stateMachine.IsActive("rewinding"))
-            DoRewind();
-
-        if (!stateMachine.IsActive("rewinding") && !stateMachine.IsActive("trace_pause"))
-            TraceRecording();
-
-
-        if (telepRequest)
+        if (stateMachine.IsActive("rewindRequest"))
         {
-            ShortDistanceTeleport(pos, dir_m);
-            telepRequest = false;
+            
+            if (DoRewind())
+            {
+                RewindVisualEffect();
+                stateMachine.AddState("rewinding");
+                gameManager.SetTimeScale(0.3f, true);
+            }
+            else
+            {
+                if (gameManager.isTimeScaled)
+                    gameManager.ReturnTimeScale();
+            }
         }
+
+        if (!stateMachine.IsActive("rewindRequest") && !stateMachine.IsActive("rewinding") && !stateMachine.IsActive("trace_pause"))
+        {
+            TraceRecording();
+            if (!isLineCleaning && rewindLine.positionCount > 0)
+                StartCoroutine(CleanTraceLine(0.1f));
+        }
+
+        if (stateMachine.IsActive("parrying") && !weapon.GetComponent<RheasSword>().parry_window_cooldown.in_use)
+        {
+            stateMachine.RemoveState("parrying");
+            stateMachine.AddState("blocking");
+        }
+
+
+        if (stateMachine.IsActive("parrySoundReq"))
+        {
+            gameManager.mainCamera.ChangeChromaticAberrationIntencityFor(1f, GlobalVariables.player_parry_window_duration);
+            gameManager.SetTimeScaleFor(0.3f, GlobalVariables.player_parry_window_duration);
+            weapon.gameObject.GetComponent<RheasSword>().parryDamageScaleCooldown.Update();
+            soundSystem.PlayOnce("parrySound");
+            stateMachine.RemoveState("parrySoundReq");
+        }
+
+        if (stateMachine.IsActive("blockSoundReq"))
+        {
+            soundSystem.PlayOnce("blockSound");
+            stateMachine.RemoveState("blockSoundReq");
+        }
+
+        if (stateMachine.IsActive("chargingRequest"))
+        {
+            if (XitonChargeAnimation())
+            {
+                stateMachine.AddState("charging");
+                if (xitonCharge_cooldown.Try())
+                    XitonTransfer(1);
+            }
+            else
+                stateMachine.RemoveState("charging");
+        }
+
+        if (stateMachine.IsActive("teleportRequest"))
+        {
+            ShortDistanceTeleport(pos, prev_dir_m);
+            soundSystem.PlayOnce("teleportSound");
+            stateMachine.RemoveState("teleportRequest");
+        }
+
         if (teleportTriggerRequest.Count > 0)
         {
             Teleport(teleportTriggerRequest[teleportTriggerRequest.Count - 1], true);
             teleportTriggerRequest.Clear();
         }
 
-        hpEnergy.text = "hp: "+ cur_hp + "   energy: " + cur_energy;
+        if (teleportRequest.Count > 0)
+        {
+            Teleport(teleportRequest[teleportRequest.Count - 1], false);
+            teleportRequest.Clear();
+        }
+
+        if (stateMachine.IsActive("death"))
+        {
+            PlayerRespawn();
+            stateMachine.RemoveState("death");
+        }
+
+        if (stateMachine.IsActive("checkPointLoad"))
+        {
+            PlayerReloadToCheckPoint();
+            stateMachine.RemoveState("checkPointLoad");
+        }
+
+        //hpEnergy.text = "hp: "+ cur_hp + "\nenergy: " + cur_energy + "\nxiton: " + curXitonCharge;
     }
 
     void Update()
@@ -373,20 +665,67 @@ public class Player : Creation
 
         if (Input.GetKey(KeyCode.F))
         {
-            stateMachine.AddState("rewinding");
+            stateMachine.AddState("rewindRequest");
         }
         else
-            stateMachine.RemoveState("rewinding");
+        {
+            if (gameManager.isTimeScaled)
+                gameManager.ReturnTimeScale();
+            stateMachine.RemoveState("rewindRequest");
+            if (stateMachine.IsActive("rewinding"))
+            {
+                stateMachine.RemoveState("rewinding");
+            }
+        }
 
         if (Input.GetKeyDown(KeyCode.Mouse0))
         {
             Attack();
         }
 
-        if (Input.GetKeyDown(KeyCode.Space))
+        if (Input.GetKeyDown(KeyCode.Space) && teleport_cooldown.Try())
         {
-            telepRequest = true;
+            stateMachine.AddState("teleportRequest");
         }
+
+        if (Input.GetKey(KeyCode.Mouse1))
+        {
+            if (Input.GetKeyDown(KeyCode.Mouse1))
+            {
+                if (deprivatedWeapon == null)
+                {
+                    weapon.AlternateAttack();
+                }
+                else
+                {
+                    deprivatedWeapon.AlternateAttack();
+                }
+            }  
+        }
+        else
+        {
+            stateMachine.RemoveState("parrying");
+            stateMachine.RemoveState("blocking");
+        }
+
+        if (Input.GetKey(KeyCode.LeftShift))
+            stateMachine.AddState("chargingRequest");
+        else
+        {
+            stateMachine.RemoveState("chargingRequest");
+            stateMachine.RemoveState("charging");
+        }
+
+        if (Input.GetKeyDown(KeyCode.Escape))
+        {
+            if (!gameManager.pauseMenu.isPaused)
+                gameManager.pauseMenu.Pause();
+            else
+                gameManager.pauseMenu.Resume();
+        }
+
+        if (Input.GetKeyDown(KeyCode.R))
+            gameManager.ReloadToCheckPoint();
     }
 
     public void Ping()
