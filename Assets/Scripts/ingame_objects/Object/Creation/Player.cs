@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -309,13 +310,8 @@ public class Player : Creation
                 {
                     position_trace.Add(pos);
                     health_trace.Add(cur_hp);
-                    if (last_deprivated_path != cur_deprivated_weapon_path)
-                        weapon_path_trace.Add(cur_deprivated_weapon_path);
-                    else
-                        weapon_path_trace.Add("");
-
-                    if (cur_deprivated_weapon_path == "")
-                        last_deprivated_path = "";
+                    weapon_path_trace.Add(cur_deprivated_weapon_path);
+                   
                     cur_tracing_step = tracing_step;
                 }
             }
@@ -360,6 +356,7 @@ public class Player : Creation
                     {
                         soundSystem.PlayOnce("equipSound");
                         Weapon.LoadWeaponFrom(weapon_path_trace[count - 1], this, true);
+                        cur_deprivated_weapon_path = ""; // if weapon taked from rewine, we should not write it to time line
                         ClearLastDeprivatedWith(weapon_path_trace[count - 1]);
                     }
                 }
@@ -395,13 +392,13 @@ public class Player : Creation
         {
             if (!isEmptyFound)
             {
-                if (weapon_path_trace[i] == path)
+                if (weapon_path_trace[i].Equals(path))
                     weapon_path_trace[i] = "";
                 else
                     isEmptyFound = true;
             }
         }
-        last_deprivated_path = path;
+
     }
 
     public IEnumerator SmoothTeleport(Vector3 destination, float duration)
@@ -650,7 +647,9 @@ public class Player : Creation
             stateMachine.RemoveState("checkPointLoad");
         }
 
-        //hpEnergy.text = "hp: "+ cur_hp + "\nenergy: " + cur_energy + "\nxiton: " + curXitonCharge;
+
+
+        //hpEnergy.text = "CurDeprWeapon: " + cur_deprivated_weapon_path + "\nLast Weapons: " + String.Join(", ", weapon_path_trace);
     }
 
     void Update()
