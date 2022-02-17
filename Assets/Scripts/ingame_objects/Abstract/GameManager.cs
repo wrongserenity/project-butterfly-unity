@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
-using UnityEngine.Rendering;
+using UnityEngine.SceneManagement;
 
 public class GameManager : MonoBehaviour
 {
@@ -17,7 +17,11 @@ public class GameManager : MonoBehaviour
     public LineRenderer rewindLineRenderer;
     public PauseMenu pauseMenu;
 
-    List<Enemy> enemyAfterCheckPoint = new List<Enemy>() { };
+    public GameObject[] doNotDestroyOnLoad = new GameObject[] { };
+
+    AsyncOperation asyncOperation;
+
+    List <Enemy> enemyAfterCheckPoint = new List<Enemy>() { };
     public Vector3 currentCheckpoint;
     // hp, energy, xiton
     List<int> currentCheckPointData = new List<int>() { 100, 0, 0 };
@@ -30,7 +34,7 @@ public class GameManager : MonoBehaviour
     public bool isTimeScaled = false;
     bool isTimeScalingRN = false;
 
-    List<string> levelsPathList = new List<string>() { "", "Prefabs/Levels/DemoLevel",  "Prefabs/Levels/VoidLevel" };
+    List<string> levelsPathList = new List<string>() {"Prefabs/Levels/DemoLevel",  "Prefabs/Levels/VoidLevel" };
     int curLevelIndex = 0;
     Level curLevel;
 
@@ -39,35 +43,36 @@ public class GameManager : MonoBehaviour
         deathImage = GameObject.Find("death").GetComponent<Image>();
         startFixedDeltaTime = Time.fixedDeltaTime;
         deathImage.gameObject.SetActive(false);
+
+        foreach(GameObject go in doNotDestroyOnLoad)
+            DontDestroyOnLoad(go);
     }
 
-    public void NextLevel()
+    // creates async operation and scene switching waits calling NextLevel()
+    // should be linked to trigger 5-10 seconds before current level's end
+    public void NextLevelPreload()
     {
-        curLevelIndex++;
-        if (curLevelIndex == (levelsPathList.Count - 1))
-            dataRecorder.StoreData();
-        DestroyLevel();
-        if (curLevelIndex <= (levelsPathList.Count - 1))
-            LoadLevelFrom(levelsPathList[curLevelIndex]);
+        asyncOperation = SceneManager.LoadSceneAsync(curLevelIndex + 1);
+        asyncOperation.allowSceneActivation = false;
+    }
+
+    // linking to level's end
+    public bool NextLevel()
+    {
+        if (asyncOperation != null)
+        {
+            curLevelIndex++;
+            asyncOperation.allowSceneActivation = true;
+
+            if (curLevelIndex == (levelsPathList.Count))
+                dataRecorder.StoreData();
+            return true;
+        }
         else
-            Debug.Log("ERROR: there is only " + (levelsPathList.Count - 1) + " levels. But called " + curLevelIndex);
-
-        player.gameObject.SetActive(true);
-    }
-
-    public void DestroyLevel()
-    {
-        for (int i = levelContainer.transform.childCount - 1; i >= 0 ; i--)
-            Destroy(levelContainer.transform.GetChild(i).gameObject);
-        levelContainer.transform.DetachChildren();
-        //Debug.Log("Destroyed levels, childCount: " + levelContainer.transform.childCount);
-    }
-    public void LoadLevelFrom(string path)
-    {
-        GameObject go = Resources.Load(path) as GameObject;
-        curLevel = Instantiate(go, new Vector3(0f, 0f, 0f), transform.rotation).GetComponent<Level>();
-        curLevel.transform.SetParent(levelContainer.transform, false);
-        ReloadCurrentLevel();
+        {
+            return false;
+        }
+        
     }
 
 

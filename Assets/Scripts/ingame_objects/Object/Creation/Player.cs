@@ -725,6 +725,16 @@ public class Player : Creation
 
         if (Input.GetKeyDown(KeyCode.R))
             gameManager.ReloadToCheckPoint();
+
+        if (Input.GetKeyDown(KeyCode.P))
+        {
+            gameManager.NextLevelPreload();
+        }
+
+        if (Input.GetKeyDown(KeyCode.N))
+        {
+            gameManager.NextLevel();
+        }
     }
 
     public void Ping()
