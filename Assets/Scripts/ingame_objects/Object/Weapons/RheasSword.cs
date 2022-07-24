@@ -1,21 +1,22 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using FMODUnity;
 
 public class RheasSword : Weapon
 {
     Cooldown cooldown;
     public Cooldown parry_window_cooldown;
 
-
     GameObject blockSphere;
     public Cooldown parryDamageScaleCooldown;
     float parryDamageScale = GlobalVariables.player_weapon_parry_scaling;
 
-
     AudioSource attack;
     AudioSource whoosh;
     AudioSource attackXiton;
+
+    public StudioEventEmitter attackEvent;
 
     List<Color> particlesColors = new List<Color>() { };
 
@@ -27,8 +28,6 @@ public class RheasSword : Weapon
     Gradient gradient;
     GradientColorKey[] colorKey;
     GradientAlphaKey[] alphaKey;
-        
-
 
     void Start()
     {
@@ -52,10 +51,6 @@ public class RheasSword : Weapon
         particlesColors.Add(Color.yellow);
 
         parryDamageScaleCooldown = gameManager.cooldownSystem.AddCooldown(this, GlobalVariables.player_parry_damage_boost_time);
-
-
-
-
     }
 
     public override void Attack()
@@ -83,8 +78,23 @@ public class RheasSword : Weapon
                 {
                     attackXiton.Play();
                 }
+                else
+                {
+                    FMOD.Studio.EventInstance attackInstance = RuntimeManager.CreateInstance(attackEvent.EventReference);
+                    attackInstance.setParameterByName("ParameterName", Random.Range(0f, 1f));
+                    attackInstance.start();
+
+                    //float tempValue;
+                    //attackEvent.EventInstance.getParameterByName("ParameterName", out tempValue);
+                    //float value = Random.Range(0f, 1f);
+                    //attackEvent.SetParameter("ParameterName", value);
+                    //float tempTempValue;
+                    //attackEvent.EventInstance.getParameterByName("ParameterName", out tempTempValue);
+                    //Debug.Log("From: " + tempValue + " by: " + value + " to: " + tempTempValue);
+                    //attackEvent.Play();
+                }
+
                 ParticlesSpawn(2 * ((parryDamageScaleCooldown.in_use ? parryDamageScale : 1) - (isXitonHit ? 0 : 1)));
-                attack.Play();
 
                 if (parryDamageScaleCooldown.in_use)
                 {

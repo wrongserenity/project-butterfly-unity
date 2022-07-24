@@ -520,6 +520,7 @@ GameObject:
   m_Component:
   - component: {fileID: 2985965637200182242}
   - component: {fileID: 1215199496478499504}
+  - component: {fileID: 424770045874245161}
   m_Layer: 0
   m_Name: attack
   m_TagString: Untagged
@@ -548,7 +549,7 @@ AudioSource:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 7993824338332925504}
-  m_Enabled: 1
+  m_Enabled: 0
   serializedVersion: 4
   OutputAudioMixerGroup: {fileID: 0}
   m_audioClip: {fileID: 8300000, guid: 8ae4a88fc6960384abe5dc8de0949f57, type: 3}
@@ -637,6 +638,36 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
+--- !u!114 &424770045874245161
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7993824338332925504}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9a6610d2e704f1648819acc8d7460285, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  CollisionTag: 
+  EventReference:
+    Guid:
+      Data1: -405096323
+      Data2: 1087072564
+      Data3: 687528871
+      Data4: -569451986
+    Path: event:/Atack
+  Event: 
+  PlayEvent: 0
+  StopEvent: 0
+  AllowFadeout: 1
+  TriggerOnce: 0
+  Preload: 0
+  Params: []
+  OverrideAttenuation: 0
+  OverrideMinDistance: 0
+  OverrideMaxDistance: 0
 --- !u!1 &8751620070943986889
 GameObject:
   m_ObjectHideFlags: 0
@@ -708,3 +739,4 @@ MonoBehaviour:
   state: 0
   attackSprite: {fileID: 3729357238966298946}
   fadeStepSec: 0.01
+  attackEvent: {fileID: 424770045874245161}

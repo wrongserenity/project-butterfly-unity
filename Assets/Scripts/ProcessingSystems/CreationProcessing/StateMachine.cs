@@ -5,6 +5,12 @@ using UnityEngine;
 public class StateMachine : MonoBehaviour
 {
     List<string> stateList = new List<string>() { };
+
+    Hashtable environmentConditions = new Hashtable();
+    public static string REVERBERATION_PARAMETER_NAME = "reverberation";
+    public static float REVERBERATION_DEFAULT_VALUE = 0f;
+
+
     public SoundSystem soundSystem;
     List<string> availableSounds = new List<string>() { };
 
@@ -14,6 +20,27 @@ public class StateMachine : MonoBehaviour
         foreach (AudioSource sound in soundSystem.GetComponentsInChildren<AudioSource>())
         {
             availableSounds.Add(sound.name);
+        }
+
+        InitDefaultEnvironmentConditions();
+    }
+
+    void InitDefaultEnvironmentConditions()
+    {
+        environmentConditions.Clear();
+        environmentConditions.Add(REVERBERATION_PARAMETER_NAME, REVERBERATION_DEFAULT_VALUE);
+    }
+
+    public void SetEnvironmentConditionValue(string parameterName, object value=null)
+    {
+        if (parameterName == REVERBERATION_PARAMETER_NAME)
+        {
+            object temp_value = value ?? REVERBERATION_DEFAULT_VALUE;
+            if (temp_value != environmentConditions[parameterName])
+            {
+                environmentConditions[parameterName] = temp_value;
+                soundSystem.UpdateParameterByName("walking", "Room", (float)temp_value);
+            }
         }
     }
 

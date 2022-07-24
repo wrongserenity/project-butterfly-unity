@@ -1,23 +1,26 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using FMODUnity;
 
 public class SoundSystem : MonoBehaviour
 {
     public List<string> playlist;
+    Dictionary<string, StudioEventEmitter> emitters = new Dictionary<string, StudioEventEmitter>();
 
 
     void Start()
     {
-        foreach(AudioSource sound in GetComponentsInChildren<AudioSource>())
+        foreach(StudioEventEmitter emitter in GetComponentsInChildren<StudioEventEmitter>())
         {
-            //Debug.Log("in sound system: " + sound.name);        
+            Debug.Log("in sound system: " + emitter.name);
+            emitters.Add(emitter.name, emitter);
         }
     }
 
     public void AddToPlaylist(string soundName)
     {
-        if (!playlist.Contains(soundName))
+        if (!playlist.Contains(soundName) && emitters.ContainsKey(soundName))
         {
             playlist.Add(soundName);
         }
@@ -34,36 +37,32 @@ public class SoundSystem : MonoBehaviour
 
     public void Check()
     {
-        foreach(AudioSource sound in GetComponentsInChildren<AudioSource>())
+        foreach(KeyValuePair<string, StudioEventEmitter> emitter in emitters)
         {
-            if (sound.loop)
-            {
-                if (playlist.Contains(sound.name) && !sound.isPlaying)
-                {
-                    sound.Play();
-                }
-                if (sound.isPlaying && !playlist.Contains(sound.name))
-                {
-                    sound.Stop();
-                }
-            }
+            if (playlist.Contains(emitter.Key) && !emitter.Value.IsPlaying())
+                emitter.Value.Play();
+            else if (emitter.Value.IsPlaying() && !playlist.Contains(emitter.Key))
+                emitter.Value.Stop();
         }
     }
 
     public void PlayOnce(string soundName)
     {
-        bool isPlayed = false;
-        foreach (AudioSource sound in GetComponentsInChildren<AudioSource>())
-        {
-            if (sound.name == soundName)
-            {
-                isPlayed = true;
-                sound.Play();
-            }
-        }
+        //bool isPlayed = false;
+        if (emitters.ContainsKey(soundName))
+            emitters[soundName]?.Play();
         //if (!isPlayed)
         //    print("not played");
         //else
         //    print("played " + soundName);
+    }
+
+    public void UpdateParameterByName(string eventName, string parameterName, float value)
+    {
+        if (emitters.ContainsKey(eventName))
+        {
+            emitters[eventName].SetParameter(parameterName, value);
+            Debug.Log("New parameter value: " + value);
+        }
     }
 }
