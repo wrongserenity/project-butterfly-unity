@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<objects serializationModel="Studio.02.00.00">
+	<object class="AudioFile" id="{c1b4a6e5-8d49-4d47-b03f-d14ce71449d3}">
+		<property name="assetPath">
+			<value>Beep - Stereo Out.wav</value>
+		</property>
+		<property name="isStreaming">
+			<value>true</value>
+		</property>
+		<property name="frequencyInKHz">
+			<value>44.0999985</value>
+		</property>
+		<property name="channelCount">
+			<value>2</value>
+		</property>
+		<property name="length">
+			<value>66</value>
+		</property>
+		<relationship name="masterAssetFolder">
+			<destination>{db751a81-71da-40a5-9cfb-71bc7b6e2ae2}</destination>
+		</relationship>
+	</object>
+</objects>

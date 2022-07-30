@@ -1,5 +1,5 @@
 
-using System.Collections;
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -14,10 +14,10 @@ public class Line
 
     public Line(List<char> allowed_enemies_, int power_, double radius_)
     {
-     allowed_enemies = allowed_enemies_;
-     max_power = power_;
-     radius = radius_;
-     current_power = 0;
+        allowed_enemies = allowed_enemies_;
+        max_power = power_;
+        radius = radius_;
+        current_power = 0;
     }
 
     public bool CanAdd(Enemy target)
@@ -48,6 +48,8 @@ public class BattleSystem : MonoBehaviour
     GameManager gameManager;
     DataRecorder dataRec;
 
+    public event Action OnBattleActivityChanged;
+
     public List<Line> lines;
     public List<List<string>> allowed_enemies;
 
@@ -56,6 +58,7 @@ public class BattleSystem : MonoBehaviour
     double default_line_radius = GlobalVariables.line_radius;
     
     public List<int> allowed_power = new List<int> {5, 15, 6, 9, 5, 100};
+
     void Start()
     {
         gameManager = GameObject.Find("GameManager").GetComponent<GameManager>();
@@ -98,6 +101,8 @@ public class BattleSystem : MonoBehaviour
             lines.Add(new Line(new List<char> { 's' }, 15, default_line_radius * 5));
             lines.Add(new Line(new List<char> { 'm', 'r', 's', 'e' }, 100, default_line_radius * 6));
         }
+
+        FireButtleActivityChanged();
     }
 
     public int GetAvailableLineNum(Enemy target)
@@ -122,6 +127,8 @@ public class BattleSystem : MonoBehaviour
         if (removal_successful && line_num >= 0 && line_num < lines_num) {
             lines[line_num].Add(target);
             target.currentLineNum = line_num;
+
+            FireButtleActivityChanged();
             return true;
         } else {
             return false;
@@ -139,11 +146,6 @@ public class BattleSystem : MonoBehaviour
         {
             Debug.Log("ERROR: Could not add enemy to line" + available_line + ". Target: " + target);
         }
-        else
-        {
-            //Debug.Log("successfully added to: " + available_line);
-        }
-
     }
 
     public float GetMaxDistance(int lineNumber)
@@ -176,7 +178,6 @@ public class BattleSystem : MonoBehaviour
             //gameManager.player.EnergyTransfer(enemy_.power * GlobalVariables.enemy_power_price);
             gameManager.AddEnemyToReload(enemy_);
         }
-
     }
 
     public void RemoveEnemy(Enemy enemy)
@@ -185,6 +186,8 @@ public class BattleSystem : MonoBehaviour
         {
             lines[enemy.currentLineNum].Remove(enemy);
             enemy.currentLineNum = -1;
+
+            FireButtleActivityChanged();
         }
         else
         {
@@ -281,7 +284,6 @@ public class BattleSystem : MonoBehaviour
                                 FindProfitSwap(enemy, "health");
                             }
                         }
-                        
                     }
                 }
             }
@@ -296,6 +298,11 @@ public class BattleSystem : MonoBehaviour
             sum += line.enemies.Count;
         }
         return sum;
+    }
+
+    void FireButtleActivityChanged()
+    {
+        OnBattleActivityChanged?.Invoke();
     }
 
     public void Reload()

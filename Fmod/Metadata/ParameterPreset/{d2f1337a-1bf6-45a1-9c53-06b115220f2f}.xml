@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<objects serializationModel="Studio.02.00.00">
+	<object class="ParameterPreset" id="{d2f1337a-1bf6-45a1-9c53-06b115220f2f}">
+		<property name="name">
+			<value>Mus2</value>
+		</property>
+		<relationship name="folder">
+			<destination>{b62bf73d-7048-4ea8-9864-c2f2ca21542e}</destination>
+		</relationship>
+		<relationship name="parameter">
+			<destination>{dfa09200-0ce3-48e7-98d2-33a0f443654d}</destination>
+		</relationship>
+	</object>
+	<object class="GameParameter" id="{dfa09200-0ce3-48e7-98d2-33a0f443654d}">
+		<property name="initialValue">
+			<value>0</value>
+		</property>
+	</object>
+</objects>

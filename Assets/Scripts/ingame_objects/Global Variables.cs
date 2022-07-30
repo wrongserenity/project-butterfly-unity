@@ -71,7 +71,7 @@ public static class GlobalVariables
 
 
     // player's variables 
-    public static int player_max_hp = 100;
+    public static int player_max_hp = 1000;
     public static int player_max_energy = 1000;
     public static float player_max_speed = 7f;
     public static int player_max_xiton_charge = 100;
@@ -112,7 +112,7 @@ public static class GlobalVariables
     public static List<float> push_machine_weapon_cooldown = new List<float>() { 0.0f, 0.2f, 0.0f, 0.8f };
 
     // sound variables
-    public static int music_max_enemy_amount = 5;
+    public static int default_music_max_enemy_amount = 5;
 
     // special weapons variables
     public static float gravity_bomb_throw_distance = 10f;

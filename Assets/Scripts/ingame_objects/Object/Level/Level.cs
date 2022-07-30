@@ -6,13 +6,15 @@ public class Level : MonoBehaviour
 {
     public GameManager gameManager;
     public Transform startTransform;
+
+    public MusicSettings musicSettings;
     // Start is called before the first frame update
     public void Start()
     {
         gameManager = GameObject.Find("GameManager").GetComponent<GameManager>();
+        gameManager.musicSystem.UpdateMusicSettings(musicSettings);
+        gameManager.musicSystem.StartAllMusic();
     }
-
-    // Update is called once per frame
 
     public virtual void FastReload() { }
 

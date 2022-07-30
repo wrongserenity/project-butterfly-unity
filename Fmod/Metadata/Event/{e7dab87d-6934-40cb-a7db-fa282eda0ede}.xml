@@ -177,9 +177,6 @@
 		<property name="length">
 			<value>0.8666666666666667</value>
 		</property>
-		<property name="playlistMode">
-			<value>1</value>
-		</property>
 		<relationship name="modulators">
 			<destination>{1983d4cf-aeaf-4b58-9f2f-1a5a7eaea747}</destination>
 			<destination>{1d5bbf30-9093-4d3d-b782-ed494b6d61ca}</destination>
@@ -270,13 +267,10 @@
 		<property name="nameOfPropertyBeingModulated">
 			<value>startOffset</value>
 		</property>
-		<property name="amount">
-			<value>2</value>
-		</property>
 	</object>
 	<object class="SingleSound" id="{ee2596c3-0a8b-49ff-ab6b-f3984c4477e2}">
 		<property name="startOffset">
-			<value>12</value>
+			<value>8.5</value>
 		</property>
 		<relationship name="audioFile">
 			<destination>{3c695017-651f-4bb9-babf-56dadae8a3c1}</destination>
@@ -284,7 +278,7 @@
 	</object>
 	<object class="SingleSound" id="{1c58bd7a-3d69-477e-a5ea-0b57fcedef7e}">
 		<property name="startOffset">
-			<value>13.5</value>
+			<value>9.5</value>
 		</property>
 		<relationship name="audioFile">
 			<destination>{38de4a2b-9e74-44f2-a815-1d9f2b9400b1}</destination>
@@ -292,7 +286,7 @@
 	</object>
 	<object class="SingleSound" id="{682daeb5-81b4-4452-a352-41070f9c2a60}">
 		<property name="startOffset">
-			<value>5.5</value>
+			<value>2.5</value>
 		</property>
 		<relationship name="audioFile">
 			<destination>{cff21ecf-a96d-4d4e-b905-29a3e0fd7a39}</destination>
@@ -324,13 +318,10 @@
 		<property name="nameOfPropertyBeingModulated">
 			<value>startOffset</value>
 		</property>
-		<property name="amount">
-			<value>2</value>
-		</property>
 	</object>
 	<object class="SingleSound" id="{33760272-3b6a-4d2b-9791-42e3338647c8}">
 		<property name="startOffset">
-			<value>12.5</value>
+			<value>8</value>
 		</property>
 		<relationship name="audioFile">
 			<destination>{5654c00d-5291-4a61-88f6-4dbee66a26d5}</destination>
@@ -338,7 +329,7 @@
 	</object>
 	<object class="SingleSound" id="{98ecdbbb-5835-4416-89c4-4e4fbf8b5231}">
 		<property name="startOffset">
-			<value>12</value>
+			<value>6</value>
 		</property>
 		<property name="volume">
 			<value>3</value>
@@ -349,7 +340,7 @@
 	</object>
 	<object class="SingleSound" id="{6cfe1e4c-3c1d-413f-a9a9-620584bbc95f}">
 		<property name="startOffset">
-			<value>12</value>
+			<value>8.5</value>
 		</property>
 		<relationship name="audioFile">
 			<destination>{ee348e41-3a47-4597-9301-f83aa240e400}</destination>
@@ -421,7 +412,7 @@
 			<value>-12</value>
 		</property>
 		<property name="attackTime">
-			<value>2</value>
+			<value>4.4000001</value>
 		</property>
 		<property name="releaseTime">
 			<value>22</value>
