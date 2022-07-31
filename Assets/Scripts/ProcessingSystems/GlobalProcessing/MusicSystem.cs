@@ -56,10 +56,13 @@ public class MusicSystem : MonoBehaviour
             return;
 
         int enemyCount = battleSystem.CalculateEnemiesCount();
-        float newParameter = 1f;
+        float newParameter = 0f;
 
-        if (enemyCount < parameterByEnemyCount.Count)
+        int listSize = parameterByEnemyCount.Count;
+        if (enemyCount < listSize)
             newParameter = parameterByEnemyCount[enemyCount];
+        else if (listSize > 0)
+            newParameter = parameterByEnemyCount[listSize - 1];
 
         if (newParameter.Equals(curBattleMusicParameterValue))
             return;
