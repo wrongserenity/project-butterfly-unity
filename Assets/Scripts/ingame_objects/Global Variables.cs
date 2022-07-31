@@ -111,9 +111,6 @@ public static class GlobalVariables
     public static int push_machine_weapon_damage = 0;
     public static List<float> push_machine_weapon_cooldown = new List<float>() { 0.0f, 0.2f, 0.0f, 0.8f };
 
-    // sound variables
-    public static int default_music_max_enemy_amount = 5;
-
     // special weapons variables
     public static float gravity_bomb_throw_distance = 10f;
     public static float gravity_bomb_impact_radius = 5f;

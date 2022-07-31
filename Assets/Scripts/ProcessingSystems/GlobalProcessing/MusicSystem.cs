@@ -12,8 +12,7 @@ public class MusicSystem : MonoBehaviour
 
     FMOD.Studio.EventInstance battleEventInstance;
     string battleMusicParameterName = "";
-    List<float> fixedBattleMusicParameters;
-    int mostEpicEnemyAmount = GlobalVariables.default_music_max_enemy_amount;
+    List<float> parameterByEnemyCount;
 
     float curBattleMusicParameterValue = 0f;
 
@@ -36,8 +35,7 @@ public class MusicSystem : MonoBehaviour
         battleEventInstance.set3DAttributes(RuntimeUtils.To3DAttributes(gameObject));
 
         battleMusicParameterName = settings.battleMusicParameterName;
-        fixedBattleMusicParameters = settings.fixedBattleMusicParameters;
-        mostEpicEnemyAmount = settings.mostEpicEnemyAmount;
+        parameterByEnemyCount = settings.parameterByEnemyCount;
     }
 
     public void StartAllMusic()
@@ -57,47 +55,17 @@ public class MusicSystem : MonoBehaviour
         if (!battleEventInstance.isValid())
             return;
 
-        float mappedCurEnemyAmount = MapCurEnemyAmount(battleSystem.CalculateEnemiesCount());
+        int enemyCount = battleSystem.CalculateEnemiesCount();
+        float newParameter = 1f;
 
-        float newFixedParameter = mappedCurEnemyAmount.Equals(0f) ? 0f : GetFixedParameterValue(mappedCurEnemyAmount);
-        if (newFixedParameter.Equals(curBattleMusicParameterValue))
+        if (enemyCount < parameterByEnemyCount.Count)
+            newParameter = parameterByEnemyCount[enemyCount];
+
+        if (newParameter.Equals(curBattleMusicParameterValue))
             return;
 
-        Debug.Log("Music: " + newFixedParameter + " - " + battleSystem.CalculateEnemiesCount());
-        UpdateBattleMusicParameter(newFixedParameter);
-    }
-
-    private float MapCurEnemyAmount(int curEnemyAmount)
-    {
-        float result = 0f;
-
-
-        if (mostEpicEnemyAmount != 0)
-            result = (float)curEnemyAmount / (float)mostEpicEnemyAmount;
-
-        return Mathf.Clamp(result, 0f, 1f);
-    }
-
-    private float GetFixedParameterValue(float mappedValue)
-    {
-        float result = 0f;
-        if (mappedValue.Equals(0f) || mappedValue.Equals(1f))
-            return mappedValue;
-
-        if (fixedBattleMusicParameters.Count == 0)
-            return result;
-
-        for (int i = 1; i < fixedBattleMusicParameters.Count; i++)
-        {
-            if (mappedValue > fixedBattleMusicParameters[i] || mappedValue.Equals(fixedBattleMusicParameters[i]))
-                continue;
-            else
-            {
-                result = fixedBattleMusicParameters[i - 1];
-                break;
-            }
-        }
-        return result;
+        Debug.Log("Music: " + newParameter + " - " + enemyCount);
+        UpdateBattleMusicParameter(newParameter);
     }
 
     private void UpdateBattleMusicParameter(float newParamValue)

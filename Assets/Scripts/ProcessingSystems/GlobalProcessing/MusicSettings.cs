@@ -11,7 +11,6 @@ public class MusicSettings : MonoBehaviour
     [Header("Battle")]
     public EventReference battleMusicEvent;
     public string battleMusicParameterName = "";
-    public List<float> fixedBattleMusicParameters = new List<float>() { };
-    public int mostEpicEnemyAmount;
+    public List<float> parameterByEnemyCount = new List<float>() { };
 
 }
