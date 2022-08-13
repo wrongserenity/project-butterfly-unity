@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<objects serializationModel="Studio.02.02.00">
+	<object class="AudioFile" id="{c966a4eb-5aac-415d-98db-cfbed6865ed7}">
+		<property name="assetPath">
+			<value>Freeze 2-Grand Rhapsody Piano Stereo [2022-08-12 151502]-1.wav</value>
+		</property>
+		<property name="isStreaming">
+			<value>true</value>
+		</property>
+		<property name="frequencyInKHz">
+			<value>44.0999985</value>
+		</property>
+		<property name="channelCount">
+			<value>2</value>
+		</property>
+		<property name="length">
+			<value>24.615396825396825</value>
+		</property>
+		<relationship name="masterAssetFolder">
+			<destination>{db751a81-71da-40a5-9cfb-71bc7b6e2ae2}</destination>
+		</relationship>
+	</object>
+</objects>

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<objects serializationModel="Studio.02.00.00">
+<objects serializationModel="Studio.02.02.00">
 	<object class="Event" id="{9bb98046-62ab-4215-a749-7d8970eadc5f}">
 		<property name="name">
 			<value>Steps</value>
@@ -82,9 +82,9 @@
 			<destination>{d8a6653f-3da6-4aa8-8b7d-aeaa151948c0}</destination>
 		</relationship>
 		<relationship name="markers">
+			<destination>{6cad6eed-0440-4c1a-8ab5-79bf23b1b9a4}</destination>
 			<destination>{4584b896-65fe-46e8-8017-89fbf57e9441}</destination>
 			<destination>{37940b34-de0c-44df-b707-0432db1588b9}</destination>
-			<destination>{6cad6eed-0440-4c1a-8ab5-79bf23b1b9a4}</destination>
 			<destination>{a75efab0-ef75-4f1a-b768-091c84df3a2b}</destination>
 		</relationship>
 	</object>
@@ -148,6 +148,32 @@
 			<destination>{2208d598-5bde-45d2-8292-835462fe9c10}</destination>
 		</relationship>
 	</object>
+	<object class="TransitionRegion" id="{6cad6eed-0440-4c1a-8ab5-79bf23b1b9a4}">
+		<property name="position">
+			<value>1.6000000000000001</value>
+		</property>
+		<property name="length">
+			<value>0.64999999999999991</value>
+		</property>
+		<property name="triggerProbabilityEnabled">
+			<value>true</value>
+		</property>
+		<property name="triggerProbability">
+			<value>50</value>
+		</property>
+		<property name="quantizationInterval">
+			<value>6</value>
+		</property>
+		<relationship name="timeline">
+			<destination>{702801a9-96a9-406e-93f9-0bbc8a8744fa}</destination>
+		</relationship>
+		<relationship name="markerTrack">
+			<destination>{39d7df18-8ffe-4e64-9ee3-76f6a4de03f8}</destination>
+		</relationship>
+		<relationship name="destination">
+			<destination>{4584b896-65fe-46e8-8017-89fbf57e9441}</destination>
+		</relationship>
+	</object>
 	<object class="NamedMarker" id="{4584b896-65fe-46e8-8017-89fbf57e9441}">
 		<property name="position">
 			<value>0.41200000000000003</value>
@@ -174,32 +200,6 @@
 		</relationship>
 		<relationship name="markerTrack">
 			<destination>{4c2c95cc-15b1-4926-8013-97e5b04b33e9}</destination>
-		</relationship>
-	</object>
-	<object class="TransitionRegion" id="{6cad6eed-0440-4c1a-8ab5-79bf23b1b9a4}">
-		<property name="position">
-			<value>1.6000000000000001</value>
-		</property>
-		<property name="length">
-			<value>0.64999999999999991</value>
-		</property>
-		<property name="triggerProbabilityEnabled">
-			<value>true</value>
-		</property>
-		<property name="triggerProbability">
-			<value>50</value>
-		</property>
-		<property name="quantizationInterval">
-			<value>6</value>
-		</property>
-		<relationship name="timeline">
-			<destination>{702801a9-96a9-406e-93f9-0bbc8a8744fa}</destination>
-		</relationship>
-		<relationship name="markerTrack">
-			<destination>{39d7df18-8ffe-4e64-9ee3-76f6a4de03f8}</destination>
-		</relationship>
-		<relationship name="destination">
-			<destination>{4584b896-65fe-46e8-8017-89fbf57e9441}</destination>
 		</relationship>
 	</object>
 	<object class="TransitionRegion" id="{a75efab0-ef75-4f1a-b768-091c84df3a2b}">
@@ -286,8 +286,8 @@
 			<destination>{702801a9-96a9-406e-93f9-0bbc8a8744fa}</destination>
 		</relationship>
 		<relationship name="automationPoints">
-			<destination>{e08fe2d9-1a8f-4d37-8451-a11b1d68b4fb}</destination>
 			<destination>{0dd77ce9-aff7-4068-8dc1-571311f9e43b}</destination>
+			<destination>{e08fe2d9-1a8f-4d37-8451-a11b1d68b4fb}</destination>
 		</relationship>
 	</object>
 	<object class="AutomationCurve" id="{7efef1df-2817-463f-844c-211a4b3588e8}">
@@ -308,14 +308,6 @@
 			<destination>{8fb193a1-060a-4977-9390-688f7adf0c83}</destination>
 		</relationship>
 	</object>
-	<object class="AutomationPoint" id="{e08fe2d9-1a8f-4d37-8451-a11b1d68b4fb}">
-		<property name="position">
-			<value>0.070427955665024633</value>
-		</property>
-		<property name="value">
-			<value>3.81469727e-06</value>
-		</property>
-	</object>
 	<object class="AutomationPoint" id="{0dd77ce9-aff7-4068-8dc1-571311f9e43b}">
 		<property name="position">
 			<value>0.0011545566502463055</value>
@@ -325,6 +317,14 @@
 		</property>
 		<property name="curveShape">
 			<value>-0.368497163</value>
+		</property>
+	</object>
+	<object class="AutomationPoint" id="{e08fe2d9-1a8f-4d37-8451-a11b1d68b4fb}">
+		<property name="position">
+			<value>0.070427955665024633</value>
+		</property>
+		<property name="value">
+			<value>3.81469727e-06</value>
 		</property>
 	</object>
 	<object class="AutomationPoint" id="{d4ba37ff-8acc-4e7c-87d2-363afe4931d9}">

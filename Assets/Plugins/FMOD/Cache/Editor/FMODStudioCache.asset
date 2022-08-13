@@ -1,5 +1,32 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
+--- !u!114 &-8980128914282643825
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
+  m_Name: event:/teleportSound
+  m_EditorClassIdentifier: 
+  Path: event:/teleportSound
+  Guid:
+    Data1: -743609152
+    Data2: 1283253789
+    Data3: 1466801052
+    Data4: 917633890
+  Banks:
+  - {fileID: -3685289802044957845}
+  IsStream: 0
+  Is3D: 1
+  IsOneShot: 1
+  Parameters: []
+  MinDistance: 1
+  MaxDistance: 20
+  Length: 2140
 --- !u!114 &-6061925788985082411
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -25,8 +52,8 @@ MonoBehaviour:
   IsOneShot: 0
   Parameters:
   - {fileID: 6693990793399067553}
-  MinDistance: 0
-  MaxDistance: 0
+  MinDistance: 1
+  MaxDistance: 20
   Length: 92689
 --- !u!114 &-5018456165794043031
 MonoBehaviour:
@@ -67,10 +94,10 @@ MonoBehaviour:
   Path: Fmod/Build/Desktop/Master.bank
   Name: Master
   StudioPath: bank:/Master
-  lastModified: 637948014720219173
+  lastModified: 637959130646039194
   FileSizes:
   - Name: Desktop
-    Value: 15758208
+    Value: 15759936
   Exists: 1
 --- !u!114 &-3483498394829914090
 MonoBehaviour:
@@ -97,8 +124,8 @@ MonoBehaviour:
   IsOneShot: 0
   Parameters:
   - {fileID: 5554404046937699717}
-  MinDistance: 0
-  MaxDistance: 0
+  MinDistance: 1
+  MaxDistance: 20
   Length: 2500
 --- !u!114 &-1825751506318247608
 MonoBehaviour:
@@ -124,8 +151,8 @@ MonoBehaviour:
   Is3D: 0
   IsOneShot: 1
   Parameters: []
-  MinDistance: 0
-  MaxDistance: 0
+  MinDistance: 1
+  MaxDistance: 20
   Length: 735
 --- !u!114 &-233578531575595797
 MonoBehaviour:
@@ -151,8 +178,8 @@ MonoBehaviour:
   Is3D: 0
   IsOneShot: 1
   Parameters: []
-  MinDistance: 0
-  MaxDistance: 0
+  MinDistance: 1
+  MaxDistance: 20
   Length: 600
 --- !u!114 &11400000
 MonoBehaviour:
@@ -177,14 +204,14 @@ MonoBehaviour:
   - {fileID: 684603374939039316}
   - {fileID: -233578531575595797}
   - {fileID: -1825751506318247608}
-  - {fileID: 697218794065348267}
   - {fileID: -6061925788985082411}
+  - {fileID: -8980128914282643825}
   EditorParameters: []
   MasterBanks:
   - {fileID: -3685289802044957845}
   StringsBanks:
   - {fileID: 8549765778103009857}
-  cacheTime: 637948014720278954
+  cacheTime: 637959130646100398
   cacheVersion: 131591
 --- !u!114 &684603374939039316
 MonoBehaviour:
@@ -213,33 +240,6 @@ MonoBehaviour:
   MinDistance: 1
   MaxDistance: 20
   Length: 700
---- !u!114 &697218794065348267
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
-  m_Name: event:/Teleport
-  m_EditorClassIdentifier: 
-  Path: event:/Teleport
-  Guid:
-    Data1: -743609152
-    Data2: 1283253789
-    Data3: 1466801052
-    Data4: 917633890
-  Banks:
-  - {fileID: -3685289802044957845}
-  IsStream: 0
-  Is3D: 1
-  IsOneShot: 1
-  Parameters: []
-  MinDistance: 1
-  MaxDistance: 20
-  Length: 2140
 --- !u!114 &5163374770035752137
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -264,8 +264,8 @@ MonoBehaviour:
   Is3D: 0
   IsOneShot: 1
   Parameters: []
-  MinDistance: 0
-  MaxDistance: 0
+  MinDistance: 1
+  MaxDistance: 20
   Length: 2500
 --- !u!114 &5554404046937699717
 MonoBehaviour:
@@ -316,8 +316,8 @@ MonoBehaviour:
   IsOneShot: 1
   Parameters:
   - {fileID: -5018456165794043031}
-  MinDistance: 0
-  MaxDistance: 0
+  MinDistance: 1
+  MaxDistance: 20
   Length: 1166
 --- !u!114 &6693990793399067553
 MonoBehaviour:
@@ -367,8 +367,8 @@ MonoBehaviour:
   Is3D: 0
   IsOneShot: 0
   Parameters: []
-  MinDistance: 0
-  MaxDistance: 0
+  MinDistance: 1
+  MaxDistance: 20
   Length: 49230
 --- !u!114 &8549765778103009857
 MonoBehaviour:
@@ -385,8 +385,8 @@ MonoBehaviour:
   Path: Fmod/Build/Desktop/Master.strings.bank
   Name: Master.strings
   StudioPath: bank:/Master.strings
-  lastModified: 637948014720278954
+  lastModified: 637959130646100398
   FileSizes:
   - Name: Desktop
-    Value: 1196
+    Value: 1232
   Exists: 1

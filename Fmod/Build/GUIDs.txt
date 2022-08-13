@@ -1,0 +1,16 @@
+{61d62087-face-4e2f-83aa-b8b199bfc288} bank:/Master
+{f9cb0053-8bb5-026d-05e3-324f684cc410} bank:/Master.strings
+{187fdd0e-a2e8-4a66-b4d5-3de0df508357} bus:/
+{6b1772b5-f3b0-4f9c-887f-1099ee2c0578} bus:/Reverb
+{fe360aa1-d028-45bb-8138-883ed0553aaa} event:/Ambience
+{e7dab87d-6934-40cb-a7db-fa282eda0ede} event:/Atack
+{03d621f5-c399-4cd5-b2a4-67bc13357eef} event:/BattleMusic
+{4ae48b6a-5d86-413a-a133-d7c7215792b9} event:/Bonus
+{ea4a7a30-cc9f-46e1-8e0c-9c91bd91eba9} event:/Death
+{bcf71ca6-6f19-41d2-86a0-4e3e6955dd64} event:/Equip
+{49531475-f475-4997-b166-76219460b927} event:/Parry
+{9bb98046-62ab-4215-a749-7d8970eadc5f} event:/Steps
+{d3ad6cc0-e61d-4c7c-9c9b-6d5762fbb136} event:/teleportSound
+{f3a5d2e6-4f8a-4ef6-8b87-6b9314759323} parameter:/Battle
+{b1fd2f09-9516-48aa-88be-f6aa5b0f4782} parameter:/ParameterName
+{be88b0e5-7d07-4bcd-9faf-445f2bfaaccf} parameter:/Room

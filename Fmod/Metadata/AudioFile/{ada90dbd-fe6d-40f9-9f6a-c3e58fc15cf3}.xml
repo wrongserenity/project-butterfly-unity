@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<objects serializationModel="Studio.02.02.00">
+	<object class="AudioFile" id="{ada90dbd-fe6d-40f9-9f6a-c3e58fc15cf3}">
+		<property name="assetPath">
+			<value>Freeze 7-Pigments [2022-08-12 151403].wav</value>
+		</property>
+		<property name="isStreaming">
+			<value>true</value>
+		</property>
+		<property name="frequencyInKHz">
+			<value>44.0999985</value>
+		</property>
+		<property name="channelCount">
+			<value>2</value>
+		</property>
+		<property name="length">
+			<value>18.461541950113379</value>
+		</property>
+		<relationship name="masterAssetFolder">
+			<destination>{db751a81-71da-40a5-9cfb-71bc7b6e2ae2}</destination>
+		</relationship>
+	</object>
+</objects>

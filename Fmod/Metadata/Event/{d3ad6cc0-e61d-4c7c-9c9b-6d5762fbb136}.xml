@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<objects serializationModel="Studio.02.00.00">
+<objects serializationModel="Studio.02.02.00">
 	<object class="Event" id="{d3ad6cc0-e61d-4c7c-9c9b-6d5762fbb136}">
 		<property name="name">
-			<value>Teleport</value>
+			<value>teleportSound</value>
 		</property>
 		<property name="outputFormat">
 			<value>2</value>
