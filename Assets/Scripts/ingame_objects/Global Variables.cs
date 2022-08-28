@@ -71,7 +71,7 @@ public static class GlobalVariables
 
 
     // player's variables 
-    public static int player_max_hp = 1000;
+    public static int player_max_hp = 300;
     public static int player_max_energy = 1000;
     public static float player_max_speed = 7f;
     public static int player_max_xiton_charge = 100;

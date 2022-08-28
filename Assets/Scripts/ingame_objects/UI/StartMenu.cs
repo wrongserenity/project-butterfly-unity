@@ -12,11 +12,13 @@ public class StartMenu : MonoBehaviour
     {
         gameManager = GameObject.Find("GameManager").GetComponent<GameManager>();
         gameManager.player.gameObject.SetActive(false);
+        gameManager.NextLevelPreload();
     }
 
     public void PlayGame()
     {
         gameManager.player.gameObject.SetActive(true);
+        gameManager.NextLevel();
         StartCoroutine(HideIn(2f));
     }
 

@@ -94,10 +94,10 @@ MonoBehaviour:
   Path: Fmod/Build/Desktop/Master.bank
   Name: Master
   StudioPath: bank:/Master
-  lastModified: 637959130646039194
+  lastModified: 637961792811083926
   FileSizes:
   - Name: Desktop
-    Value: 15759936
+    Value: 16896416
   Exists: 1
 --- !u!114 &-3483498394829914090
 MonoBehaviour:
@@ -127,6 +127,33 @@ MonoBehaviour:
   MinDistance: 1
   MaxDistance: 20
   Length: 2500
+--- !u!114 &-2708146076909786617
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
+  m_Name: event:/parrySound
+  m_EditorClassIdentifier: 
+  Path: event:/parrySound
+  Guid:
+    Data1: 1230181493
+    Data2: 1234695285
+    Data3: 561407665
+    Data4: 666460308
+  Banks:
+  - {fileID: -3685289802044957845}
+  IsStream: 0
+  Is3D: 0
+  IsOneShot: 1
+  Parameters: []
+  MinDistance: 1
+  MaxDistance: 20
+  Length: 600
 --- !u!114 &-1825751506318247608
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -154,33 +181,6 @@ MonoBehaviour:
   MinDistance: 1
   MaxDistance: 20
   Length: 735
---- !u!114 &-233578531575595797
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
-  m_Name: event:/Parry
-  m_EditorClassIdentifier: 
-  Path: event:/Parry
-  Guid:
-    Data1: 1230181493
-    Data2: 1234695285
-    Data3: 561407665
-    Data4: 666460308
-  Banks:
-  - {fileID: -3685289802044957845}
-  IsStream: 0
-  Is3D: 0
-  IsOneShot: 1
-  Parameters: []
-  MinDistance: 1
-  MaxDistance: 20
-  Length: 600
 --- !u!114 &11400000
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -202,16 +202,16 @@ MonoBehaviour:
   - {fileID: 8526997226293161057}
   - {fileID: 5163374770035752137}
   - {fileID: 684603374939039316}
-  - {fileID: -233578531575595797}
   - {fileID: -1825751506318247608}
   - {fileID: -6061925788985082411}
   - {fileID: -8980128914282643825}
+  - {fileID: -2708146076909786617}
   EditorParameters: []
   MasterBanks:
   - {fileID: -3685289802044957845}
   StringsBanks:
   - {fileID: 8549765778103009857}
-  cacheTime: 637959130646100398
+  cacheTime: 637961792811113835
   cacheVersion: 131591
 --- !u!114 &684603374939039316
 MonoBehaviour:
@@ -385,8 +385,8 @@ MonoBehaviour:
   Path: Fmod/Build/Desktop/Master.strings.bank
   Name: Master.strings
   StudioPath: bank:/Master.strings
-  lastModified: 637959130646100398
+  lastModified: 637961792811113835
   FileSizes:
   - Name: Desktop
-    Value: 1232
+    Value: 1238
   Exists: 1

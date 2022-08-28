@@ -30,6 +30,8 @@ public class Enemy : Creation
     public Vector3 playerPos = new Vector3(0f, 0f, 0f);
     public Vector3 ownPos = new Vector3(0f, 0f, 0f);
 
+    public string levelSurfaceTag = "LevelSurface";
+
     public bool deathRequest = false;
     public bool isLogicBlocked = false;
     public bool deprivationActivateRequest = false;
@@ -274,7 +276,7 @@ public class Enemy : Creation
             Collider[] cols = Physics.OverlapBox(movementHitbox[i].bounds.center, movementHitbox[i].bounds.extents, movementHitbox[i].transform.rotation);
             foreach (Collider col in cols)
             {
-                if (col.tag == "Level")
+                if (col.tag == levelSurfaceTag)
                 {
                     availability[i] = true;
                 }

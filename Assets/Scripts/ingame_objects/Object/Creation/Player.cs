@@ -511,6 +511,8 @@ public class Player : Creation
         dir_m = new Vector3(0f, 0f, 0f);
         pos = transform.position;
 
+        FallingOutCheck(pos);
+
         float horizontal = Input.GetAxisRaw("Horizontal");
         float vertical = Input.GetAxisRaw("Vertical");
         dir_m = new Vector3(horizontal, 0f, vertical).normalized;
@@ -536,8 +538,6 @@ public class Player : Creation
             prev_dir_m = dir_m;
         }
         AnimationControl(prev_dir_m, dir_v);
-
-        FallingOutCheck(pos);
 
         if (dir_m.magnitude > 0)
         {

@@ -7,6 +7,8 @@ TagManager:
   - Level
   - Enemy
   - GlowingObject
+  - LevelContainer
+  - LevelSurface
   layers:
   - Default
   - TransparentFX

@@ -17,6 +17,8 @@ public class GameManager : MonoBehaviour
     public LineRenderer rewindLineRenderer;
     public PauseMenu pauseMenu;
 
+    public string levelContainerTag = "LevelContainer";
+
     public GameObject[] doNotDestroyOnLoad = new GameObject[] { };
 
     AsyncOperation asyncOperation;
@@ -24,7 +26,7 @@ public class GameManager : MonoBehaviour
     List <Enemy> enemyAfterCheckPoint = new List<Enemy>() { };
     public Vector3 currentCheckpoint;
     // hp, energy, xiton
-    List<int> currentCheckPointData = new List<int>() { 100, 0, 0 };
+    List<int> currentCheckPointData = new List<int>() { GlobalVariables.player_max_hp, 0, 0 };
 
     public Image deathImage;
 
@@ -34,7 +36,7 @@ public class GameManager : MonoBehaviour
     public bool isTimeScaled = false;
     bool isTimeScalingRN = false;
 
-    List<string> levelsPathList = new List<string>() {"Prefabs/Levels/DemoLevel",  "Prefabs/Levels/VoidLevel" };
+    List<string> levelsPathList = new List<string>() {"Prefabs/Levels/EmptyLevel",  "Prefabs/Levels/Discoverer" };
     int curLevelIndex = 0;
     Level curLevel;
 
@@ -46,6 +48,8 @@ public class GameManager : MonoBehaviour
 
         foreach(GameObject go in doNotDestroyOnLoad)
             DontDestroyOnLoad(go);
+
+        ReplaceCurrentLevel();
     }
 
     // creates async operation and scene switching waits calling NextLevel()
@@ -63,6 +67,7 @@ public class GameManager : MonoBehaviour
         {
             curLevelIndex++;
             asyncOperation.allowSceneActivation = true;
+            asyncOperation.completed += HandeAsyncLoadCompleted;
 
             if (curLevelIndex == (levelsPathList.Count))
                 dataRecorder.StoreData();
@@ -75,6 +80,27 @@ public class GameManager : MonoBehaviour
         
     }
 
+    public void HandeAsyncLoadCompleted(AsyncOperation operation)
+    {
+        operation.completed -= HandeAsyncLoadCompleted;
+        ReplaceCurrentLevel();
+    }
+
+    public void ReplaceCurrentLevel()
+    {
+        int childCount = levelContainer.transform.childCount;
+        if (childCount > 0)
+            for (int i = childCount - 1; i >= 0; i--)
+            {
+                GameObject destroyableLevelObj = levelContainer.transform.GetChild(i).gameObject;
+                destroyableLevelObj.tag = "Untagged";
+                Destroy(destroyableLevelObj);
+
+            }
+
+        GameObject levelObj = GameObject.FindGameObjectWithTag(levelContainerTag);
+        levelObj.transform.SetParent(levelContainer.transform);
+    }
 
     public void ReloadCurrentLevel()
     {
