@@ -1,4 +1,4 @@
-# project-butterfly-unity
+# Project Butterfly
 Second-person cyberpunk action game
 
 > Engine: **Unity**  
