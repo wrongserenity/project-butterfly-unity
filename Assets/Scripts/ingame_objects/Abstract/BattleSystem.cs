@@ -300,6 +300,11 @@ public class BattleSystem : MonoBehaviour
         return sum;
     }
 
+    public int GetFirstLineEnemiesCount()
+    {
+        return lines[0].enemies.Count;
+    }
+
     void FireButtleActivityChanged()
     {
         OnBattleActivityChanged?.Invoke();

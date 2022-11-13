@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -6,6 +7,9 @@ public class Creation : MonoBehaviour
 {
     public GameManager gameManager;
     public DataRecorder dataRec;
+
+    public event Action OnCreationDamaged;
+    public event Action OnCreationDeath;
 
 
     float Gr = GlobalVariables.GRAVITY;
@@ -66,11 +70,15 @@ public class Creation : MonoBehaviour
                 gameManager.mainCamera.RedVignetteFor(0.1f);
             }
         }
+
+        if (value < 0)
+            OnCreationDamaged?.Invoke();
     }
 
     public void Kill()
     {
         gameManager.battleSystem.Kill(this);
+        OnCreationDeath?.Invoke();
     }
 
     public void DamageImmuneFor(float seconds)

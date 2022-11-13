@@ -24,6 +24,11 @@ public class MusicSystem : MonoBehaviour
         battleSystem.OnBattleActivityChanged += TryUpdateBattleMusicParameter;
     }
 
+    public float GetCurBattleMusicParameterValue()
+    {
+        return curBattleMusicParameterValue;
+    }
+
     public void UpdateMusicSettings(MusicSettings settings)
     {
         TryImmediatelyStopInstance(ambientEventInstance);

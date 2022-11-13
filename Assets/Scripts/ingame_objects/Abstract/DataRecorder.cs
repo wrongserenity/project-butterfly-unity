@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Reflection;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -10,7 +11,7 @@ public class DataRecorder : MonoBehaviour
     public GameObject dataRepMenu;
     Text dataRepText;
 
-    bool isWriting = GlobalVariables.is_writing;
+    bool isPlayerResultsWriting = GlobalVariables.is_writing;
 
     // first - falling down death, second - from enemies' damage
     List<int> deathCounter = new List<int>() { 0, 0 };
@@ -40,37 +41,52 @@ public class DataRecorder : MonoBehaviour
     List<Vector3> curLifeTrace = new List<Vector3>() { };
 
     // Timeline list
-    List<TimelineElement> timelineList = new List<TimelineElement>() { };
-    TimelineElement curTimelineElement = new TimelineElement();
-    float timelineRecordStartTime = 0f;
+    [SerializeField] int timelineRecordingRate = 30;
+
     bool isTimelineRecording = false;
+
+    Player player;
+
+    TimelineRecorder timelineRecorder = new TimelineRecorder();
 
     void Start()
     {
         gameManager = GameObject.Find("GameManager").GetComponent<GameManager>();
+
+        player = gameManager.player;
+
         dataRepText = dataRepMenu.transform.Find("Text").GetComponent<Text>();
         dataRepMenu.SetActive(false);
     }
 
     void FixedUpdate()
     {
-        if (isWriting)
+        if (isPlayerResultsWriting)
         {
-            if(iter == 0)
-            {
-                float delta_ = Time.deltaTime;
-                totalPassingTime += delta_ * 20;
-                oneLifePassingTime += delta_ * 20;
-
-                if (GameObject.FindGameObjectWithTag("Player") != null)
-                {
-                    curLifeTrace.Add(GameObject.FindGameObjectWithTag("Player").transform.position);
-                }
-                iter = 20;
-            }
-            iter--;
-            
+            ProcessPlayerResultsWriting();
         }
+
+        if (isTimelineRecording)
+        {
+            timelineRecorder.Process();
+        }
+    }
+
+    void ProcessPlayerResultsWriting()
+    {
+        if (iter == 0)
+        {
+            float delta_ = Time.deltaTime;
+            totalPassingTime += delta_ * 20;
+            oneLifePassingTime += delta_ * 20;
+
+            if (GameObject.FindGameObjectWithTag("Player") != null)
+            {
+                curLifeTrace.Add(GameObject.FindGameObjectWithTag("Player").transform.position);
+            }
+            iter = 20;
+        }
+        iter--;
     }
 
     public void PlayerKilled(bool isByFalling)
@@ -96,7 +112,7 @@ public class DataRecorder : MonoBehaviour
     /// calling from last_level loading
     public void StoreData()
     {
-        isWriting = false;
+        isPlayerResultsWriting = false;
         movementTrace.AddRange(curLifeTrace);
         dataRepMenu.SetActive(true);
         dataRepText.text = totalPassingTime + "\n" +
@@ -131,95 +147,79 @@ public class DataRecorder : MonoBehaviour
         if (variable == "restored_hp")
             totalRestoredHp += value;
         else if (variable == "shifted")
+        {
             totalTimesShifted += value;
-        else if (variable == "spent_on_rewind")
+            timelineRecorder.UpdateActionTime("shifted");
+        }
+        else if (variable == "spent_on_rewind") 
+        {
             totalSpentOnRewind += value;
+            timelineRecorder.UpdateActionTime("rewinded");
+        }
         else if (variable == "energy_spent")
+        {
+            timelineRecorder.UpdateActionTime("energySpending");
             totalEnergySpent += value;
+        }
         else if (variable == "energy_collected")
+        {
+            timelineRecorder.UpdateActionTime("energyCollecting");
             totalEnergyCollected += value;
+        }
         else if (variable == "push_killed")
+        {
+            timelineRecorder.UpdateActionTime("kill");
             totalKilledEnemyCounter[0] += value;
+        }
         else if (variable == "samu_killed")
+        {
+            timelineRecorder.UpdateActionTime("kill");
             totalKilledEnemyCounter[1] += value;
+        }
         else if (variable == "sword_killed")
+        {
+            timelineRecorder.UpdateActionTime("kill");
             totalKilledEnemyCounter[2] += value;
+        }
         else if (variable == "parry_times")
             totalParryTimes += value;
         else if (variable == "xiton_charged")
+        {
+            timelineRecorder.UpdateActionTime("xitonCharging");
             totalXitonCharged += value;
+        }
         else if (variable == "xiton_spent")
+        {
+            timelineRecorder.UpdateActionTime("xitonSpending");
             totalXitonSpent += value;
+        }
         else if (variable == "depr_flamethrower")
+        {
+            timelineRecorder.UpdateActionTime("depricatingWeapon");
             totalDeprivatedWeapon[0] += value;
+        }
         else if (variable == "depr_gravitybomb")
+        {
+            timelineRecorder.UpdateActionTime("depricatingWeapon");
             totalDeprivatedWeapon[1] += value;
+        }
         else if (variable == "damage_blocked")
             totalDamageBlocked += value;
         else if (variable == "parry_damage")
             totalDamageByParry += value;
         else
-            Debug.Log("ERROR: data writing exeption");
+            Debug.Log("ERROR: data writing exeption - " + variable);
     }
 
-    public void StartTimeLineRecording()
+    public void StartTimelineRecording()
     {
+        timelineRecorder.StartRecordingWithParameters(1f / (float)timelineRecordingRate, Time.time, gameManager);
         isTimelineRecording = true;
-
     }
-}
 
-class TimelineElement 
-{
-    const float DEFAULT_EMPTY_FLOAT = -1f;
-    const int DEFAULT_EMPTY_INT     = -1;
-
-    public float timeline                       = DEFAULT_EMPTY_FLOAT;
-
-    public Vector3 inputDir;
-    public float curHp                          = DEFAULT_EMPTY_FLOAT;
-    public float curEnergy                      = DEFAULT_EMPTY_FLOAT;
-    public float curXiton                       = DEFAULT_EMPTY_FLOAT;
-
-    public float timeFromLastAttack             = DEFAULT_EMPTY_FLOAT;
-    public float timeFromLastDamaged            = DEFAULT_EMPTY_FLOAT;
-
-    public float timeFromLastEnergyUsing        = DEFAULT_EMPTY_FLOAT;
-    public float timeFromLastEnergyGetting      = DEFAULT_EMPTY_FLOAT;
-
-    public float timeFromXitonUsing             = DEFAULT_EMPTY_FLOAT;
-    public float timeFromLastXitonCharging      = DEFAULT_EMPTY_FLOAT;
-
-    public int enemiesCountClose                = DEFAULT_EMPTY_INT;
-    public int enemiesCountDistant              = DEFAULT_EMPTY_INT;
-    public float curBattleMusicParameterValue   = DEFAULT_EMPTY_FLOAT;
-
-    public float timeFromLastPikcup             = DEFAULT_EMPTY_FLOAT;
-    public float timeFromLastCheckoint          = DEFAULT_EMPTY_FLOAT;
-
-    public void Clear() 
+    public void StopTimelineRecording()
     {
-        timeline = DEFAULT_EMPTY_FLOAT;
-
-        inputDir                        = Vector3.zero;
-        curHp                           = DEFAULT_EMPTY_FLOAT;
-        curEnergy                       = DEFAULT_EMPTY_FLOAT;
-        curXiton                        = DEFAULT_EMPTY_FLOAT;
-
-        timeFromLastAttack              = DEFAULT_EMPTY_FLOAT;
-        timeFromLastDamaged             = DEFAULT_EMPTY_FLOAT;
-
-        timeFromLastEnergyUsing         = DEFAULT_EMPTY_FLOAT;
-        timeFromLastEnergyGetting       = DEFAULT_EMPTY_FLOAT;
-
-        timeFromXitonUsing              = DEFAULT_EMPTY_FLOAT;
-        timeFromLastXitonCharging       = DEFAULT_EMPTY_FLOAT;
-
-        enemiesCountClose               = DEFAULT_EMPTY_INT;
-        enemiesCountDistant             = DEFAULT_EMPTY_INT;
-        curBattleMusicParameterValue    = DEFAULT_EMPTY_FLOAT;
-
-        timeFromLastPikcup              = DEFAULT_EMPTY_FLOAT;
-        timeFromLastCheckoint           = DEFAULT_EMPTY_FLOAT;
+        isTimelineRecording = false;
+        timelineRecorder.StopRecordingAndSave();
     }
 }

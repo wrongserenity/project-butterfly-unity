@@ -11,6 +11,7 @@ public class Player : Creation
     Cooldown teleport_cooldown;
     Cooldown xitonCharge_cooldown;
 
+    public event Action OnPlayerAttack;
 
     public InterfaceSystem interfaceObject;
     Text hpEnergy;
@@ -66,7 +67,6 @@ public class Player : Creation
     SphereCollider xitonChargeCollider;
 
     LineRenderer rewindLine;
-
 
     // Start is called before the first frame update
     void Start()
@@ -135,6 +135,8 @@ public class Player : Creation
         }
         else 
             deprivatedWeapon.Attack();
+
+        OnPlayerAttack?.Invoke();
     }
 
     // TODO:  idea: make it return boolean, with returning false if had no enoght energy
@@ -504,18 +506,22 @@ public class Player : Creation
         return dir_v;
     }
 
-
-    // Update is called once per frame
-    void FixedUpdate()
+    public Vector3 GetCurrentMovementInputDirection()
     {
-        dir_m = new Vector3(0f, 0f, 0f);
-        pos = transform.position;
+        return new Vector3(Input.GetAxisRaw("Horizontal"), 0f, Input.GetAxisRaw("Vertical")).normalized;
+    }
 
-        FallingOutCheck(pos);
+    public Vector3 GetCurrentViewInputDirection(Vector3 pointToLook)
+    {
+        Vector3 result = -transform.position + pointToLook;
+        result.y = 0;
 
-        float horizontal = Input.GetAxisRaw("Horizontal");
-        float vertical = Input.GetAxisRaw("Vertical");
-        dir_m = new Vector3(horizontal, 0f, vertical).normalized;
+        return result;
+    }
+
+    public Vector3 GetCurPointToLook()
+    {
+        Vector3 result = new Vector3() { };
 
         Ray cameraRay = camera_obj.ScreenPointToRay(Input.mousePosition);
         Plane groundPlane = new Plane(Vector3.up, Vector3.zero);
@@ -524,13 +530,29 @@ public class Player : Creation
 
         if (groundPlane.Raycast(cameraRay, out rayLength))
         {
-            Vector3 pointToLook = cameraRay.GetPoint(rayLength);
-            Debug.DrawLine(cameraRay.origin, pointToLook, Color.cyan);
-
-            transform.LookAt(new Vector3(pointToLook.x, transform.position.y, pointToLook.z));
-            dir_v = -transform.position + pointToLook;
-            dir_v.y = 0;
+            result = cameraRay.GetPoint(rayLength);
+            // Debug.DrawLine(cameraRay.origin, pointToLook, Color.cyan);
         }
+
+        return result;
+    }
+
+    // Update is called once per frame
+    void FixedUpdate()
+    {
+        pos = transform.position;
+
+        FallingOutCheck(pos);
+
+        dir_m = GetCurrentMovementInputDirection();
+
+        Vector3 pointToLook = GetCurPointToLook();
+        if (!Mathf.Approximately(pointToLook.magnitude, 0f))
+        {
+            transform.LookAt(new Vector3(pointToLook.x, transform.position.y, pointToLook.z));
+            dir_v = GetCurrentViewInputDirection(pointToLook);
+        }
+
         ProcessMovement(dir_m, dir_v, new List<bool>());
 
         if (dir_m.magnitude > 0)
@@ -717,6 +739,7 @@ public class Player : Creation
 
         if (Input.GetKeyDown(KeyCode.Escape))
         {
+            gameManager.dataRecorder.StopTimelineRecording();
             if (!gameManager.pauseMenu.isPaused)
                 gameManager.pauseMenu.Pause();
             else
@@ -724,7 +747,10 @@ public class Player : Creation
         }
 
         if (Input.GetKeyDown(KeyCode.R))
+        {
+            gameManager.dataRecorder.StartTimelineRecording();
             gameManager.ReloadToCheckPoint();
+        }
 
         if (Input.GetKeyDown(KeyCode.P))
         {
