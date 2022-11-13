@@ -39,6 +39,12 @@ public class DataRecorder : MonoBehaviour
     List<Vector3> movementTrace = new List<Vector3>() { };
     List<Vector3> curLifeTrace = new List<Vector3>() { };
 
+    // Timeline list
+    List<TimelineElement> timelineList = new List<TimelineElement>() { };
+    TimelineElement curTimelineElement = new TimelineElement();
+    float timelineRecordStartTime = 0f;
+    bool isTimelineRecording = false;
+
     void Start()
     {
         gameManager = GameObject.Find("GameManager").GetComponent<GameManager>();
@@ -154,5 +160,66 @@ public class DataRecorder : MonoBehaviour
             totalDamageByParry += value;
         else
             Debug.Log("ERROR: data writing exeption");
+    }
+
+    public void StartTimeLineRecording()
+    {
+        isTimelineRecording = true;
+
+    }
+}
+
+class TimelineElement 
+{
+    const float DEFAULT_EMPTY_FLOAT = -1f;
+    const int DEFAULT_EMPTY_INT     = -1;
+
+    public float timeline                       = DEFAULT_EMPTY_FLOAT;
+
+    public Vector3 inputDir;
+    public float curHp                          = DEFAULT_EMPTY_FLOAT;
+    public float curEnergy                      = DEFAULT_EMPTY_FLOAT;
+    public float curXiton                       = DEFAULT_EMPTY_FLOAT;
+
+    public float timeFromLastAttack             = DEFAULT_EMPTY_FLOAT;
+    public float timeFromLastDamaged            = DEFAULT_EMPTY_FLOAT;
+
+    public float timeFromLastEnergyUsing        = DEFAULT_EMPTY_FLOAT;
+    public float timeFromLastEnergyGetting      = DEFAULT_EMPTY_FLOAT;
+
+    public float timeFromXitonUsing             = DEFAULT_EMPTY_FLOAT;
+    public float timeFromLastXitonCharging      = DEFAULT_EMPTY_FLOAT;
+
+    public int enemiesCountClose                = DEFAULT_EMPTY_INT;
+    public int enemiesCountDistant              = DEFAULT_EMPTY_INT;
+    public float curBattleMusicParameterValue   = DEFAULT_EMPTY_FLOAT;
+
+    public float timeFromLastPikcup             = DEFAULT_EMPTY_FLOAT;
+    public float timeFromLastCheckoint          = DEFAULT_EMPTY_FLOAT;
+
+    public void Clear() 
+    {
+        timeline = DEFAULT_EMPTY_FLOAT;
+
+        inputDir                        = Vector3.zero;
+        curHp                           = DEFAULT_EMPTY_FLOAT;
+        curEnergy                       = DEFAULT_EMPTY_FLOAT;
+        curXiton                        = DEFAULT_EMPTY_FLOAT;
+
+        timeFromLastAttack              = DEFAULT_EMPTY_FLOAT;
+        timeFromLastDamaged             = DEFAULT_EMPTY_FLOAT;
+
+        timeFromLastEnergyUsing         = DEFAULT_EMPTY_FLOAT;
+        timeFromLastEnergyGetting       = DEFAULT_EMPTY_FLOAT;
+
+        timeFromXitonUsing              = DEFAULT_EMPTY_FLOAT;
+        timeFromLastXitonCharging       = DEFAULT_EMPTY_FLOAT;
+
+        enemiesCountClose               = DEFAULT_EMPTY_INT;
+        enemiesCountDistant             = DEFAULT_EMPTY_INT;
+        curBattleMusicParameterValue    = DEFAULT_EMPTY_FLOAT;
+
+        timeFromLastPikcup              = DEFAULT_EMPTY_FLOAT;
+        timeFromLastCheckoint           = DEFAULT_EMPTY_FLOAT;
     }
 }
