@@ -6,7 +6,9 @@ using UnityEngine;
 public class TimelineRecorder
 {
     [SerializeField] int timelineRecordingRate = 30;
-    [SerializeField] string saveFilePath = "filename.csv";
+    string saveFilePath = "Assets/Recorded/";
+    string recordedFileName = "filename";
+    string fileType = ".csv";
 
     List<TimelineElement> timelineList = new List<TimelineElement>() { };
     TimelineElement curTimelineElement = new TimelineElement();
@@ -24,10 +26,12 @@ public class TimelineRecorder
     bool isRecording = false;
 
 
-    public void StartRecordingWithParameters(float updateDeltaTime, float startTime, GameManager gameManager)
+    public void StartRecordingWithParameters(float updateDeltaTime, float startTime, string dataFileName, GameManager gameManager)
     {
         timelineRecordingUpdateTime = updateDeltaTime;
         timelineRecordStartTime = startTime;
+
+        recordedFileName = dataFileName;
 
         player = gameManager.player;
         battleSystem = gameManager.battleSystem;
@@ -40,7 +44,7 @@ public class TimelineRecorder
         isRecording = true;
     }
 
-    public void StopRecordingAndSave()
+    public void StopRecordingAndSave(GameManager gameManager)
     {
         isRecording = false;
 
@@ -48,7 +52,7 @@ public class TimelineRecorder
         player.OnPlayerAttack -= () => UpdateActionTime("attack");
         player.OnCreationDeath -= () => UpdateActionTime("death");
 
-        ParseAndSaveTimeline(saveFilePath);
+        ParseAndSaveTimeline(saveFilePath + recordedFileName + fileType);
     }
 
     public void Process()

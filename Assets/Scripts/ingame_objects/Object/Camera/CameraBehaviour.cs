@@ -115,10 +115,15 @@ public class CameraBehaviour : MonoBehaviour
         StartCoroutine(RedVignette(duration));
     }
 
-    IEnumerator RedVignette(float duration)
+    public void RedVignetteFor(float duration, float intensity)
+    {
+        StopCoroutine(RedVignette(duration, intensity));
+        StartCoroutine(RedVignette(duration, intensity));
+    }
+
+    IEnumerator RedVignette(float duration, float maxIntensity = 0.2f)
     {
         float step = 0.02f;
-        float maxIntensity = 0.2f;
         Vignette vignette;
         profile.TryGet(out vignette);
         float curIntencity = 0;

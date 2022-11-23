@@ -8,6 +8,8 @@ public class DataRecorder : MonoBehaviour
 {
     GameManager gameManager;
 
+    [SerializeField] string dataSavingName = "player_recorded_data";
+
     public GameObject dataRepMenu;
     Text dataRepText;
 
@@ -48,6 +50,7 @@ public class DataRecorder : MonoBehaviour
     Player player;
 
     TimelineRecorder timelineRecorder = new TimelineRecorder();
+    [SerializeField] GameObject timelineRecordingScreen;
 
     void Start()
     {
@@ -213,13 +216,26 @@ public class DataRecorder : MonoBehaviour
 
     public void StartTimelineRecording()
     {
-        timelineRecorder.StartRecordingWithParameters(1f / (float)timelineRecordingRate, Time.time, gameManager);
+        timelineRecorder.StartRecordingWithParameters(1f / (float)timelineRecordingRate, Time.time, dataSavingName, gameManager);
         isTimelineRecording = true;
+
+        StopCoroutine(ShowTimelineElement(1f));
+        StartCoroutine(ShowTimelineElement(1f));
+    }
+
+    IEnumerator ShowTimelineElement(float duration)
+    {
+        timelineRecordingScreen.SetActive(true);
+        yield return new WaitForSeconds(duration);
+        timelineRecordingScreen.SetActive(false);
     }
 
     public void StopTimelineRecording()
     {
+        StopCoroutine(ShowTimelineElement(1f));
+        StartCoroutine(ShowTimelineElement(1f));
+
         isTimelineRecording = false;
-        timelineRecorder.StopRecordingAndSave();
+        timelineRecorder.StopRecordingAndSave(gameManager);
     }
 }

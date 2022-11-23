@@ -739,7 +739,6 @@ public class Player : Creation
 
         if (Input.GetKeyDown(KeyCode.Escape))
         {
-            gameManager.dataRecorder.StopTimelineRecording();
             if (!gameManager.pauseMenu.isPaused)
                 gameManager.pauseMenu.Pause();
             else
@@ -748,7 +747,6 @@ public class Player : Creation
 
         if (Input.GetKeyDown(KeyCode.R))
         {
-            gameManager.dataRecorder.StartTimelineRecording();
             gameManager.ReloadToCheckPoint();
         }
 
@@ -760,6 +758,16 @@ public class Player : Creation
         if (Input.GetKeyDown(KeyCode.N))
         {
             gameManager.NextLevel();
+        }
+
+        if (Input.GetKeyDown(KeyCode.J))
+        {
+            gameManager.dataRecorder.StartTimelineRecording();
+        }
+
+        if (Input.GetKeyDown(KeyCode.K))
+        {
+            gameManager.dataRecorder.StopTimelineRecording();
         }
     }
 
