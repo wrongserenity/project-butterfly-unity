@@ -5,6 +5,9 @@ using UnityEngine;
 
 public class TimelineRecorder
 {
+    [SerializeField]
+    bool isNeedCurEmotionUpdate = true;
+
     [SerializeField] int timelineRecordingRate = 30;
     string saveFilePath = "Assets/Recorded/";
     string recordedFileName = "filename";
@@ -24,6 +27,8 @@ public class TimelineRecorder
     MusicSystem musicSystem;
 
     bool isRecording = false;
+
+    PythonConnector pythonConnector;
 
 
     public void StartRecordingWithParameters(float updateDeltaTime, float startTime, string dataFileName, GameManager gameManager)
@@ -55,11 +60,19 @@ public class TimelineRecorder
         ParseAndSaveTimeline(saveFilePath + recordedFileName + fileType);
     }
 
+    public void SetPythonConnector(PythonConnector connector)
+    {
+        pythonConnector = connector;
+    }
+
     public void Process()
     {
         if (IsNeedToUpdateTimeline())
         {
             UpdateTimeline();
+
+            if (isNeedCurEmotionUpdate)
+                UpdateSendingToModelData();
         }
     }
 
@@ -81,6 +94,11 @@ public class TimelineRecorder
 
         timelineList.Add(curTimelineElement.Copy());
         curTimelineElement.Clear();
+    }
+
+    void UpdateSendingToModelData()
+    {
+        pythonConnector.RequestMessageSend(timelineList[^1].Parse());
     }
 
     void UpdateCurTimelineElement()

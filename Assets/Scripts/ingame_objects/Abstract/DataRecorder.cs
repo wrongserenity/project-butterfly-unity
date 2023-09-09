@@ -52,6 +52,8 @@ public class DataRecorder : MonoBehaviour
     TimelineRecorder timelineRecorder = new TimelineRecorder();
     [SerializeField] GameObject timelineRecordingScreen;
 
+    PythonConnector pythonConnector;
+
     void Start()
     {
         gameManager = GameObject.Find("GameManager").GetComponent<GameManager>();
@@ -60,6 +62,9 @@ public class DataRecorder : MonoBehaviour
 
         dataRepText = dataRepMenu.transform.Find("Text").GetComponent<Text>();
         dataRepMenu.SetActive(false);
+
+        pythonConnector = new();
+        timelineRecorder.SetPythonConnector(pythonConnector);
     }
 
     void FixedUpdate()
@@ -221,6 +226,8 @@ public class DataRecorder : MonoBehaviour
 
         StopCoroutine(ShowTimelineElement(1f));
         StartCoroutine(ShowTimelineElement(1f));
+
+        pythonConnector.Start(HandleEmotionsUpdate);
     }
 
     IEnumerator ShowTimelineElement(float duration)
@@ -232,10 +239,17 @@ public class DataRecorder : MonoBehaviour
 
     public void StopTimelineRecording()
     {
+        pythonConnector.Stop();
+
         StopCoroutine(ShowTimelineElement(1f));
         StartCoroutine(ShowTimelineElement(1f));
 
         isTimelineRecording = false;
         timelineRecorder.StopRecordingAndSave(gameManager);
+    }
+
+    void HandleEmotionsUpdate(Dictionary<string, float> dict)
+    {
+        Debug.Log(dict);
     }
 }
