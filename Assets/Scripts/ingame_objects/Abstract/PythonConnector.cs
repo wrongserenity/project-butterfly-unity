@@ -1,3 +1,4 @@
+
 using NetMQ;
 using NetMQ.Sockets;
 using System;
@@ -7,12 +8,26 @@ using Newtonsoft.Json;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-
+using System.Net.Sockets;
+using System.Net;
+using System.Text;
 
 public class PythonConnector
 {
-    private readonly Thread receiveThread;
-    private bool running;
+    bool isRunning = false;
+
+    string IP = "127.0.0.1"; // local host
+    int rxPort = 8000; // port to receive data from Python on
+    int txPort = 8001; // port to send data to Python on
+
+    int i = 0; // DELETE THIS: Added to show sending data from Unity to Python via UDP
+
+    // Create necessary UdpClient objects
+    UdpClient client;
+    IPEndPoint remoteEndPoint;
+
+    Thread sendThread;
+    Thread receiveThread;
 
     private Dictionary<string, float> lastRequestedParsedDict;
     private bool isSentLastRequestedMsg;
@@ -21,39 +36,85 @@ public class PythonConnector
 
     public PythonConnector()
     {
-        receiveThread = new Thread((object callback) =>
-        {
-            using (var socket = new RequestSocket())
-            {
-                socket.Connect("tcp://localhost:5555");
-                while (running)
-                {
-                    //socket.SendFrameEmpty();
+        remoteEndPoint = new IPEndPoint(IPAddress.Parse(IP), txPort);
 
-                    TrySend(socket);
-                    Receive(socket);
-
-                    ((Action<Dictionary<string, float>>)callback)(lastRecievedDict);
-                }
-            }
-        });
+        client = new UdpClient(rxPort);
     }
 
-    void TrySend(RequestSocket socket)
+    void SendInThread()
     {
-        if (!isSentLastRequestedMsg)
+        while (isRunning)
         {
-            isSentLastRequestedMsg = true;
+            try
+            {
+                TrySend();
 
-            string json = JsonConvert.SerializeObject(lastRequestedParsedDict);
-            socket.SendFrame(json);
+                Thread.Sleep(200);
+            }
+            catch (Exception err)
+            {
+                Debug.Log(err.ToString());
+            }
         }
     }
 
-    void Receive(RequestSocket socket)
+    void ReceiveInThread()
     {
-        string message = socket.ReceiveFrameString();
+        while (isRunning)
+        {
+            try
+            {
+                Receive();
+            }
+            catch (Exception err)
+            {
+                Debug.Log(err.ToString());
+            }
+        }
+    }
+
+    void TrySend()
+    {
+        if (!isSentLastRequestedMsg)
+        {
+            isSentLastRequestedMsg = true;;
+
+            string json = JsonConvert.SerializeObject(lastRequestedParsedDict);
+            SendMessage(json);
+        }
+    }
+
+    void SendMessage(string message)
+    {
+        try
+        {
+            byte[] data = Encoding.UTF8.GetBytes(message);
+            client.Send(data, data.Length, remoteEndPoint);
+        }
+        catch (Exception err)
+        {
+            Debug.Log(err.ToString());
+        }
+    }
+
+    void Receive()
+    {
+        try
+        {
+            IPEndPoint anyIP = new IPEndPoint(IPAddress.Any, 0);
+            byte[] data = client.Receive(ref anyIP);
+            string text = Encoding.UTF8.GetString(data);
+            Debug.Log(">> " + text);
+        }
+        catch (Exception err)
+        {
+            Debug.Log(err.ToString());
+        }
+
+        /*string message = socket.ReceiveFrameString();
         lastRecievedDict = JsonUtility.FromJson<Dictionary<string, float>>(message);
+
+        Debug.Log("received " + lastRecievedDict["value"].ToString());*/
     }
 
     public void RequestMessageSend(Dictionary<string, float> dict)
@@ -69,13 +130,23 @@ public class PythonConnector
 
     public void Start(Action<Dictionary<string, float>> callback)
     {
-        running = true;
-        receiveThread.Start(callback);
+        isRunning = true;
+
+        sendThread = new Thread(new ThreadStart(SendInThread));
+        sendThread.IsBackground = true;
+        sendThread.Start();
+
+        receiveThread = new Thread(new ThreadStart(ReceiveInThread));
+        receiveThread.IsBackground = true;
+        receiveThread.Start();
     }
 
     public void Stop()
     {
-        running = false;
-        receiveThread.Join();
+        isRunning = false;
+        sendThread.Abort();
+        receiveThread.Abort();
+
+        SendMessage("stop");
     }
 }

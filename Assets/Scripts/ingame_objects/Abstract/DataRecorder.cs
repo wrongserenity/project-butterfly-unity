@@ -45,7 +45,7 @@ public class DataRecorder : MonoBehaviour
     // Timeline list
     [SerializeField] int timelineRecordingRate = 30;
 
-    bool isTimelineRecording = false;
+    bool isTimelineRecording = true;
 
     Player player;
 
@@ -126,7 +126,7 @@ public class DataRecorder : MonoBehaviour
         dataRepText.text = totalPassingTime + "\n" +
            "\n" +
             deathCounter[1] + "\n" +
-            deathCounter[0] + "\n" + 
+            deathCounter[0] + "\n" +
             "\n" +
             totalKilledEnemyCounter[0] + "\n" +
             totalKilledEnemyCounter[1] + "\n" +
@@ -159,7 +159,7 @@ public class DataRecorder : MonoBehaviour
             totalTimesShifted += value;
             timelineRecorder.UpdateActionTime("shifted");
         }
-        else if (variable == "spent_on_rewind") 
+        else if (variable == "spent_on_rewind")
         {
             totalSpentOnRewind += value;
             timelineRecorder.UpdateActionTime("rewinded");
@@ -251,5 +251,10 @@ public class DataRecorder : MonoBehaviour
     void HandleEmotionsUpdate(Dictionary<string, float> dict)
     {
         Debug.Log(dict);
+    }
+
+    void OnDestroy()
+    {
+        pythonConnector.Stop();
     }
 }
