@@ -20,8 +20,6 @@ public class PythonConnector
     int rxPort = 8000; // port to receive data from Python on
     int txPort = 8001; // port to send data to Python on
 
-    int i = 0; // DELETE THIS: Added to show sending data from Unity to Python via UDP
-
     // Create necessary UdpClient objects
     UdpClient client;
     IPEndPoint remoteEndPoint;
@@ -33,6 +31,7 @@ public class PythonConnector
     private bool isSentLastRequestedMsg;
 
     private Dictionary<string, float> lastRecievedDict;
+    private bool isReceivedDictUpdated;
 
     public PythonConnector()
     {
@@ -105,6 +104,10 @@ public class PythonConnector
             byte[] data = client.Receive(ref anyIP);
             string text = Encoding.UTF8.GetString(data);
             Debug.Log(">> " + text);
+
+            // lastRecievedDict = JsonUtility.FromJson<Dictionary<string, float>>(text.Replace("\\", ""));
+            lastRecievedDict = JsonConvert.DeserializeObject<Dictionary<string, float>>(text);
+            isReceivedDictUpdated = true;
         }
         catch (Exception err)
         {
@@ -123,12 +126,17 @@ public class PythonConnector
         isSentLastRequestedMsg = false;
     }
 
-    public Dictionary<string, float> GetLastReceivedData()
+    public Dictionary<string, float> GetUpdatedData()
     {
-        return lastRecievedDict;
+        if (isReceivedDictUpdated)
+        {
+            isReceivedDictUpdated = false;
+            return lastRecievedDict;
+        }
+        return null;
     }
 
-    public void Start(Action<Dictionary<string, float>> callback)
+    public void Start()
     {
         isRunning = true;
 

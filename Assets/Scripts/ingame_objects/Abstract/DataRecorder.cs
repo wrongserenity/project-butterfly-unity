@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Reflection;
@@ -12,6 +13,9 @@ public class DataRecorder : MonoBehaviour
 
     public GameObject dataRepMenu;
     Text dataRepText;
+
+    public GameObject emotionTextCanvas;
+    Text emotionText;
 
     bool isPlayerResultsWriting = GlobalVariables.is_writing;
 
@@ -63,6 +67,8 @@ public class DataRecorder : MonoBehaviour
         dataRepText = dataRepMenu.transform.Find("Text").GetComponent<Text>();
         dataRepMenu.SetActive(false);
 
+        emotionText = emotionTextCanvas.GetComponent<Text>();
+
         pythonConnector = new();
         timelineRecorder.SetPythonConnector(pythonConnector);
     }
@@ -77,7 +83,32 @@ public class DataRecorder : MonoBehaviour
         if (isTimelineRecording)
         {
             timelineRecorder.Process();
+            TryUpdateEmotionText();
         }
+    }
+
+    void TryUpdateEmotionText()
+    {
+        Dictionary<string, float> receivedData = pythonConnector.GetUpdatedData();
+        if (receivedData == null)
+            return;
+
+        string emotionTextString = "";
+        string maxEmotion = "";
+        float maxValue = 0.0f;
+        foreach (KeyValuePair<string, float> el in receivedData)
+        {
+            emotionTextString += el.Key + " - " + Math.Round(el.Value, 2) + "\n";
+
+            if (el.Value > maxValue)
+            {
+                maxValue = el.Value;
+                maxEmotion = el.Key;
+            }
+        }
+        emotionTextString += "MAX: " + maxEmotion;
+
+        emotionText.text = emotionTextString;
     }
 
     void ProcessPlayerResultsWriting()
@@ -227,7 +258,7 @@ public class DataRecorder : MonoBehaviour
         StopCoroutine(ShowTimelineElement(1f));
         StartCoroutine(ShowTimelineElement(1f));
 
-        pythonConnector.Start(HandleEmotionsUpdate);
+        pythonConnector.Start();
     }
 
     IEnumerator ShowTimelineElement(float duration)
@@ -246,11 +277,6 @@ public class DataRecorder : MonoBehaviour
 
         isTimelineRecording = false;
         timelineRecorder.StopRecordingAndSave(gameManager);
-    }
-
-    void HandleEmotionsUpdate(Dictionary<string, float> dict)
-    {
-        Debug.Log(dict);
     }
 
     void OnDestroy()

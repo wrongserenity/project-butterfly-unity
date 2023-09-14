@@ -1,7 +1,9 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class TimelineRecorder
 {
@@ -30,6 +32,8 @@ public class TimelineRecorder
 
     PythonConnector pythonConnector;
 
+    public GameObject emotionTextCanvas;
+    Text emotionText;
 
     public void StartRecordingWithParameters(float updateDeltaTime, float startTime, string dataFileName, GameManager gameManager)
     {
@@ -72,7 +76,7 @@ public class TimelineRecorder
             UpdateTimeline();
 
             if (isNeedCurEmotionUpdate)
-                UpdateSendingToModelData();
+                UpdatePythonConnector();
         }
     }
 
@@ -96,7 +100,7 @@ public class TimelineRecorder
         curTimelineElement.Clear();
     }
 
-    void UpdateSendingToModelData()
+    void UpdatePythonConnector()
     {
         pythonConnector.RequestMessageSend(timelineList[^1].Parse());
     }
