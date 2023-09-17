@@ -7,15 +7,15 @@ using UnityEngine.UI;
 
 public class DataRecorder : MonoBehaviour
 {
+    [SerializeField]
+    bool isLogging = false;
+
     GameManager gameManager;
 
     [SerializeField] string dataSavingName = "player_recorded_data";
 
     public GameObject dataRepMenu;
     Text dataRepText;
-
-    public GameObject emotionTextCanvas;
-    Text emotionText;
 
     bool isPlayerResultsWriting = GlobalVariables.is_writing;
 
@@ -56,6 +56,7 @@ public class DataRecorder : MonoBehaviour
     TimelineRecorder timelineRecorder = new TimelineRecorder();
     [SerializeField] GameObject timelineRecordingScreen;
 
+    [SerializeField] 
     PythonConnector pythonConnector;
 
     void Start()
@@ -67,9 +68,6 @@ public class DataRecorder : MonoBehaviour
         dataRepText = dataRepMenu.transform.Find("Text").GetComponent<Text>();
         dataRepMenu.SetActive(false);
 
-        emotionText = emotionTextCanvas.GetComponent<Text>();
-
-        pythonConnector = new();
         timelineRecorder.SetPythonConnector(pythonConnector);
     }
 
@@ -83,32 +81,7 @@ public class DataRecorder : MonoBehaviour
         if (isTimelineRecording)
         {
             timelineRecorder.Process();
-            TryUpdateEmotionText();
         }
-    }
-
-    void TryUpdateEmotionText()
-    {
-        Dictionary<string, float> receivedData = pythonConnector.GetUpdatedData();
-        if (receivedData == null)
-            return;
-
-        string emotionTextString = "";
-        string maxEmotion = "";
-        float maxValue = 0.0f;
-        foreach (KeyValuePair<string, float> el in receivedData)
-        {
-            emotionTextString += el.Key + " - " + Math.Round(el.Value, 2) + "\n";
-
-            if (el.Value > maxValue)
-            {
-                maxValue = el.Value;
-                maxEmotion = el.Key;
-            }
-        }
-        emotionTextString += "MAX: " + maxEmotion;
-
-        emotionText.text = emotionTextString;
     }
 
     void ProcessPlayerResultsWriting()
@@ -255,13 +228,13 @@ public class DataRecorder : MonoBehaviour
         timelineRecorder.StartRecordingWithParameters(1f / (float)timelineRecordingRate, Time.time, dataSavingName, gameManager);
         isTimelineRecording = true;
 
-        StopCoroutine(ShowTimelineElement(1f));
-        StartCoroutine(ShowTimelineElement(1f));
+        StopCoroutine(ShowTimelineNotification(1f));
+        StartCoroutine(ShowTimelineNotification(1f));
 
-        pythonConnector.Start();
+        pythonConnector.StartInternal();
     }
 
-    IEnumerator ShowTimelineElement(float duration)
+    IEnumerator ShowTimelineNotification(float duration)
     {
         timelineRecordingScreen.SetActive(true);
         yield return new WaitForSeconds(duration);
@@ -270,17 +243,13 @@ public class DataRecorder : MonoBehaviour
 
     public void StopTimelineRecording()
     {
-        pythonConnector.Stop();
+        pythonConnector.StopInternal();
 
-        StopCoroutine(ShowTimelineElement(1f));
-        StartCoroutine(ShowTimelineElement(1f));
+        StopCoroutine(ShowTimelineNotification(1f));
+        StartCoroutine(ShowTimelineNotification(1f));
 
         isTimelineRecording = false;
         timelineRecorder.StopRecordingAndSave(gameManager);
     }
 
-    void OnDestroy()
-    {
-        pythonConnector.Stop();
-    }
 }
