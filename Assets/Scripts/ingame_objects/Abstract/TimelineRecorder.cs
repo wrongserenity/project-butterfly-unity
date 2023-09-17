@@ -5,15 +5,20 @@ using System.IO;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class TimelineRecorder
+public class TimelineRecorder : MonoBehaviour
 {
-    [SerializeField]
-    bool isNeedCurEmotionUpdate = true;
+    [SerializeField] bool isNeedCurEmotionUpdate = true;
 
     [SerializeField] int timelineRecordingRate = 30;
-    string saveFilePath = "Assets/Recorded/";
-    string recordedFileName = "filename";
-    string fileType = ".csv";
+    [SerializeField] string saveFilePath = "Assets/Recorded/";
+    [SerializeField] string recordedFileName = "filename";
+    [SerializeField] string fileType = ".csv";
+
+    [SerializeField] Player player;
+    [SerializeField] BattleSystem battleSystem;
+    [SerializeField] MusicSystem musicSystem;
+
+    [SerializeField] PythonConnector pythonConnector;
 
     List<TimelineElement> timelineList = new List<TimelineElement>() { };
     TimelineElement curTimelineElement = new TimelineElement();
@@ -24,27 +29,14 @@ public class TimelineRecorder
 
     TimelineActionData actionData = new TimelineActionData();
 
-    Player player;
-    BattleSystem battleSystem;
-    MusicSystem musicSystem;
-
     bool isRecording = false;
 
-    PythonConnector pythonConnector;
-
-    public GameObject emotionTextCanvas;
-    Text emotionText;
-
-    public void StartRecordingWithParameters(float updateDeltaTime, float startTime, string dataFileName, GameManager gameManager)
+    public void StartRecordingWithParameters(float updateDeltaTime, float startTime, string dataFileName)
     {
         timelineRecordingUpdateTime = updateDeltaTime;
         timelineRecordStartTime = startTime;
 
         recordedFileName = dataFileName;
-
-        player = gameManager.player;
-        battleSystem = gameManager.battleSystem;
-        musicSystem = gameManager.musicSystem;
 
         player.OnCreationDamaged += () => UpdateActionTime("damaged");
         player.OnPlayerAttack += () => UpdateActionTime("attack");
@@ -62,11 +54,6 @@ public class TimelineRecorder
         player.OnCreationDeath -= () => UpdateActionTime("death");
 
         ParseAndSaveTimeline(saveFilePath + recordedFileName + fileType);
-    }
-
-    public void SetPythonConnector(PythonConnector connector)
-    {
-        pythonConnector = connector;
     }
 
     public void Process()
@@ -125,7 +112,7 @@ public class TimelineRecorder
 
     public void UpdateActionTime(string actionName)
     {
-        if(isRecording)
+        if (isRecording)
             actionData.Set(actionName, Time.time);
     }
 

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using FMODUnity;
 
-public class SoundSystem : MonoBehaviour
+public class SoundSystem : LoggableBase
 {
     public List<string> playlist;
     Dictionary<string, StudioEventEmitter> emitters = new Dictionary<string, StudioEventEmitter>();
@@ -13,7 +13,7 @@ public class SoundSystem : MonoBehaviour
     {
         foreach(StudioEventEmitter emitter in GetComponentsInChildren<StudioEventEmitter>())
         {
-            Debug.Log("in sound system: " + emitter.name);
+            TryLog("in sound system: " + emitter.name);
             emitters.Add(emitter.name, emitter);
         }
     }
