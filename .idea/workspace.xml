@@ -2,19 +2,9 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="c85e1dcf-5863-473a-aada-92ef0ab8d6a8" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/project-Butterfly-ver-alpha-1-1.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/project-Butterfly-ver-alpha-1-1.iml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scenes/EmptyLevel/EmptyScene.unity" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scenes/EmptyLevel/EmptyScene.unity" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/ProcessingSystems/GlobalProcessing/MusicSystem.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/ProcessingSystems/GlobalProcessing/MusicSystem.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/ProcessingSystems/GlobalProcessing/TriggerSystem/Triggers/ChestTrigger.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/ProcessingSystems/GlobalProcessing/TriggerSystem/Triggers/ChestTrigger.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/Python/emotion_predictor.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/Python/emotion_predictor.py.meta" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/Python/random_forest_eugene_898_sec.joblib" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/Python/random_forest_eugene_898_sec.joblib.meta" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/ingame_objects/Abstract/DataRecorder.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/ingame_objects/Abstract/DataRecorder.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/ingame_objects/Abstract/GameManager.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/ingame_objects/Abstract/GameManager.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/ingame_objects/Global Variables.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/ingame_objects/Global Variables.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/ingame_objects/Object/Creation/Player.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/ingame_objects/Object/Creation/Player.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Recorded/test_09_22_10_48.csv" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Recorded/test_09_22_10_48.csv.meta" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/UserSettings/Layouts/CurrentMaximizeLayout.dwlt" beforeDir="false" afterPath="$PROJECT_DIR$/UserSettings/Layouts/CurrentMaximizeLayout.dwlt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/UserSettings/Layouts/default-2021.dwlt" beforeDir="false" afterPath="$PROJECT_DIR$/UserSettings/Layouts/default-2021.dwlt" afterDir="false" />
     </list>
