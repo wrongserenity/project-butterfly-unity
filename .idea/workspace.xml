@@ -2,8 +2,21 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="c85e1dcf-5863-473a-aada-92ef0ab8d6a8" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/PythonProject/emotion_prediction.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/Python/emotion_predictor.py" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/Python/emotion_predictor.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/project-Butterfly-ver-alpha-1-1.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/project-Butterfly-ver-alpha-1-1.iml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Scenes/EmptyLevel/EmptyScene.unity" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scenes/EmptyLevel/EmptyScene.unity" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Scripts/ProcessingSystems/GlobalProcessing/MusicSystem.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/ProcessingSystems/GlobalProcessing/MusicSystem.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Scripts/ProcessingSystems/GlobalProcessing/TriggerSystem/Triggers/ChestTrigger.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/ProcessingSystems/GlobalProcessing/TriggerSystem/Triggers/ChestTrigger.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Scripts/Python/emotion_predictor.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Scripts/Python/emotion_predictor.py.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Scripts/Python/random_forest_eugene_898_sec.joblib" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Scripts/Python/random_forest_eugene_898_sec.joblib.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Scripts/ingame_objects/Abstract/DataRecorder.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/ingame_objects/Abstract/DataRecorder.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Scripts/ingame_objects/Abstract/GameManager.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/ingame_objects/Abstract/GameManager.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Scripts/ingame_objects/Global Variables.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/ingame_objects/Global Variables.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Scripts/ingame_objects/Object/Creation/Player.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/ingame_objects/Object/Creation/Player.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/UserSettings/Layouts/CurrentMaximizeLayout.dwlt" beforeDir="false" afterPath="$PROJECT_DIR$/UserSettings/Layouts/CurrentMaximizeLayout.dwlt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/UserSettings/Layouts/default-2021.dwlt" beforeDir="false" afterPath="$PROJECT_DIR$/UserSettings/Layouts/default-2021.dwlt" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -28,15 +41,36 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "RunOnceActivity.OpenProjectViewOnStart": "true",
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "last_opened_file_path": "C:/Project Butterfly/ver alpha 1-1/project-Butterfly-ver-alpha-1-1/PythonProject",
-    "settings.editor.selected.configurable": "com.jetbrains.python.configuration.PyActiveSdkModuleConfigurable"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;last_opened_file_path&quot;: &quot;C:/Project Butterfly/ver alpha 1-1/project-Butterfly-ver-alpha-1-1/PythonProject&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;com.jetbrains.python.configuration.PyActiveSdkModuleConfigurable&quot;
   }
-}]]></component>
-  <component name="RunManager">
+}</component>
+  <component name="RunManager" selected="Python.emotion_prediction">
+    <configuration name="emotion_prediction" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
+      <module name="project-Butterfly-ver-alpha-1-1" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/PythonProject" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/PythonProject/emotion_prediction.py" />
+      <option name="PARAMETERS" value="" />
+      <option name="SHOW_COMMAND_LINE" value="false" />
+      <option name="EMULATE_TERMINAL" value="false" />
+      <option name="MODULE_MODE" value="false" />
+      <option name="REDIRECT_INPUT" value="false" />
+      <option name="INPUT_FILE" value="" />
+      <method v="2" />
+    </configuration>
     <configuration name="emotion_predictor" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
       <option name="INTERPRETER_OPTIONS" value="" />
       <option name="PARENT_ENVS" value="true" />
@@ -60,6 +94,7 @@
     </configuration>
     <recent_temporary>
       <list>
+        <item itemvalue="Python.emotion_prediction" />
         <item itemvalue="Python.emotion_predictor" />
       </list>
     </recent_temporary>

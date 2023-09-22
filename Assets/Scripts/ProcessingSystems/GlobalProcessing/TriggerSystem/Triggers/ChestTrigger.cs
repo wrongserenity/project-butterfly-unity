@@ -44,6 +44,8 @@ public class ChestTrigger : Trigger
     {
         ProcessByTag(randomObjects[Random.Range(0, randomObjects.Count)]);
         gameObject.SetActive(false);
+
+        gameManager.dataRecorder.AddTo("pickup", 1);
     }
 
     void ProcessByTag(string tag)

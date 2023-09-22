@@ -139,6 +139,7 @@ public class GameManager : MonoBehaviour
         {
             if (!isFading)
                 StartCoroutine(LevelReloadToCheckPoint());
+            dataRecorder.AddTo("checkpoint", 1);
         }
     }
 

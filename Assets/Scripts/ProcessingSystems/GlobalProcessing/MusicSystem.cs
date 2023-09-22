@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using FMODUnity;
 
-public class MusicSystem : MonoBehaviour
+public class MusicSystem : LoggableBase
 {
     GameManager gameManager;
     BattleSystem battleSystem;
@@ -72,7 +72,7 @@ public class MusicSystem : MonoBehaviour
         if (newParameter.Equals(curBattleMusicParameterValue))
             return;
 
-        Debug.Log("Music: " + newParameter + " - " + enemyCount);
+        TryLog("Music: " + newParameter + " - " + enemyCount);
         UpdateBattleMusicParameter(newParameter);
     }
 

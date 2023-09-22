@@ -217,6 +217,10 @@ public class DataRecorder : MonoBehaviour
             totalDamageBlocked += value;
         else if (variable == "parry_damage")
             totalDamageByParry += value;
+        else if (variable == "checkpoint")
+            timelineRecorder.UpdateActionTime("checkpoint");
+        else if (variable == "pickup")
+            timelineRecorder.UpdateActionTime("pickup");
         else
             Debug.Log("ERROR: data writing exeption - " + variable);
     }

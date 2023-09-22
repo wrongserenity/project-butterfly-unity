@@ -5128,9 +5128,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   isLogging: 0
-  dataSavingName: eugene_19_37
+  dataSavingName: test_09_22_10_48
   dataRepMenu: {fileID: 1333377291}
   timelineRecordingRate: 30
+  timelineRecorder: {fileID: 1629734746}
   timelineRecordingScreen: {fileID: 1452397403}
   pythonConnector: {fileID: 1161129144}
 --- !u!1 &983520644
@@ -6022,6 +6023,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a6cbc14f3f4189f4e894aee6a9db6203, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  isLogging: 0
 --- !u!1 &1143770335
 GameObject:
   m_ObjectHideFlags: 0
@@ -6383,7 +6385,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2b1bf1893e28d60418b1cb77f5eba4b9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  isLogging: 1
+  isLogging: 0
   isRunning: 0
   IP: 127.0.0.1
   receivePort: 8000
@@ -7949,6 +7951,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f3ee82fccf4a91a47a26bea46fa72a4c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  isLogging: 0
   playlist: []
 --- !u!1 &1593694969
 GameObject:

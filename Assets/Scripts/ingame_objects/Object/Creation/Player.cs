@@ -30,6 +30,8 @@ public class Player : Creation
     int teleport_cost = GlobalVariables.player_teleport_cost;
     int rewind_cost = GlobalVariables.player_rewind_cost;
 
+    int heal_points = GlobalVariables.player_heal_points;
+
     public Vector3 pos;
 
     List<Vector3> position_trace = new List<Vector3>() { };
@@ -185,8 +187,8 @@ public class Player : Creation
             stateMachine.AddState("healing");
             if (heal_cooldown.Try())
             {
-                ProcessHp(1);
-                dataRec.AddTo("restored_hp", 1);
+                ProcessHp(heal_points);
+                dataRec.AddTo("restored_hp", heal_points);
                 EnergyTransfer(-heal_cost);
             }
         }

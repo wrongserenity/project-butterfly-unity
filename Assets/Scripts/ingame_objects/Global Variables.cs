@@ -43,7 +43,7 @@ public static class GlobalVariables
     public static float default_forget_range = 20f;
 
     // balance variables
-    public static int player_heal_cost = 10;
+    public static int player_heal_cost = 40;
     public static int player_teleport_cost = 20;
     public static int player_rewind_cost = 10;
     public static int enemy_power_price = 22;
@@ -53,6 +53,8 @@ public static class GlobalVariables
     public static float player_position_rewind_cooldown = 0.01f;
     public static float player_xiton_charge_cooldown = 0.2f;
     public static float player_deprivation_cooldown = 0.5f;
+
+    public static int player_heal_points = 4;
 
     public static float player_parry_damage_boost_time = 0.5f;
 
