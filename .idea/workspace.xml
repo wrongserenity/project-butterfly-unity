@@ -3,9 +3,7 @@
   <component name="ChangeListManager">
     <list default="true" id="c85e1dcf-5863-473a-aada-92ef0ab8d6a8" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Recorded/test_09_22_10_48.csv" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Recorded/test_09_22_10_48.csv.meta" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/UserSettings/Layouts/CurrentMaximizeLayout.dwlt" beforeDir="false" afterPath="$PROJECT_DIR$/UserSettings/Layouts/CurrentMaximizeLayout.dwlt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/PythonProject/emotion_prediction.py" beforeDir="false" afterPath="$PROJECT_DIR$/PythonProject/emotion_prediction.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/UserSettings/Layouts/default-2021.dwlt" beforeDir="false" afterPath="$PROJECT_DIR$/UserSettings/Layouts/default-2021.dwlt" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />

@@ -8,7 +8,7 @@ import numpy as np
 import time
 import socket
 
-filename = "random_forest_eugene_898_sec.joblib"
+filename = "random_forest_arkady_884_sec.joblib"
 
 input_names = [
     'timeline',
@@ -30,6 +30,8 @@ input_names = [
     'timeFromLastenergyCollecting',
     'timeFromLastxitonSpending',
     'timeFromLastxitonCharging',
+    'timeFromLastpickup',
+    'timeFromLastcheckpoint',
     'timeFromLastshifted',
     'timeFromLastrewinded',
     'timeFromLastdepricatingWeapon',
@@ -39,9 +41,9 @@ emotions_list = [
     'disgust',
     'fear',
     'happy',
-    'neutral',
     'sad',
-    'surprise'
+    'surprise',
+    'neutral'
 ]
 
 
