@@ -42,6 +42,8 @@ public class PythonConnector : LoggableBase
 
         remoteEndPoint = new IPEndPoint(IPAddress.Parse(IP), sendPort);
         client = new UdpClient(receivePort);
+
+        TryLog("started python controller");
     }
 
     private void FixedUpdate()
@@ -90,6 +92,8 @@ public class PythonConnector : LoggableBase
 
             string json = JsonConvert.SerializeObject(lastRequestedParsedDict);
             SendUdpMessage(json);
+
+            TryLog("Sent to python");
         }
     }
 

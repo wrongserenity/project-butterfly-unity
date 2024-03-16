@@ -5128,7 +5128,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   isLogging: 0
-  dataSavingName: test_09_22_10_48
+  dataSavingName: natalia_06_12_23
   dataRepMenu: {fileID: 1333377291}
   timelineRecordingRate: 30
   timelineRecorder: {fileID: 1629734746}
@@ -6385,8 +6385,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2b1bf1893e28d60418b1cb77f5eba4b9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  isLogging: 0
-  isRunning: 0
+  isLogging: 1
+  isRunning: 1
   IP: 127.0.0.1
   receivePort: 8000
   sendPort: 8001
