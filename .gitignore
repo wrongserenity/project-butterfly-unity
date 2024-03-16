@@ -58,3 +58,8 @@ sysinfo.txt
 # Crashlytics generated file
 crashlytics-build.properties
 
+# Personal
+[Pp]ythonProject/[Mm]odels
+[Pp]ythonProject/[Oo]utput
+[Pp]ythonProject/[Dd]ata/[Ss]ource
+[Pp]ythonProject/[Ss]rc/[Oo]utput
